@@ -3,8 +3,9 @@
 
     <string name="facebook_app_id">652540274852758</string>
     <string name="facebook_login">Login with Facebook</string>
-    
-    <string name="kakao_app_key">b666460c48c47d1b30537611471b64ea</string>
+
+    <string name="kakao_app_key">41ef00b068314b2c961dbcc0c77ffe86</string>
+    <string name="kakao_login">Login with Kakao</string>
     
     <string name="app_name">AniCare</string>
     <string name="hello_world">Hello world!</string>
@@ -26,28 +27,14 @@
     
     
     <!-- Nav Drawer Menu Items -->
-    <string-array name="nav_drawer_items">
-        <item >신고</item>
-        <item >카톡/SMS</item>
-        <item >응급처치</item>
-        <item >Fake Call</item>
-        <item >구조커뮤니티</item>
-        <item >BeeSafe게임</item>
-        <item >게시판</item>
-        <item >보조등</item>
+    <string-array name="anicare_menu">
+        <item>친구 보기</item>
+        <item>친구 만들기</item>
+        <item>메세지함</item>
+        <item>돌봄 이력</item>
+        <item>설정</item>
     </string-array>
-    
-    <!-- Nav Drawer List Item Icons -->
-    <!-- Keep them in order as the titles are in -->
-    <array name="nav_drawer_icons">
-        <!-- <item>@drawable/callicon</item>
-        <item>@drawable/smsicon</item>
-        <item>@drawable/emergencyicon</item>
-        <item>@drawable/fakecallicon</item>
-        <item>@drawable/communityhelpicon</item>
-        <item>@drawable/findhospitalicon</item>
-        <item>@drawable/boardicon</item> -->
-    </array>
+
     
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
