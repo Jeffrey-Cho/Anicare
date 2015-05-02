@@ -21,7 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import com.facebook.FacebookSdk;
+//import com.facebook.FacebookSdk;
 
 import com.facebook.AppEventsLogger;
 import com.facebook.Session.StatusCallback;
