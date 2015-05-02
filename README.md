@@ -110,11 +110,11 @@ sep.software.anicare.util.AsyncChainer
 [실제 사용 예시](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/SplashActivity.java#L140)
 
 AniCareActivity, AniCareFragment
----------------------
-각각 Activity와 Fragment들의 최상위 클래스들이다. 크게 두가지 기능을 제공한다.
-1. bindViews(), initialize() 추상 함수 선언
-	* [상위 클래스 선언](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L62)
-	* [하위 클래스 구현](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/MainActivity.java#L57)
+------------------------
+각각 Activity와 Fragment들의 최상위 클래스들이다.
+크게 두가지 기능을 제공한다.
+
+1. ```bindViews()```, ```initialize()``` 추상 함수 선언.
 ```java
 // 하위 클래스에서 자바 view 객체와 xml을 바인딩하는 함수를 구현하게 강제한다.
 protected void bindViews() {
@@ -126,6 +126,9 @@ protected void initialize() {
 
 }
 ```
+
+	* [상위 클래스 선언](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L62)
+	* [하위 클래스 구현](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/MainActivity.java#L57)
 
 2. 자주 쓰이는 객체들을 제공하여 하위 클래스에서 바로 사용할 수 있게 제공한다.
 	* [see here](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L17)
