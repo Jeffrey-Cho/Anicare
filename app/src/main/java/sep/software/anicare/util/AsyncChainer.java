@@ -18,23 +18,23 @@ public class AsyncChainer {
 	}
 
 
-	public static void asyncChain(Object obj, Chainable...chains) {
-		Queue<Chainable> queue = mMapQueue.get(obj);
+	public static void asyncChain(Object key, Chainable...chains) {
+		Queue<Chainable> queue = mMapQueue.get(key);
 		if (queue == null) {
-			mMapQueue.put(obj, new ArrayBlockingQueue<Chainable>(NUM_OF_QUEUE));
-			queue = mMapQueue.get(obj);
+			mMapQueue.put(key, new ArrayBlockingQueue<Chainable>(NUM_OF_QUEUE));
+			queue = mMapQueue.get(key);
 		}
 		queue.addAll(Arrays.asList(chains));
-		AsyncChainer.notifyNext(obj);
+		AsyncChainer.notifyNext(key);
 	}
 
 
-	public static void notifyNext(Object obj, Object... params) {
+	public static void notifyNext(Object key, Object... params) {
 		if (++mCurrentCount < mCount) return;
-		Queue<Chainable> queue = mMapQueue.get(obj);
+		Queue<Chainable> queue = mMapQueue.get(key);
 		if (queue != null && !queue.isEmpty()) {
 			Chainable c = queue.poll();
-			c.doNext(obj, params);
+			c.doNext(key, params);
 		}
 	}
 

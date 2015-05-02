@@ -1,6 +1,6 @@
 package sep.software.anicare.fragment;
 
-public class HistoryFragment extends AniCareFragment {
+public class CareHistoryFragment extends AniCareFragment {
 
     @Override
     protected void bindViews() {

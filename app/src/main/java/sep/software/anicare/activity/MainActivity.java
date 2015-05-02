@@ -1,7 +1,7 @@
 package sep.software.anicare.activity;
 
 import sep.software.anicare.R;
-import sep.software.anicare.fragment.HistoryFragment;
+import sep.software.anicare.fragment.CareHistoryFragment;
 import sep.software.anicare.fragment.ListFriendFragment;
 import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
@@ -9,6 +9,7 @@ import sep.software.anicare.fragment.SettingFragment;
 import sep.software.anicare.view.CircleImageView;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -28,7 +29,7 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AniCareActivity {
     private DrawerLayout mDrawerLayout;
-    private LinearLayout mRelativeLayout;
+    private LinearLayout mLinearLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AniCareActivity {
     protected void bindViews() {
         mPlanetTitles = getResources().getStringArray(R.array.anicare_menu);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mRelativeLayout = (LinearLayout) findViewById(R.id.left_drawer);
+        mLinearLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mProfileImage  = (CircleImageView) findViewById(R.id.drawer_profile);
         mPetName = (TextView) findViewById(R.id.pet_name);
@@ -91,7 +92,7 @@ public class MainActivity extends AniCareActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        // set a custom shadow that overlays the main content when the drawer opens
+        // set a custom shadow that overlays the menu_main_ content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
@@ -107,11 +108,15 @@ public class MainActivity extends AniCareActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main_, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLinearLayout);
+        menu.findItem(R.id.action_test).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -120,7 +125,17 @@ public class MainActivity extends AniCareActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        switch(item.getItemId()) {
+            case R.id.action_test:
+                // create intent to perform web search for this planet
+                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+//                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
+                // catch event that there's no activity to handle intent
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -133,7 +148,7 @@ public class MainActivity extends AniCareActivity {
     }
 
     private void selectItem(int position) {
-        // update the main content by replacing fragments
+        // update the menu_main_ content by replacing fragments
         Fragment fragment = null;
 
         switch (position) {
@@ -147,7 +162,7 @@ public class MainActivity extends AniCareActivity {
                 fragment = new MessageBoxFragment();
                 break;
             case 3:
-                fragment = new HistoryFragment();
+                fragment = new CareHistoryFragment();
                 break;
             case 4:
                 fragment = new SettingFragment();
@@ -166,7 +181,7 @@ public class MainActivity extends AniCareActivity {
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
-        mDrawerLayout.closeDrawer(mRelativeLayout);
+        mDrawerLayout.closeDrawer(mLinearLayout);
     }
 
     @Override

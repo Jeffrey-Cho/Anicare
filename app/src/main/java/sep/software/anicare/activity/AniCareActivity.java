@@ -3,8 +3,7 @@ package sep.software.anicare.activity;
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.event.AniCareException;
 import sep.software.anicare.callback.DialogCallback;
-import sep.software.anicare.service.AniCareServiceAzure;
-import sep.software.anicare.service.BlobStorageServiceAzure;
+import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import sep.software.anicare.view.AniCareAlertDialog;
@@ -17,8 +16,7 @@ public abstract class AniCareActivity extends Activity {
 
     protected Activity mThisActivity;
     protected AniCareApp mAppContext;
-    protected AniCareServiceAzure mAniCareService;
-    protected BlobStorageServiceAzure mBlobStorageService;
+    protected AniCareService mAniCareService;
     protected ObjectPreferenceUtil mObjectPreference;
 
     @Override
@@ -30,7 +28,6 @@ public abstract class AniCareActivity extends Activity {
 
         mAppContext = AniCareApp.getAppContext();
         mAniCareService = mAppContext.getAniCareService();
-        mBlobStorageService = mAppContext.getBlobStorageService();
         mObjectPreference = mAppContext.getObjectPreference();
 
         bindViews();

@@ -3,29 +3,20 @@
 
     <string name="facebook_app_id">652540274852758</string>
     <string name="facebook_login">Login with Facebook</string>
-
     <string name="kakao_app_key">41ef00b068314b2c961dbcc0c77ffe86</string>
     <string name="kakao_login">Login with Kakao</string>
-    
     <string name="app_name">AniCare</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
-    
     <string name="second_ago">sec ago</string>
     <string name="minute_ago">min ago</string>
     <string name="hour_ago">hour ago</string>
     <string name="day_ago">day ago</string>
     <string name="yesterday">Yesterday</string>
-    
-    
-    
-    
     <string name="action_settings">Settings</string>
-
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
-    
-    
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="anicare_menu">
         <item>친구 보기</item>
@@ -35,13 +26,15 @@
         <item>설정</item>
     </string-array>
 
-    
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
-    
+
     <string-array name="gender_types">
         <item>Female</item>
         <item>Male</item>
     </string-array>
+
+    <string name="title_activity_user_setting">UserSettingActivity</string>
+    <string name="title_activity_pet_setting">PetSettingActivity</string>
 
 </resources>

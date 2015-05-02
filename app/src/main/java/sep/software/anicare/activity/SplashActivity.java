@@ -9,7 +9,6 @@ import sep.software.anicare.event.AniCareException;
 import sep.software.anicare.callback.EntityCallback;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
-import sep.software.anicare.service.BlobStorageServiceAzure;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.AsyncChainer.Chainable;
@@ -188,7 +187,7 @@ public class SplashActivity extends AniCareActivity {
 
                     protected void onPostExecute(Bitmap result) {
                         AsyncChainer.notifyNext(obj, result);
-                    };
+                    }
 
                 }).execute();
 
@@ -199,15 +198,14 @@ public class SplashActivity extends AniCareActivity {
             public void doNext(final Object obj, Object... params) {
                 Bitmap profileImage = (Bitmap) params[0];
                 Bitmap profileImageBitmap = ImageUtil.refineSquareImage(profileImage, ImageUtil.PROFILE_IMAGE_SIZE);
-                mBlobStorageService.uploadBitmapAsync(BlobStorageServiceAzure.CONTAINER_USER_PROFILE, mObjectPreference.getClass(AniCareUser.class).getId(),
-                        profileImageBitmap, new EntityCallback<String>() {
-
-                            @Override
-                            public void onCompleted(String entity) {
-                                AniCareApp.getAppContext().dismissProgressDialog();
-                                AsyncChainer.notifyNext(obj);
-                            }
-                        });
+                String userId = mObjectPreference.getClass(AniCareUser.class).getId();
+                mAniCareService.uploadUserImage(userId, profileImage, new EntityCallback<String>() {
+                    @Override
+                    public void onCompleted(String entity) {
+                        AniCareApp.getAppContext().dismissProgressDialog();
+                        AsyncChainer.notifyNext(obj);
+                    }
+                });
 
             }
         }, new Chainable(){

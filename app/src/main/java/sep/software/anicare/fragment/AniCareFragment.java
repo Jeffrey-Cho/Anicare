@@ -1,8 +1,7 @@
 package sep.software.anicare.fragment;
 
 import sep.software.anicare.AniCareApp;
-import sep.software.anicare.service.AniCareServiceAzure;
-import sep.software.anicare.service.BlobStorageServiceAzure;
+import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,8 +10,7 @@ public abstract class AniCareFragment extends Fragment {
 	protected Activity mThisActivity;
 	protected Fragment mThisFragment;
 	protected AniCareApp mAppContext;
-	protected AniCareServiceAzure mAniCareService;
-	protected BlobStorageServiceAzure mBlobStorageService;
+	protected AniCareService mAniCareService;
 	protected ObjectPreferenceUtil mObjectPreference;
 	
 	public AniCareFragment() {
@@ -23,7 +21,6 @@ public abstract class AniCareFragment extends Fragment {
 		
 		mAppContext = AniCareApp.getAppContext();
 		mAniCareService = mAppContext.getAniCareService();
-		mBlobStorageService = mAppContext.getBlobStorageService();
 		mObjectPreference = mAppContext.getObjectPreference();
 
         bindViews();

@@ -10,6 +10,7 @@ import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.callback.EntityCallback;
 import sep.software.anicare.model.AniCareUser;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -20,13 +21,15 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import de.greenrobot.event.EventBus;
+import sep.software.anicare.util.AsyncChainer;
 
 
 public class AniCareServiceAzure implements AniCareService {
 
-    private static MobileServiceClient mobileClient;
-    private static final String AZURE_URL = "https://ani-care.azure-mobile.net/";
-    private static final String AZURE_KEY = "yHhHAGwAeqdZDFgMZkXYWVZEgQucFr12";
+    private MobileServiceClient mobileClient;
+    private final String AZURE_URL = "https://ani-care.azure-mobile.net/";
+    private final String AZURE_KEY = "yHhHAGwAeqdZDFgMZkXYWVZEgQucFr12";
+    private BlobStorageService mBlobStorageService;
 
 
     public AniCareServiceAzure(Context context) {
@@ -40,6 +43,7 @@ public class AniCareServiceAzure implements AniCareService {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        mBlobStorageService = new BlobStorageService();
     }
 
     public void login(AniCareUser user, final EntityCallback<AniCareUser> callback) {
@@ -57,6 +61,15 @@ public class AniCareServiceAzure implements AniCareService {
                 callback.onCompleted(new Gson().fromJson(arg0, AniCareUser.class));
             }
         });
+    }
+
+    public boolean isLoggedIn() {
+        AniCareUser user = AniCareApp.getAppContext().getObjectPreference().getClass(AniCareUser.class);
+        return user.getId() != null && !user.getId().equals("");
+    }
+
+    public void logout() {
+        AniCareApp.getAppContext().getObjectPreference().removeClass(AniCareUser.class);
     }
 
     public void getGcmRegistrationId(final EntityCallback<String> callback) {
@@ -89,18 +102,39 @@ public class AniCareServiceAzure implements AniCareService {
             public void onCompleted(JsonElement arg0, Exception arg1,
                                     ServiceFilterResponse arg2) {
                 // TODO Auto-generated method stub
-                callback.onCompleted(new Gson().fromJson(arg0, AniCareMessage.class));
+                if (arg1 == null) {
+                    callback.onCompleted(new Gson().fromJson(arg0, AniCareMessage.class));
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+
             }
         });
     }
 
-    public boolean isLoggedIn() {
-        AniCareUser user = AniCareApp.getAppContext().getObjectPreference().getClass(AniCareUser.class);
-        return user.getId() != null && !user.getId().equals("");
+    @Override
+    public void uploadUserImage(String id, Bitmap image, final EntityCallback<String> callback) {
+        mBlobStorageService.uploadBitmapAsync(BlobStorageService.CONTAINER_USER_PROFILE, id, image,
+                new EntityCallback<String>() {
+
+            @Override
+            public void onCompleted(String entity) {
+                callback.onCompleted(entity);
+            }
+        });
     }
 
-    public void logout() {
-        AniCareApp.getAppContext().getObjectPreference().removeClass(AniCareUser.class);
+    @Override
+    public void uploadPetImage(String id, Bitmap image, final EntityCallback<String> callback) {
+        mBlobStorageService.uploadBitmapAsync(BlobStorageService.CONTAINER_IMAGE, id, image,
+                new EntityCallback<String>() {
+
+            @Override
+            public void onCompleted(String entity) {
+                callback.onCompleted(entity);
+            }
+        });
+
     }
 
 }
