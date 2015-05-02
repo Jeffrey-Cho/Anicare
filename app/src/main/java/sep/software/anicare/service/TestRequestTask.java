@@ -2,7 +2,7 @@ package sep.software.anicare.service;
 
 import org.apache.http.client.methods.HttpRequestBase;
 
-import sep.software.anicare.interfaces.JsonCallback;
+import sep.software.anicare.callback.JsonCallback;
 import sep.software.anicare.model.AniCareUser;
 import android.os.AsyncTask;
 

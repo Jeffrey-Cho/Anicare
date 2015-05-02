@@ -2,22 +2,23 @@ package sep.software.anicare.activity;
 
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.interfaces.DialogCallback;
-import sep.software.anicare.service.AniCareService;
-import sep.software.anicare.service.BlobStorageService;
+import sep.software.anicare.callback.DialogCallback;
+import sep.software.anicare.service.AniCareServiceAzure;
+import sep.software.anicare.service.BlobStorageServiceAzure;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import sep.software.anicare.view.AniCareAlertDialog;
 import android.app.Activity;
 import android.os.Bundle;
+
 import de.greenrobot.event.EventBus;
 
-public class AniCareActivity extends Activity {
+public abstract class AniCareActivity extends Activity {
 
     protected Activity mThisActivity;
     protected AniCareApp mAppContext;
-    protected AniCareService mAniCareService;
-    protected BlobStorageService mBlobStorageService;
+    protected AniCareServiceAzure mAniCareService;
+    protected BlobStorageServiceAzure mBlobStorageService;
     protected ObjectPreferenceUtil mObjectPreference;
 
     @Override
@@ -32,6 +33,8 @@ public class AniCareActivity extends Activity {
         mBlobStorageService = mAppContext.getBlobStorageService();
         mObjectPreference = mAppContext.getObjectPreference();
 
+        bindViews();
+        initialize();
     }
 
     public void onEvent(AniCareException exception){
@@ -58,4 +61,7 @@ public class AniCareActivity extends Activity {
     protected boolean isInternetAvailable() {
         return mAppContext.isInternetAvailable();
     }
+
+    protected abstract void bindViews();
+    protected abstract void initialize();
 }

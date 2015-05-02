@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import sep.software.anicare.interfaces.JsonCallback;
+import sep.software.anicare.callback.JsonCallback;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

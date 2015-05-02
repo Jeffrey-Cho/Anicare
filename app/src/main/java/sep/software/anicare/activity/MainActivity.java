@@ -1,7 +1,11 @@
 package sep.software.anicare.activity;
 
 import sep.software.anicare.R;
+import sep.software.anicare.fragment.HistoryFragment;
 import sep.software.anicare.fragment.ListFriendFragment;
+import sep.software.anicare.fragment.MakeFriendFragment;
+import sep.software.anicare.fragment.MessageBoxFragment;
+import sep.software.anicare.fragment.SettingFragment;
 import sep.software.anicare.view.CircleImageView;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -18,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -32,8 +37,9 @@ public class MainActivity extends AniCareActivity {
     private String[] mPlanetTitles;
 
     private CircleImageView mProfileImage;
+    private TextView mPetName;
 
-    private String imageUrl =
+    private String sampleImageUrl =
             "http://images5.fanpop.com/image/photos/27300000/Doggy-dogs-27378007-400-300.jpg";
 
     @Override
@@ -41,27 +47,29 @@ public class MainActivity extends AniCareActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTitle = mDrawerTitle = getTitle();
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
+    }
+
+    @Override
+    protected void bindViews() {
         mPlanetTitles = getResources().getStringArray(R.array.anicare_menu);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mRelativeLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mProfileImage  = (CircleImageView) findViewById(R.id.drawer_profile);
+        mPetName = (TextView) findViewById(R.id.pet_name);
+    }
 
-        Picasso.with(mAppContext).load(imageUrl).into(mProfileImage);
-//	        mProfileImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_launcher));
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+    @Override
+    protected void initialize() {
 
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mPlanetTitles));
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
@@ -83,10 +91,18 @@ public class MainActivity extends AniCareActivity {
             }
         };
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
+        mTitle = getTitle();
+        mDrawerTitle = "Select Menu";
+
+        Picasso.with(mAppContext).load(sampleImageUrl).into(mProfileImage);
+        mPetName.setText("Happy");
     }
 
     @Override
@@ -96,8 +112,6 @@ public class MainActivity extends AniCareActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mRelativeLayout);
-//	        menu.findItem(R.id.action_websearch).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -106,22 +120,7 @@ public class MainActivity extends AniCareActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle action buttons
-//	        switch(item.getItemId()) {
-//	        case R.id.action_websearch:
-//	            // create intent to perform web search for this planet
-//	            Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-//	            intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-//	            // catch event that there's no activity to handle intent
-//	            if (intent.resolveActivity(getPackageManager()) != null) {
-//	                startActivity(intent);
-//	            } else {
-//	                Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-//	            }
-//	            return true;
-//	        default:
         return super.onOptionsItemSelected(item);
-//	        }
     }
 
 
@@ -135,10 +134,31 @@ public class MainActivity extends AniCareActivity {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = new ListFriendFragment();
-//	        Bundle args = new Bundle();
-//	        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-//	        fragment.setArguments(args);
+        Fragment fragment = null;
+
+        switch (position) {
+            case 0:
+                fragment = new ListFriendFragment();
+                break;
+            case 1:
+                fragment = new MakeFriendFragment();
+                break;
+            case 2:
+                fragment = new MessageBoxFragment();
+                break;
+            case 3:
+                fragment = new HistoryFragment();
+                break;
+            case 4:
+                fragment = new SettingFragment();
+                break;
+            default:
+                break;
+        }
+
+//        Bundle args = new Bundle();
+//        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+//        fragment.setArguments(args);
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();

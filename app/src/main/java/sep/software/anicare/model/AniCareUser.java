@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
-public class AniCareUser implements Parcelable {
+public class AniCareUser extends AniCareModel {
     private String id;
     private String name;
     private String platformId;
@@ -44,10 +44,6 @@ public class AniCareUser implements Parcelable {
         this.imageUrl = imageUrl;
     }
 
-    public String toString() {
-        return new Gson().toJson(this);
-    }
-
     public static AniCareUser rand() {
         AniCareUser user = new AniCareUser();
         user.setName(RandomUtil.getName());
@@ -56,14 +52,16 @@ public class AniCareUser implements Parcelable {
         return user;
     }
 
-    @Override
-    public int describeContents() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        // TODO Auto-generated method stub
+    /*
+	 * Parcelable
+	 */
+    public static final Parcelable.Creator<AniCareUser> CREATOR = new Creator<AniCareUser>(){
+        public AniCareUser createFromParcel(Parcel in){
+            return toClass(in, AniCareUser.class);
+        }
+        public AniCareUser[] newArray(int size){
+            return new AniCareUser[size];
+        }
+    };
 
-    }
 }

@@ -6,10 +6,10 @@ import java.util.Arrays;
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.callback.EntityCallback;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
-import sep.software.anicare.service.BlobStorageService;
+import sep.software.anicare.service.BlobStorageServiceAzure;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.AsyncChainer.Chainable;
@@ -26,7 +26,6 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-import com.google.gson.Gson;
 /*
 import com.kakao.APIErrorResult;
 import com.kakao.MeResponseCallback;
@@ -56,15 +55,25 @@ public class SplashActivity extends AniCareActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        getActionBar().hide();
-
-        initalizeFacebook(savedInstanceState);
-
-//        initalizeKakao();
-
+        mFacebookUiHelper.onCreate(savedInstanceState);
     }
 
-    private void initalizeFacebook(Bundle savedInstanceState) {
+    @Override
+    protected void bindViews() {
+        mFacebookButton = (LoginButton)findViewById(R.id.login_facebook);
+//        mKakaoButton = (com.kakao.widget.LoginButton)findViewById(R.id.login_kakao);
+    }
+
+    @Override
+    protected void initialize() {
+        getActionBar().hide();
+
+        initializeFacebook();
+
+//        initializeKakao();
+    }
+
+    private void initializeFacebook() {
 
         mFacebookUiHelper = new UiLifecycleHelper(mThisActivity, new StatusCallback() {
 
@@ -72,9 +81,7 @@ public class SplashActivity extends AniCareActivity {
             public void call(com.facebook.Session session, SessionState state, Exception exception) {
             }
         });
-        mFacebookUiHelper.onCreate(savedInstanceState);
 
-        mFacebookButton = (LoginButton)findViewById(R.id.login_facebook);
 
         if (mAniCareService.isLoggedIn()) {
             mFacebookButton.setVisibility(View.GONE);
@@ -107,9 +114,8 @@ public class SplashActivity extends AniCareActivity {
 
     }
 
-//    private void initalizeKakao() {
+//    private void initializeKakao() {
 //
-//        mKakaoButton = (com.kakao.widget.LoginButton)findViewById(R.id.login_kakao);
 //
 //        session = Session.getCurrentSession();
 //        session.addCallback(mySessionCallback);
@@ -193,7 +199,7 @@ public class SplashActivity extends AniCareActivity {
             public void doNext(final Object obj, Object... params) {
                 Bitmap profileImage = (Bitmap) params[0];
                 Bitmap profileImageBitmap = ImageUtil.refineSquareImage(profileImage, ImageUtil.PROFILE_IMAGE_SIZE);
-                mBlobStorageService.uploadBitmapAsync(BlobStorageService.CONTAINER_USER_PROFILE, mObjectPreference.getClass(AniCareUser.class).getId(),
+                mBlobStorageService.uploadBitmapAsync(BlobStorageServiceAzure.CONTAINER_USER_PROFILE, mObjectPreference.getClass(AniCareUser.class).getId(),
                         profileImageBitmap, new EntityCallback<String>() {
 
                             @Override

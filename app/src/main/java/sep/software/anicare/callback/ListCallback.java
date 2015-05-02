@@ -1,4 +1,4 @@
-package sep.software.anicare.interfaces;
+package sep.software.anicare.callback;
 
 import java.util.List;
 

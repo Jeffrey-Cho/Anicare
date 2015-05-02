@@ -1,4 +1,4 @@
-package sep.software.anicare.interfaces;
+package sep.software.anicare.callback;
 
 import com.google.gson.JsonElement;
 

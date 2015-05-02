@@ -14,8 +14,8 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicNameValuePair;
 
 import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.interfaces.EntityCallback;
-import sep.software.anicare.interfaces.JsonCallback;
+import sep.software.anicare.callback.EntityCallback;
+import sep.software.anicare.callback.JsonCallback;
 import android.net.Uri;
 
 import com.google.gson.Gson;

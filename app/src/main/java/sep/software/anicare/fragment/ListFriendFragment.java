@@ -16,4 +16,14 @@ public class ListFriendFragment extends AniCareFragment {
 
         return rootView;
     }
+
+    @Override
+    protected void bindViews() {
+
+    }
+
+    @Override
+    protected void initialize() {
+
+    }
 }
