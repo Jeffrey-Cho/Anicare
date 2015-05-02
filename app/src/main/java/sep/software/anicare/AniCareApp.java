@@ -4,6 +4,7 @@ package sep.software.anicare;
 
 import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.service.AniCareServiceAzure;
+import sep.software.anicare.service.AniCareServiceTest;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import android.app.Application;
 import android.app.ProgressDialog;
@@ -32,7 +33,10 @@ public class AniCareApp extends Application {
         // initialize KakaoTalk
 //        Session.initialize(this);
         // initialize AniCareService
-        mAniCareService = new AniCareServiceAzure(instance);
+        if (AniCareProtocol.isDebugMode)
+            mAniCareService = new AniCareServiceTest();
+        else
+            mAniCareService = new AniCareServiceAzure(instance);
         // initialize ObjectPreferenceUtil
         mObjectPreference = new ObjectPreferenceUtil(instance);
 

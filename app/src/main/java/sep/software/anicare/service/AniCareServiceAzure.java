@@ -5,9 +5,11 @@ import java.net.MalformedURLException;
 
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.AniCareProtocol;
+import sep.software.anicare.callback.ListCallback;
 import sep.software.anicare.event.AniCareException;
 import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.callback.EntityCallback;
+import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -21,6 +23,7 @@ import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import de.greenrobot.event.EventBus;
+import sep.software.anicare.model.CareHistory;
 import sep.software.anicare.util.AsyncChainer;
 
 
@@ -72,6 +75,37 @@ public class AniCareServiceAzure implements AniCareService {
         AniCareApp.getAppContext().getObjectPreference().removeClass(AniCareUser.class);
     }
 
+
+    @Override
+    public void putUser(AniCareUser user, EntityCallback<AniCareUser> callback) {
+
+    }
+
+    @Override
+    public boolean isUserSet() {
+        return false;
+    }
+
+    @Override
+    public void putPet(AniCarePet pet, EntityCallback<AniCarePet> callback) {
+
+    }
+
+    @Override
+    public boolean isPetSet() {
+        return false;
+    }
+
+    @Override
+    public void listPet(int page, String userId, ListCallback<AniCarePet> callback) {
+
+    }
+
+    @Override
+    public void makeFriend(AniCarePet pet, EntityCallback<AniCarePet> callback) {
+
+    }
+
     public void getGcmRegistrationId(final EntityCallback<String> callback) {
         (new AniCareAsyncTask<GoogleCloudMessaging, Void, String>() {
 
@@ -110,6 +144,11 @@ public class AniCareServiceAzure implements AniCareService {
 
             }
         });
+    }
+
+    @Override
+    public void listHistory(String userId, ListCallback<CareHistory> callback) {
+
     }
 
     @Override
