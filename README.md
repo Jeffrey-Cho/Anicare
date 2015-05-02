@@ -126,9 +126,9 @@ protected void initialize() {
 
 }
 ```
+[상위 클래스 선언](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L62)
 
-	* [상위 클래스 선언](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L62)
-	* [하위 클래스 구현](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/MainActivity.java#L57)
+[하위 클래스 구현](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/MainActivity.java#L57)
 
 2. 자주 쓰이는 객체들을 제공하여 하위 클래스에서 바로 사용할 수 있게 제공한다.
 	* [see here](https://github.com/Jeffrey-Cho/Anicare/blob/master/app/src/main/java/sep/software/anicare/activity/AniCareActivity.java#L17)
