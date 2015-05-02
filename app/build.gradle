@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://devrepo.kakao.com:8088/nexus/content/groups/public/"
+    }
+}
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        applicationId "sep.software.anicare"
+        minSdkVersion 18
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':facebook')
+    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.0.1'
+    compile 'com.kakao.sdk:usermgmt:1.0.39'
+}
