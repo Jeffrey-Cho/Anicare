@@ -48,23 +48,13 @@ public class MainActivity extends AniCareActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
-    }
-
-    @Override
-    protected void bindViews() {
         mPlanetTitles = getResources().getStringArray(R.array.anicare_menu);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mLinearLayout = (LinearLayout) findViewById(R.id.left_drawer);
         mDrawerList = (ListView) findViewById(R.id.drawer_list);
         mProfileImage  = (CircleImageView) findViewById(R.id.drawer_profile);
         mPetName = (TextView) findViewById(R.id.pet_name);
-    }
 
-    @Override
-    protected void initialize() {
 
         // set up the drawer's list view with items and click listener
         mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -104,6 +94,10 @@ public class MainActivity extends AniCareActivity {
 
         Picasso.with(mAppContext).load(sampleImageUrl).into(mProfileImage);
         mPetName.setText("Happy");
+
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
     }
 
     @Override

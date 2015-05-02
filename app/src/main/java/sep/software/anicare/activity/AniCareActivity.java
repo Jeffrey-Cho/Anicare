@@ -12,7 +12,7 @@ import android.os.Bundle;
 
 import de.greenrobot.event.EventBus;
 
-public abstract class AniCareActivity extends Activity {
+public class AniCareActivity extends Activity {
 
     protected Activity mThisActivity;
     protected AniCareApp mAppContext;
@@ -29,9 +29,6 @@ public abstract class AniCareActivity extends Activity {
         mAppContext = AniCareApp.getAppContext();
         mAniCareService = mAppContext.getAniCareService();
         mObjectPreference = mAppContext.getObjectPreference();
-
-        bindViews();
-        initialize();
     }
 
     public void onEvent(AniCareException exception){
@@ -59,6 +56,4 @@ public abstract class AniCareActivity extends Activity {
         return mAppContext.isInternetAvailable();
     }
 
-    protected abstract void bindViews();
-    protected abstract void initialize();
 }

@@ -16,6 +16,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_test"
-          android:title="TestActivity"
+          android:title="goto_test"
           android:showAsAction="ifRoom|withText" />
 </menu>

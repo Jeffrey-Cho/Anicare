@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import sep.software.anicare.R;
 
-public class PetSettingActivity extends Activity {
+public class PetSettingActivity extends AniCareActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

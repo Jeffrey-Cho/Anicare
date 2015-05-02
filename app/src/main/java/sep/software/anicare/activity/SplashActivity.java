@@ -54,25 +54,16 @@ public class SplashActivity extends AniCareActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mFacebookUiHelper.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void bindViews() {
-        mFacebookButton = (LoginButton)findViewById(R.id.login_facebook);
-//        mKakaoButton = (com.kakao.widget.LoginButton)findViewById(R.id.login_kakao);
-    }
-
-    @Override
-    protected void initialize() {
         getActionBar().hide();
 
-        initializeFacebook();
+        initializeFacebook(savedInstanceState);
 
 //        initializeKakao();
     }
 
-    private void initializeFacebook() {
+    private void initializeFacebook(Bundle savedInstanceState) {
+
+        mFacebookButton = (LoginButton) findViewById(R.id.login_facebook);
 
         mFacebookUiHelper = new UiLifecycleHelper(mThisActivity, new StatusCallback() {
 
@@ -81,6 +72,7 @@ public class SplashActivity extends AniCareActivity {
             }
         });
 
+        mFacebookUiHelper.onCreate(savedInstanceState);
 
         if (mAniCareService.isLoggedIn()) {
             mFacebookButton.setVisibility(View.GONE);

@@ -15,13 +15,4 @@ public class UserSettingActivity extends AniCareActivity {
         setContentView(R.layout.activity_user_setting);
     }
 
-    @Override
-    protected void bindViews() {
-
-    }
-
-    @Override
-    protected void initialize() {
-
-    }
 }

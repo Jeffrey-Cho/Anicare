@@ -6,7 +6,7 @@ import sep.software.anicare.util.ObjectPreferenceUtil;
 import android.app.Activity;
 import android.app.Fragment;
 
-public abstract class AniCareFragment extends Fragment {
+public class AniCareFragment extends Fragment {
 	protected Activity mThisActivity;
 	protected Fragment mThisFragment;
 	protected AniCareApp mAppContext;
@@ -23,10 +23,6 @@ public abstract class AniCareFragment extends Fragment {
 		mAniCareService = mAppContext.getAniCareService();
 		mObjectPreference = mAppContext.getObjectPreference();
 
-        bindViews();
-        initialize();
 	}
 
-    protected abstract void bindViews();
-    protected abstract void initialize();
 }
