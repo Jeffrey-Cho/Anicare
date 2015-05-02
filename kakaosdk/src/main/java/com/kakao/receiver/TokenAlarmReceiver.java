@@ -47,7 +47,7 @@ public class TokenAlarmReceiver extends BroadcastReceiver {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
                 return powerManager.isScreenOn();
             } else {
-                return powerManager.isInteractive();
+                //return powerManager.isInteractive();
             }
         } catch (Exception e) {
             // nothing to do;
