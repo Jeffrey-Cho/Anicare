@@ -31,7 +31,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':facebook')
+//    compile project(':kakaosdk')
     compile 'com.google.android.gms:play-services:7.3.0'
     //compile 'com.facebook.android:facebook-android-sdk:4.0.1'
-    //compile 'com.kakao.sdk:usermgmt:1.0.39'
+//    compile 'com.kakao.sdk:usermgmt:1.0.52'
 }

@@ -1,1 +1,2 @@
-include ':app', ':facebook', ':kakaosdk'
+include ':app', ':facebook'
+//        ':kakaosdk'

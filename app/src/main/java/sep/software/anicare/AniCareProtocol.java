@@ -6,5 +6,5 @@ public class AniCareProtocol {
     // ID for GCM registration id
 	public static final String GCM_SENDER_ID = "111024823235";
 
-    public static final boolean isDebugMode = false;
+    public static final boolean isDebugMode = true;
 }

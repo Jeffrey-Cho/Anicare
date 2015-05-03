@@ -10,8 +10,21 @@ public class AniCarePet extends AniCareModel {
     private String id;
     private String name;
 
+    public String getId(){ return id; }
+    public void setId(String id) { this.id = id; }
 
 
+
+    public static AniCarePet rand() {
+        return rand(false);
+    }
+
+    public static AniCarePet rand(boolean hasId) {
+        AniCarePet pet = new AniCarePet();
+
+
+        return pet;
+    }
 
     /*
 	 * Parcelable

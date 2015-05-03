@@ -26,6 +26,7 @@ public interface AniCareService {
      */
     public void putUser(AniCareUser user, final EntityCallback<AniCareUser> callback);
     public boolean isUserSet();
+    public AniCareUser getCurrentUser();
 
     /*
         PetSetting API
@@ -60,6 +61,7 @@ public interface AniCareService {
      */
     public void uploadUserImage(String id, Bitmap image, EntityCallback<String> callback);
     public void uploadPetImage(String id, Bitmap image, EntityCallback<String> callback);
-
+    public String getUserImageUrl(String id);
+    public String getPetImageUrl(String id);
 
 }

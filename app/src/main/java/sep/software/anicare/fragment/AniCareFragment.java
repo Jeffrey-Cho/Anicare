@@ -1,6 +1,7 @@
 package sep.software.anicare.fragment;
 
 import sep.software.anicare.AniCareApp;
+import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import android.app.Activity;
@@ -12,6 +13,7 @@ public class AniCareFragment extends Fragment {
 	protected AniCareApp mAppContext;
 	protected AniCareService mAniCareService;
 	protected ObjectPreferenceUtil mObjectPreference;
+    protected AniCareUser mThisUser;
 	
 	public AniCareFragment() {
 		// TODO Auto-generated constructor stub
@@ -22,6 +24,7 @@ public class AniCareFragment extends Fragment {
 		mAppContext = AniCareApp.getAppContext();
 		mAniCareService = mAppContext.getAniCareService();
 		mObjectPreference = mAppContext.getObjectPreference();
+//        mThisUser = mObjectPreference.get("user")
 
 	}
 

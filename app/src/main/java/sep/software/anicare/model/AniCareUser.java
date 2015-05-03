@@ -45,9 +45,16 @@ public class AniCareUser extends AniCareModel {
     }
 
     public static AniCareUser rand() {
+        return rand(false);
+    }
+    public static AniCareUser rand(boolean hasId) {
+
         AniCareUser user = new AniCareUser();
+        if (hasId)
+            user.setId(RandomUtil.getId());
+
         user.setName(RandomUtil.getName());
-        user.setPlatformId(RandomUtil.getString(10));
+        user.setPlatformId(RandomUtil.getId());
         user.setRegistrationId(RandomUtil.getString(10));
         return user;
     }

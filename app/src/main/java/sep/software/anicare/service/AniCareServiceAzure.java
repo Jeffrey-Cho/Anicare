@@ -61,14 +61,16 @@ public class AniCareServiceAzure implements AniCareService {
             public void onCompleted(JsonElement arg0, Exception arg1,
                                     ServiceFilterResponse arg2) {
                 // TODO Auto-generated method stub
-                callback.onCompleted(new Gson().fromJson(arg0, AniCareUser.class));
+                AniCareUser user = new Gson().fromJson(arg0, AniCareUser.class);
+                AniCareApp.getAppContext().getObjectPreference().putClass(user);
+                callback.onCompleted(user);
             }
         });
     }
 
     public boolean isLoggedIn() {
         AniCareUser user = AniCareApp.getAppContext().getObjectPreference().getClass(AniCareUser.class);
-        return user.getId() != null && !user.getId().equals("");
+        return user != null && user.getId() != null && !user.getId().equals("");
     }
 
     public void logout() {
@@ -84,6 +86,10 @@ public class AniCareServiceAzure implements AniCareService {
     @Override
     public boolean isUserSet() {
         return false;
+    }
+
+    public AniCareUser getCurrentUser() {
+        return null;
     }
 
     @Override
@@ -173,7 +179,15 @@ public class AniCareServiceAzure implements AniCareService {
                 callback.onCompleted(entity);
             }
         });
-
     }
 
+    @Override
+    public String getUserImageUrl(String id) {
+        return null;
+    }
+
+    @Override
+    public String getPetImageUrl(String id) {
+        return null;
+    }
 }

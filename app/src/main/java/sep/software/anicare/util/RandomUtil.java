@@ -53,6 +53,9 @@ public class RandomUtil {
 		}
 		return num;
 	}
+    public static String getId() {
+        return getString(6).toUpperCase() + "-" + getInt(1000) + getString(6).toUpperCase() + "-" + getInt(1000);
+    }
 	public static String getName() {
 		return nameList.get(getInt(nameList.size()));
 	}

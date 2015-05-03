@@ -6,6 +6,7 @@ import sep.software.anicare.fragment.ListFriendFragment;
 import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
 import sep.software.anicare.fragment.SettingFragment;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.CircleImageView;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -101,6 +102,28 @@ public class MainActivity extends AniCareActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        checkSettings();
+    }
+
+    private void checkSettings() {
+        if (!mAniCareService.isUserSet()) {
+            Intent intent = new Intent();
+            intent.setClass(this, UserSettingActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        if (!mAniCareService.isPetSet()) {
+            Intent intent = new Intent();
+            intent.setClass(this, PetSettingActivity.class);
+            startActivity(intent);
+            return;
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main_, menu);
@@ -122,7 +145,9 @@ public class MainActivity extends AniCareActivity {
         switch(item.getItemId()) {
             case R.id.action_test:
                 // create intent to perform web search for this planet
-                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+//                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, TestActivity.class);
 //                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
                 // catch event that there's no activity to handle intent
                 startActivity(intent);

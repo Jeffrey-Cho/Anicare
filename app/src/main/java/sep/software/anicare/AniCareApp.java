@@ -1,6 +1,5 @@
 package sep.software.anicare;
 
-//import com.kakao.Session;
 
 import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.service.AniCareServiceAzure;
@@ -11,6 +10,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
+//import com.kakao.Session;
 
 public class AniCareApp extends Application {
     private static volatile AniCareApp instance = null;
@@ -32,11 +33,13 @@ public class AniCareApp extends Application {
 
         // initialize KakaoTalk
 //        Session.initialize(this);
+
         // initialize AniCareService
         if (AniCareProtocol.isDebugMode)
             mAniCareService = new AniCareServiceTest();
         else
             mAniCareService = new AniCareServiceAzure(instance);
+
         // initialize ObjectPreferenceUtil
         mObjectPreference = new ObjectPreferenceUtil(instance);
 

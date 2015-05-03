@@ -20,20 +20,22 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.facebook.AppEventsLogger;
+import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
-/*
-import com.kakao.APIErrorResult;
-import com.kakao.MeResponseCallback;
-import com.kakao.Session;
-import com.kakao.SessionCallback;
-import com.kakao.UserManagement;
-import com.kakao.UserProfile;
-import com.kakao.exception.KakaoException;
-*/
+
+import com.google.gson.Gson;
+//import com.kakao.APIErrorResult;
+//import com.kakao.MeResponseCallback;
+//import com.kakao.Session;
+//import com.kakao.SessionCallback;
+//import com.kakao.UserManagement;
+//import com.kakao.UserProfile;
+//import com.kakao.exception.KakaoException;
+
 import com.squareup.picasso.Picasso;
 
 import de.greenrobot.event.EventBus;
@@ -153,7 +155,6 @@ public class SplashActivity extends AniCareActivity {
                     @Override
                     public void onCompleted(AniCareUser entity) {
                         // TODO Auto-generated method stub
-                        mObjectPreference.putClass(entity);
                         AniCareLogger.log(entity);
                         AsyncChainer.notifyNext(object);
                     }
