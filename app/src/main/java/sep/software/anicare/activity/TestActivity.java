@@ -37,7 +37,9 @@ public class TestActivity extends AniCareActivity {
         removeUserSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mObjectPreference.remove("userSetting");
+                AniCareUser user = mObjectPreference.get("user",AniCareUser.class);
+                user.setLocation(null);
+                mObjectPreference.put("user",user);
                 textView.setText("Remove User Setting");
             }
         });
@@ -45,7 +47,7 @@ public class TestActivity extends AniCareActivity {
         removePetSettingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mObjectPreference.remove("petSetting");
+                mObjectPreference.remove("user");
                 textView.setText("Remove Pet Setting");
             }
         });
@@ -65,15 +67,16 @@ public class TestActivity extends AniCareActivity {
         seeCurrentUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText(mObjectPreference.get("userSetting", AniCareUser.class).toString());
+                textView.setText(mObjectPreference.get("user", AniCareUser.class).toString());
             }
         });
 
         seeCurrentPet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText(mObjectPreference.get("petSetting", AniCarePet.class).toString());
+                textView.setText(mObjectPreference.get("pet", AniCarePet.class).toString());
             }
         });
+
     }
 }

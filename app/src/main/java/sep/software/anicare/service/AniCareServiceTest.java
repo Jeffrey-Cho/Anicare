@@ -1,6 +1,10 @@
 package sep.software.anicare.service;
 
 import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +16,7 @@ import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.model.CareHistory;
+import sep.software.anicare.util.ObjectPreferenceUtil;
 import sep.software.anicare.util.RandomUtil;
 
 /**
@@ -19,15 +24,17 @@ import sep.software.anicare.util.RandomUtil;
  */
 public class AniCareServiceTest implements AniCareService {
 
+    private ObjectPreferenceUtil mObjectPreference = AniCareApp.getAppContext().getObjectPreference();
+
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
     private List<CareHistory> historyList = new ArrayList<CareHistory>();
 
     public AniCareServiceTest() {
-        for (int i = 0 ; i < 20 ; i++) {
+        for (int i = 0 ; i < 10 ; i++) {
             petList.add(AniCarePet.rand(true));
         }
 
-        for (int i = 0 ; i < 20 ; i++) {
+        for (int i = 0 ; i < 10 ; i++) {
             historyList.add(CareHistory.rand(true));
         }
 
@@ -45,52 +52,57 @@ public class AniCareServiceTest implements AniCareService {
     public void login(AniCareUser user, EntityCallback<AniCareUser> callback) {
         delay();
         user.setId(RandomUtil.getId());
-        AniCareApp.getAppContext().getObjectPreference().put("login", user);
+        mObjectPreference.put("user", user);
         callback.onCompleted(user);
     }
 
     @Override
     public void logout() {
         com.facebook.Session.getActiveSession().close();
-        AniCareApp.getAppContext().getObjectPreference().remove("login");
+        mObjectPreference.remove("user");
     }
 
     @Override
     public boolean isLoggedIn() {
-        AniCareUser user = AniCareApp.getAppContext().getObjectPreference().get("login", AniCareUser.class);
+        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
+        if (user == null) return false;
         return user != null && user.getId() != null && !user.getId().equals("");
     }
 
     @Override
     public void putUser(AniCareUser user, EntityCallback<AniCareUser> callback) {
         delay();
-        user.setId(RandomUtil.getId());
-        AniCareApp.getAppContext().getObjectPreference().put("userSetting", user);
+        mObjectPreference.put("user", user);
         callback.onCompleted(user);
     }
 
     @Override
     public boolean isUserSet() {
-        AniCareUser user = AniCareApp.getAppContext().getObjectPreference().get("userSetting", AniCareUser.class);
-        return user != null && user.getId() != null && !user.getId().equals("");
+        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
+
+        if (user != null) {
+            if (user.getId() != null && !user.getId().equals("") |
+                    user.getLocation() != null && !"".equals(user.getLocation())) return true;
+        }
+        return false;
     }
 
     @Override
     public AniCareUser getCurrentUser() {
-        return null;
+        return mObjectPreference.get("user", AniCareUser.class);
     }
 
     @Override
     public void putPet(AniCarePet pet, EntityCallback<AniCarePet> callback) {
         delay();
         pet.setId(RandomUtil.getId());
-        AniCareApp.getAppContext().getObjectPreference().put("petSetting",pet);
+        mObjectPreference.put("pet",pet);
         callback.onCompleted(pet);
     }
 
     @Override
     public boolean isPetSet() {
-        AniCarePet pet = AniCareApp.getAppContext().getObjectPreference().get("petSetting", AniCarePet.class);
+        AniCarePet pet = mObjectPreference.get("pet", AniCarePet.class);
         return pet != null && pet.getId() != null && !pet.getId().equals("");
     }
 
@@ -137,9 +149,22 @@ public class AniCareServiceTest implements AniCareService {
         callback.onCompleted(RandomUtil.getId());
     }
 
+    @Override
+    public void setUserImageIntro(String userId, ImageView view){
+        Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId)).into(view);
+    }
+
+    @Override
+    public void setPetImageIntro(String petId, ImageView view){
+        Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(petId)).into(view);
+    }
+
+    @Override
     public String getUserImageUrl(String id){
         return "http://thecontentwrangler.com/wp-content/uploads/2011/08/User.png";
     }
+
+    @Override
     public String getPetImageUrl(String id) {
         return "http://images5.fanpop.com/image/photos/27300000/Doggy-dogs-27378007-400-300.jpg";
     }

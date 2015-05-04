@@ -12,6 +12,23 @@ public class AniCareUser extends AniCareModel {
     private String platformId;
     private String registrationId;
     private String imageUrl;
+    private String location;
+    private String selfIntro;
+    private int point;
+    private int rawHouseType;
+    private boolean hasPet;
+    public enum HouseType {
+        HOUSE(0), APART(1),OFFICE_TEL(2);
+
+        private final int value;
+        HouseType(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
+
 
     public String getId() {
         return id;
@@ -43,6 +60,52 @@ public class AniCareUser extends AniCareModel {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+    public String getLocation() {
+        return location;
+    }
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSelfIntro() {
+        return selfIntro;
+    }
+
+    public void setSelfIntro(String selfIntro) {
+        this.selfIntro = selfIntro;
+    }
+
+    public int getPoint() {
+        return point;
+    }
+
+    public void setPoint(int point) {
+        this.point = point;
+    }
+
+    public int getRawHouseType() {
+        return rawHouseType;
+    }
+
+    public void setRawHouseType(int rawHouseType) {
+        this.rawHouseType = rawHouseType;
+    }
+
+    public HouseType getHouseType() {
+        return HouseType.values()[this.rawHouseType];
+    }
+
+    public void setHouseType(HouseType houseType) {
+        this.rawHouseType = houseType.getValue();
+    }
+
+    public boolean isHasPet() {
+        return hasPet;
+    }
+
+    public void setHasPet(boolean hasPet) {
+        this.hasPet = hasPet;
+    }
 
     public static AniCareUser rand() {
         return rand(false);
@@ -56,6 +119,11 @@ public class AniCareUser extends AniCareModel {
         user.setName(RandomUtil.getName());
         user.setPlatformId(RandomUtil.getId());
         user.setRegistrationId(RandomUtil.getString(10));
+        user.setLocation("Seoul");
+        user.setSelfIntro("Hello, my name is " + user.getName());
+        user.setPoint(RandomUtil.getInt(20));
+        user.setRawHouseType(RandomUtil.getInt(3));
+        user.setHasPet(RandomUtil.getBoolean());
         return user;
     }
 

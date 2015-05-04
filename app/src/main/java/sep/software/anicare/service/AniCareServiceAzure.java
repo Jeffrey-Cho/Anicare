@@ -13,6 +13,8 @@ import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
@@ -179,6 +181,16 @@ public class AniCareServiceAzure implements AniCareService {
                 callback.onCompleted(entity);
             }
         });
+    }
+
+    @Override
+    public void setUserImageIntro(String userId, ImageView view) {
+
+    }
+
+    @Override
+    public void setPetImageIntro(String petId, ImageView view) {
+
     }
 
     @Override

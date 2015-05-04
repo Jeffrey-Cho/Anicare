@@ -6,6 +6,7 @@ import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.Bundle;
 
 public class AniCareFragment extends Fragment {
 	protected Activity mThisActivity;
@@ -18,14 +19,19 @@ public class AniCareFragment extends Fragment {
 	public AniCareFragment() {
 		// TODO Auto-generated constructor stub
 		super();
-		mThisActivity = this.getActivity();
 		mThisFragment = this;
 		
 		mAppContext = AniCareApp.getAppContext();
 		mAniCareService = mAppContext.getAniCareService();
 		mObjectPreference = mAppContext.getObjectPreference();
-//        mThisUser = mObjectPreference.get("user")
+        mThisUser = mAniCareService.getCurrentUser();
 
 	}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mThisActivity = this.getActivity();
+    }
 
 }

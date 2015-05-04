@@ -34,6 +34,10 @@ public class UserSettingActivity extends AniCareActivity {
             @Override
             public void onClick(View v) {
                 AniCareUser user = AniCareUser.rand();
+                user.setId(mThisUser.getId());
+                user.setPlatformId(mThisUser.getPlatformId());
+                user.setRegistrationId(mThisUser.getRegistrationId());
+
                 mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                     @Override
                     public void onCompleted(AniCareUser entity) {

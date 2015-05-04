@@ -34,15 +34,14 @@ public class AniCareApp extends Application {
         // initialize KakaoTalk
 //        Session.initialize(this);
 
+        // initialize ObjectPreferenceUtil
+        mObjectPreference = new ObjectPreferenceUtil(instance);
+
         // initialize AniCareService
         if (AniCareProtocol.isDebugMode)
             mAniCareService = new AniCareServiceTest();
         else
             mAniCareService = new AniCareServiceAzure(instance);
-
-        // initialize ObjectPreferenceUtil
-        mObjectPreference = new ObjectPreferenceUtil(instance);
-
     }
 
     public AniCareService getAniCareService() {

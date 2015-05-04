@@ -144,12 +144,8 @@ public class MainActivity extends AniCareActivity {
         }
         switch(item.getItemId()) {
             case R.id.action_test:
-                // create intent to perform web search for this planet
-//                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
                 Intent intent = new Intent();
                 intent.setClass(MainActivity.this, TestActivity.class);
-//                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-                // catch event that there's no activity to handle intent
                 startActivity(intent);
                 return true;
             default:

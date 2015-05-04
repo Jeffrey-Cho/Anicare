@@ -11,6 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <include
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        layout="@layout/custom_progress_bar"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="240dp"

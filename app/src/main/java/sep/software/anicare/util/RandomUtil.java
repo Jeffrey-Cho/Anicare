@@ -65,6 +65,7 @@ public class RandomUtil {
 	public static String getUrl() {
 		return "http://www." + getString(8) + ".com";
 	}
+
 	private static List<String> nameList = new ArrayList<String>(){
 		/**
 		 * 
