@@ -18,6 +18,7 @@ import sep.software.anicare.callback.DialogCallback;
 import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.model.CareHistory;
 import sep.software.anicare.service.AniCareDBService;
 import sep.software.anicare.service.AniCareDBServicePreference;
 import sep.software.anicare.util.AniCareLogger;
@@ -44,15 +45,17 @@ public class TestActivity extends AniCareActivity {
 
         listView.setAdapter(adapter);
 
-        adapter.add("Remove User Setting");
+        adapter.add("Logout");
         adapter.add("Remove Pet Setting");
         adapter.add("Remove AniCareMessage DB");
+        adapter.add("Remove History DB");
 
         adapter.add("Read User Setting");
         adapter.add("Read Pet Setting");
         adapter.add("Read AniCareMessage DB");
+        adapter.add("Read History DB");
 
-        adapter.add("Logout");
+
 
 
         final AniCareMessage msg = AniCareMessage.rand();
@@ -66,27 +69,42 @@ public class TestActivity extends AniCareActivity {
                 String str;
                 switch (position) {
                     case 0:
-                        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-                        user.setLocation(null);
-                        mObjectPreference.put("user", user);
-                        str = "Done";
+                        mAniCareService.logout();
+                        Intent intent = new Intent();
+                        intent.setClass(mThisActivity, SplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case 1:
+                        mAniCareService.removePetSetting();
+                        str = "Removed Pet Setting";
                         new AlertDialog.Builder(mThisActivity)
                                 .setMessage(str)
                                 .setPositiveButton("ok", null)
                                 .show();
                         break;
 
-                    case 1:
-                        mObjectPreference.remove("user");
-//                        textView.setText("Remove Pet Setting");
-                        break;
-
                     case 2:
-                        mObjectPreference.remove("messageDB");
+                        dbService.deleteMessageAll();
+                        str = "Removed AniCareMessage DB";
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
                         break;
 
                     case 3:
-                        str = mObjectPreference.get("user", AniCareUser.class).toString();
+                        dbService.deleteHistoryAll();
+                        str = "Removed CareHistory DB";
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
+                        break;
+
+                    case 4:
+                        str = mAniCareService.getCurrentUser().toString();
 
                         new AlertDialog.Builder(mThisActivity)
                         .setMessage(str)
@@ -95,22 +113,32 @@ public class TestActivity extends AniCareActivity {
 
                         break;
 
-                    case 4:
-//                        textView.setText(mObjectPreference.get("pet", AniCarePet.class).toString());
-                        break;
-
                     case 5:
-                        List<AniCareMessage> list = dbService.listMessage();
-//                        textView.setText(list.toString());
+                        str = mAniCareService.getCurrentPet().toString();
+
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
+
                         break;
 
                     case 6:
-                        mAniCareService.logout();
-                        Intent intent = new Intent();
-                        intent.setClass(mThisActivity, SplashActivity.class);
-                        startActivity(intent);
-                        finish();
+                        str = dbService.listMessage().toString();
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
                         break;
+
+                    case 7:
+                        str = dbService.listHistory().toString();
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
+                        break;
+
                 }
 
             }

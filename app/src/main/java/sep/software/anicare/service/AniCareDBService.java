@@ -12,12 +12,14 @@ public interface AniCareDBService {
     public List<AniCareMessage> listMessage();
     public boolean addMessage(AniCareMessage message);
     public void deleteMessage(String id);
+    public void deleteMessageAll();
     public void updateMessage(String id, AniCareMessage message);
 
 
     public List<CareHistory> listHistory();
     public boolean addHistory(CareHistory history);
     public void deleteHistory(String id);
+    public void deleteHistoryAll();
     public void updateMessage(String id, CareHistory history);
 
 

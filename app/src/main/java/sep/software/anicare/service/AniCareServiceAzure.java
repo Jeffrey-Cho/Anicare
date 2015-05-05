@@ -2,6 +2,7 @@ package sep.software.anicare.service;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.AniCareProtocol;
@@ -104,10 +105,20 @@ public class AniCareServiceAzure implements AniCareService {
         return false;
     }
 
+    public AniCarePet getCurrentPet() {
+        return null;
+    }
+
+    @Override
+    public void removePetSetting() {
+
+    }
+
     @Override
     public void listPet(int page, String userId, ListCallback<AniCarePet> callback) {
 
     }
+
 
     @Override
     public void makeFriend(AniCarePet pet, EntityCallback<AniCarePet> callback) {
@@ -155,8 +166,13 @@ public class AniCareServiceAzure implements AniCareService {
     }
 
     @Override
-    public void listHistory(String userId, ListCallback<CareHistory> callback) {
+    public List<AniCareMessage> listMessage() {
+        return null;
+    }
 
+    @Override
+    public List<CareHistory> listHistory() {
+        return null;
     }
 
     @Override

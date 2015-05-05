@@ -54,6 +54,11 @@ public class AniCareDBServicePreference implements AniCareDBService {
     }
 
     @Override
+    public void deleteMessageAll() {
+        mObjectPreference.remove("messageDB");
+    }
+
+    @Override
     public void updateMessage(String id, AniCareMessage message) {
         List<AniCareMessage> list = listMessage();
         for (AniCareMessage msg : list) {
@@ -84,6 +89,11 @@ public class AniCareDBServicePreference implements AniCareDBService {
 
     @Override
     public void deleteHistory(String id) {
+
+    }
+
+    @Override
+    public void deleteHistoryAll() {
 
     }
 
