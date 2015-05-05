@@ -1,9 +1,9 @@
 package sep.software.anicare.service;
 
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
+import com.facebook.Session;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -16,6 +16,7 @@ import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.model.CareHistory;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 import sep.software.anicare.util.RandomUtil;
 
@@ -25,11 +26,14 @@ import sep.software.anicare.util.RandomUtil;
 public class AniCareServiceTest implements AniCareService {
 
     private ObjectPreferenceUtil mObjectPreference = AniCareApp.getAppContext().getObjectPreference();
+    private AniCareDBService mDbService;
 
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
     private List<CareHistory> historyList = new ArrayList<CareHistory>();
 
     public AniCareServiceTest() {
+        mDbService = new AniCareDBServicePreference();
+
         for (int i = 0 ; i < 10 ; i++) {
             petList.add(AniCarePet.rand(true));
         }
@@ -58,14 +62,18 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public void logout() {
-        com.facebook.Session.getActiveSession().close();
+        Session session = com.facebook.Session.getActiveSession();
+        if (session != null) session.close();
+
         mObjectPreference.remove("user");
+        mObjectPreference.remove("pet");
     }
 
     @Override
     public boolean isLoggedIn() {
         AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
         if (user == null) return false;
+        AniCareLogger.log("isLoggedIn : "+ user != null && user.getId() != null && !user.getId().equals(""));
         return user != null && user.getId() != null && !user.getId().equals("");
     }
 
@@ -79,9 +87,9 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public boolean isUserSet() {
         AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-
+        AniCareLogger.log("isUserSet : "+ user);
         if (user != null) {
-            if (user.getId() != null && !user.getId().equals("") |
+            if (user.getId() != null && !user.getId().equals("") &&
                     user.getLocation() != null && !"".equals(user.getLocation())) return true;
         }
         return false;
@@ -89,7 +97,9 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public AniCareUser getCurrentUser() {
-        return mObjectPreference.get("user", AniCareUser.class);
+        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
+        AniCareLogger.log("getCurrentUser : "+user);
+        return user;
     }
 
     @Override
@@ -104,6 +114,16 @@ public class AniCareServiceTest implements AniCareService {
     public boolean isPetSet() {
         AniCarePet pet = mObjectPreference.get("pet", AniCarePet.class);
         return pet != null && pet.getId() != null && !pet.getId().equals("");
+    }
+
+    @Override
+    public AniCarePet getCurrentPet() {
+        return mObjectPreference.get("pet", AniCarePet.class);
+    }
+
+    @Override
+    public void removePetSetting() {
+        mObjectPreference.remove("pet");
     }
 
     @Override
@@ -132,9 +152,13 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void listHistory(String userId, ListCallback<CareHistory> callback) {
-        delay();
-        callback.onCompleted(historyList, historyList.size());
+    public List<AniCareMessage> listMessage() {
+        return mDbService.listMessage();
+    }
+
+    @Override
+    public List<CareHistory> listHistory() {
+        return mDbService.listHistory();
     }
 
     @Override

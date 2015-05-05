@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.List;
+
 import sep.software.anicare.callback.ListCallback;
 import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.callback.EntityCallback;
@@ -35,6 +37,8 @@ public interface AniCareService {
      */
     public void putPet(AniCarePet pet, final EntityCallback<AniCarePet> callback);
     public boolean isPetSet();
+    public AniCarePet getCurrentPet();
+    public void removePetSetting();
 
     /*
         ListFriend API
@@ -47,16 +51,23 @@ public interface AniCareService {
     public void makeFriend(AniCarePet pet, final EntityCallback<AniCarePet> callback);
 
     /*
+        Match API
+     */
+//    public void match(AniCarePet pet, final EntityCallback<AniCareMessage> callback);
+
+
+    /*
         Message API (MessageBox Fragment)
      */
     // This method is used in SplashActivity
     public void getGcmRegistrationId(final EntityCallback<String> callback) ;
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback);
+    public List<AniCareMessage> listMessage();
 
     /*
         CareHistory API
      */
-    public void listHistory(String userId,  final ListCallback<CareHistory> callback);
+    public List<CareHistory> listHistory();
 
     /*
         BlobStorage API - To upload Bitmap Images

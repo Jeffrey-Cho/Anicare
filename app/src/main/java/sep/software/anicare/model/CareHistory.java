@@ -7,6 +7,7 @@ import sep.software.anicare.util.RandomUtil;
  */
 public class CareHistory extends AniCareModel {
     private String id;
+    private int point;
 
     public String getId() {
         return id;

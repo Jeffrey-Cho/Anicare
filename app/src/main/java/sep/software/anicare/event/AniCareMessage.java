@@ -1,31 +1,34 @@
 package sep.software.anicare.event;
 
-import sep.software.anicare.model.AniCareDateTime;
-import sep.software.anicare.util.RandomUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.GsonBuilder;
+import sep.software.anicare.model.AniCareDateTime;
+import sep.software.anicare.model.AniCareModel;
+import sep.software.anicare.util.RandomUtil;
 
-public class AniCareMessage implements Parcelable {
-	public static enum TYPE {
-		PUSH, MESSAGE;
+public class AniCareMessage extends AniCareModel {
+	public enum Type {
+		PUSH(0), MESSAGE(1);
+
+        private final int value;
+        Type(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
+        }
 	}
-	
+
 	private String id;
-	private TYPE rawType;
-	private String type;
+	private int rawType;
 	private String sender;
 	private String senderId;
 	private String receiver;
 	private String receiverId;
 	private String rawDateTime;
-	private AniCareDateTime dateTime;
 	private String relationId;
 	private String content;
-	
-	private static GsonBuilder gb = new GsonBuilder();
-	
 	
 	public String getId() {
 		return id;
@@ -35,20 +38,20 @@ public class AniCareMessage implements Parcelable {
 		this.id = id;
 	}
 
-	public TYPE getRawType() {
+	public Type getType() {
+		return Type.values()[this.rawType];
+	}
+
+	public void setType(Type type) {
+		this.rawType = type.getValue();
+	}
+
+	public int getRawType() {
 		return rawType;
 	}
 
-	public void setRawType(TYPE rawType) {
+	public void setRawType(int rawType) {
 		this.rawType = rawType;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public String getSender() {
@@ -92,11 +95,11 @@ public class AniCareMessage implements Parcelable {
 	}
 
 	public AniCareDateTime getDateTime() {
-		return dateTime;
+		return new AniCareDateTime(rawDateTime);
 	}
 
 	public void setDateTime(AniCareDateTime dateTime) {
-		this.dateTime = dateTime;
+		this.rawDateTime = dateTime.toString();
 	}
 
 	public String getRelationId() {
@@ -122,7 +125,7 @@ public class AniCareMessage implements Parcelable {
 	public static AniCareMessage rand() {
 		AniCareMessage msg = new AniCareMessage();
 		msg.id = RandomUtil.getString(10);
-		msg.type = RandomUtil.getInt(1) == 0 ? TYPE.PUSH.toString() : TYPE.MESSAGE.toString();
+		msg.rawType = RandomUtil.getInt(1) == 0 ? Type.PUSH.getValue() : Type.MESSAGE.getValue();
 		msg.sender = RandomUtil.getName();
 		msg.senderId = RandomUtil.getString(10);
 		msg.receiver = RandomUtil.getName();
@@ -133,41 +136,17 @@ public class AniCareMessage implements Parcelable {
 				
 		return msg;
 	}
-	
-	public String toString() {
-		AniCareMessage msg = new AniCareMessage();
-		msg.id = this.id;
-		msg.type = this.type;
-		msg.sender = this.sender;
-		msg.senderId = this.senderId;
-		msg.receiver = this.receiver;
-		msg.receiverId = this.receiverId;
-		msg.rawDateTime = this.rawDateTime;
-		msg.relationId = this.relationId;
-		msg.content = this.content;
-		
-		return gb.create().toJson(msg);
-	}
 
+    /*
+	 * Parcelable
+	 */
 	public final static Parcelable.Creator<AniCareMessage> CREATOR = new Creator<AniCareMessage>(){
 		public AniCareMessage createFromParcel(Parcel in){
-			return gb.create().fromJson(in.readString(), AniCareMessage.class);
+			return toClass(in, AniCareMessage.class);
 		}
 		public AniCareMessage[] newArray(int size){
 			return new AniCareMessage[size];
 		}
 	};
-	
-	@Override
-	public int describeContents() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
-		dest.writeString(gb.create().toJson(this));
-	}
 	
 }

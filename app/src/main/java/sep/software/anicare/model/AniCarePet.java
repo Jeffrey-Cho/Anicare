@@ -46,6 +46,7 @@ public class AniCarePet extends AniCareModel {
     }
 
     private String id;
+    private String userId;
     private String name;
     private int rawCategory;
     private int rawSize;
@@ -56,6 +57,10 @@ public class AniCarePet extends AniCareModel {
 
     public String getId(){ return id; }
     public void setId(String id) { this.id = id; }
+    public String getUserId() { return  userId; }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
     public String getName() {
         return name;
     }
