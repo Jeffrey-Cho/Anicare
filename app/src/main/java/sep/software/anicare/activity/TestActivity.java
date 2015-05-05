@@ -1,80 +1,118 @@
 package sep.software.anicare.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sep.software.anicare.R;
+import sep.software.anicare.callback.DialogCallback;
+import sep.software.anicare.event.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.service.AniCareDBService;
+import sep.software.anicare.service.AniCareDBServicePreference;
+import sep.software.anicare.util.AniCareLogger;
+import sep.software.anicare.view.AniCareAlertDialog;
 
 /**
  * Created by hongkunyoo on 15. 5. 3..
  */
 public class TestActivity extends AniCareActivity {
 
-    TextView textView;
-    Button removeUserSettingBtn;
-    Button removePetSettingBtn;
-    Button logoutBtn;
+    ListView listView;
 
-    Button seeCurrentUser;
-    Button seeCurrentPet;
+    ArrayAdapter<String> adapter = null;
+    AniCareDBService dbService = new AniCareDBServicePreference();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        textView = (TextView) findViewById(R.id.test_activity_text_view);
-        removeUserSettingBtn = (Button) findViewById(R.id.test_activity_remove_user_setting);
-        removePetSettingBtn = (Button) findViewById(R.id.test_activity_remove_pet_setting);
-        logoutBtn = (Button) findViewById(R.id.test_activity_logout);
-        seeCurrentUser = (Button) findViewById(R.id.test_activity_see_user_setting);
-        seeCurrentPet = (Button) findViewById(R.id.test_activity_see_pet_setting);
+        adapter = new ArrayAdapter<String>(mThisActivity, android.R.layout.simple_list_item_1);
+        listView = (ListView) findViewById(R.id.test_activity_list_view);
 
-        removeUserSettingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AniCareUser user = mObjectPreference.get("user",AniCareUser.class);
-                user.setLocation(null);
-                mObjectPreference.put("user",user);
-                textView.setText("Remove User Setting");
-            }
-        });
 
-        removePetSettingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mObjectPreference.remove("user");
-                textView.setText("Remove Pet Setting");
-            }
-        });
+        listView.setAdapter(adapter);
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAniCareService.logout();
-                textView.setText("Logout");
-                Intent intent = new Intent();
-                intent.setClass(mThisActivity, SplashActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        adapter.add("Remove User Setting");
+        adapter.add("Remove Pet Setting");
+        adapter.add("Remove AniCareMessage DB");
 
-        seeCurrentUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(mObjectPreference.get("user", AniCareUser.class).toString());
-            }
-        });
+        adapter.add("Read User Setting");
+        adapter.add("Read Pet Setting");
+        adapter.add("Read AniCareMessage DB");
 
-        seeCurrentPet.setOnClickListener(new View.OnClickListener() {
+        adapter.add("Logout");
+
+
+        final AniCareMessage msg = AniCareMessage.rand();
+
+        dbService.addMessage(msg);
+        List<AniCareMessage> list = dbService.listMessage();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                textView.setText(mObjectPreference.get("pet", AniCarePet.class).toString());
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String str;
+                switch (position) {
+                    case 0:
+                        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
+                        user.setLocation(null);
+                        mObjectPreference.put("user", user);
+                        str = "Done";
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
+                        break;
+
+                    case 1:
+                        mObjectPreference.remove("user");
+//                        textView.setText("Remove Pet Setting");
+                        break;
+
+                    case 2:
+                        mObjectPreference.remove("messageDB");
+                        break;
+
+                    case 3:
+                        str = mObjectPreference.get("user", AniCareUser.class).toString();
+
+                        new AlertDialog.Builder(mThisActivity)
+                        .setMessage(str)
+                        .setPositiveButton("ok", null)
+                        .show();
+
+                        break;
+
+                    case 4:
+//                        textView.setText(mObjectPreference.get("pet", AniCarePet.class).toString());
+                        break;
+
+                    case 5:
+                        List<AniCareMessage> list = dbService.listMessage();
+//                        textView.setText(list.toString());
+                        break;
+
+                    case 6:
+                        mAniCareService.logout();
+                        Intent intent = new Intent();
+                        intent.setClass(mThisActivity, SplashActivity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+                }
+
             }
         });
 
