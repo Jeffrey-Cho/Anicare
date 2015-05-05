@@ -18,7 +18,7 @@ public class AniCareUser extends AniCareModel {
     private int rawHouseType;
     private boolean hasPet;
     public enum HouseType {
-        HOUSE(0), APART(1),OFFICE_TEL(2);
+        HOUSE(0), APART(1),OFFICE_TEL(2), Etc(3);
 
         private final int value;
         HouseType(int value) {

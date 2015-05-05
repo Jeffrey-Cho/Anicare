@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.AppEventsLogger;
@@ -41,6 +42,8 @@ import com.squareup.picasso.Picasso;
 import de.greenrobot.event.EventBus;
 
 public class SplashActivity extends AniCareActivity {
+
+    private final static String TAG = SplashActivity.class.getCanonicalName();
 
     private LoginButton mFacebookButton;
 

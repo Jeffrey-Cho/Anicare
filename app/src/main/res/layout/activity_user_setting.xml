@@ -6,36 +6,221 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="sep.software.anicare.activity.UserSettingActivity">
 
-    <TextView android:text="in user set activity" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_setting_text_view" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Set TestUser"
-        android:id="@+id/user_setting_rand_set"
-        android:layout_below="@+id/user_setting_text_view"
+
+    <!--<TextView android:text="in user set activity" android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/user_setting_text_view" />-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Set TestUser"-->
+        <!--android:id="@+id/user_setting_rand_set"-->
+        <!--android:layout_below="@+id/user_setting_text_view"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="70dp" />-->
+
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="go to Pet Setting Activity"-->
+        <!--android:id="@+id/user_setting_go_to_pet_setting"-->
+        <!--android:layout_below="@+id/user_setting_text_view"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="130dp" />-->
+
+    <!--<Button-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="go back to Main"-->
+        <!--android:id="@+id/user_setting_go_back_to_main"-->
+        <!--android:layout_below="@+id/user_setting_text_view"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="190dp" />-->
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp" />
+        android:weightSum="1">
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="go to Pet Setting Activity"
-        android:id="@+id/user_setting_go_to_pet_setting"
-        android:layout_below="@+id/user_setting_text_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="130dp" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="212dp"
+            android:id="@+id/profileImage"
+            android:layout_gravity="center_horizontal" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="go back to Main"
-        android:id="@+id/user_setting_go_back_to_main"
-        android:layout_below="@+id/user_setting_text_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="190dp" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.12">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/user_setting_name"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/user_setting_name"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_location"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:ems="10"
+                    android:id="@+id/user_setting_location"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_living_type"
+                    />
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_setting_living_type"
+                    android:prompt="@string/user_setting_living_type"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:checkedButton="@+id/user_setting_pet_yes"
+                    android:text="@string/user_setting_is_pet"
+                    />
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:checkedButton="@+id/user_setting_pet_yes"
+                    android:id="@+id/is_pet">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item_yes"
+                        android:id="@+id/user_setting_pet_yes" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item_no"
+                        android:id="@+id/user_setting_pet_no" />
+                </RadioGroup>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_self_intro"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:id="@+id/user_setting_self_intro"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_confirm"
+            android:id="@+id/user_setting_submit"
+            android:layout_gravity="center_horizontal" />
+
+
+    </LinearLayout>
 </RelativeLayout>

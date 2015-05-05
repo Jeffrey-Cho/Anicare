@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AniCareActivity {
+
+    private final static String TAG = MainActivity.class.getSimpleName();
+
     private DrawerLayout mDrawerLayout;
     private LinearLayout mLinearLayout;
     private ListView mDrawerList;
@@ -109,6 +113,7 @@ public class MainActivity extends AniCareActivity {
 
     private void checkSettings() {
         if (!mAniCareService.isUserSet()) {
+        //if (true) {
             Intent intent = new Intent();
             intent.setClass(this, UserSettingActivity.class);
             startActivity(intent);

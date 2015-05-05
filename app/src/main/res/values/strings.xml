@@ -16,6 +16,18 @@
     <string name="action_settings">Settings</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
+    <string name="user_setting_name">이름</string>
+    <string name="user_setting_location">위치</string>
+    <string name="user_setting_living_type">주거 형태</string>
+    <string name="user_setting_is_pet">펫 유무</string>
+    <string name="user_setting_self_intro">자기 소개</string>
+    <string name="pet_setting_name">펫 이름</string>
+    <string name="pet_setting_category">카테고리</string>
+    <string name="pet_setting_size">크기</string>
+    <string name="pet_setting_talent">성격</string>
+    <string name="pet_setting_sex">성별</string>
+    <string name="pet_setting_normalize">중성화</string>
+    <string name="pet_setting_feed">사료</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="anicare_menu">
@@ -25,6 +37,20 @@
         <item>돌봄 이력</item>
         <item>설정</item>
     </string-array>
+
+    <string-array name="pet_category">
+        <item>개</item>
+        <item>고양이</item>
+        <item>새</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="user_living_type">
+        <item>단독주택</item>
+        <item>아파트</item>
+        <item>오피스텔</item>
+        <item>기타</item>
+     </string-array>
 
     <!-- Content Description -->
     <string name="desc_list_item_icon">Item Icon</string>
@@ -37,5 +63,16 @@
     <string name="title_activity_user_setting">UserSettingActivity</string>
     <string name="title_activity_pet_setting">PetSettingActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="item_yes">Yes</string>
+    <string name="item_no">No</string>
+    <string name="item_confirm">확인</string>
+    <string name="item_large">대</string>
+    <string name="item_medium">중</string>
+    <string name="item_small">소</string>
+    <string name="item_male">수컷</string>
+    <string name="item_female">암컷</string>
+    <string name="item_bright">활발함</string>
+    <string name="item_normal">보통</string>
+    <string name="item_shy">내성적임</string>
 
 </resources>
