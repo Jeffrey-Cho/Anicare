@@ -1,21 +1,12 @@
 package sep.software.anicare.fragment;
 
-import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
-import sep.software.anicare.callback.ListCallback;
-import sep.software.anicare.model.AniCarePet;
-import sep.software.anicare.service.AniCareDBService;
-import sep.software.anicare.service.AniCareDBServicePreference;
-import sep.software.anicare.util.AniCareLogger;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.util.List;
 
 public class ListFriendFragment extends AniCareFragment {
 

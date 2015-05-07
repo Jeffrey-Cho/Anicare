@@ -1,4 +1,4 @@
-package sep.software.anicare.callback;
+package sep.software.anicare.interfaces;
 
 import android.os.Bundle;
 

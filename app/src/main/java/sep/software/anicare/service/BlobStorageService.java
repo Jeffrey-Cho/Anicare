@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 
-import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.callback.EntityCallback;
+import sep.software.anicare.AniCareException;
+import sep.software.anicare.interfaces.EntityCallback;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

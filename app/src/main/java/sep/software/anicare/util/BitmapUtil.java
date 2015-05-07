@@ -3,7 +3,7 @@ package sep.software.anicare.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import sep.software.anicare.event.AniCareException;
+import sep.software.anicare.AniCareException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

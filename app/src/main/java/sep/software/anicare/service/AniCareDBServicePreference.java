@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sep.software.anicare.AniCareApp;
-import sep.software.anicare.event.AniCareMessage;
-import sep.software.anicare.model.AniCareDateTime;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.CareHistory;
 import sep.software.anicare.util.ObjectPreferenceUtil;
 

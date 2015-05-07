@@ -2,7 +2,7 @@ package sep.software.anicare.service;
 
 import java.util.List;
 
-import sep.software.anicare.event.AniCareMessage;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.CareHistory;
 
 /**

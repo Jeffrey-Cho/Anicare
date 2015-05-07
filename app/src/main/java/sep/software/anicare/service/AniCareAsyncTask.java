@@ -1,7 +1,7 @@
 package sep.software.anicare.service;
 
 import sep.software.anicare.AniCareApp;
-import sep.software.anicare.event.AniCareException;
+import sep.software.anicare.AniCareException;
 import de.greenrobot.event.EventBus;
 import android.os.AsyncTask;
 

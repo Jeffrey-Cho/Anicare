@@ -2,7 +2,6 @@ package sep.software.anicare.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,9 +19,8 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import sep.software.anicare.R;
-import sep.software.anicare.callback.EntityCallback;
-import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.AniCareException;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.ImageUtil;
@@ -36,7 +34,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private Spinner petCategory;
     private RadioGroup petSize;
     private RadioGroup petSex;
-    private RadioGroup petPersonanlity;
+    private RadioGroup petPersonality;
     private RadioGroup petNeutralized;
     private RadioGroup petFeed;
     private Button submitBtn;
@@ -64,17 +62,17 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
 
         petSize = (RadioGroup) findViewById(R.id.pet_size);
         petSex = (RadioGroup) findViewById(R.id.pet_sexuality);
-        petPersonanlity = (RadioGroup) findViewById(R.id.pet_personality);
+        petPersonality = (RadioGroup) findViewById(R.id.pet_personality);
         petNeutralized = (RadioGroup) findViewById(R.id.pet_neutralized);
         petFeed = (RadioGroup) findViewById(R.id.pet_feed);
 
         submitBtn = (Button) findViewById(R.id.pet_setting_submit);
         submitBtn.setOnClickListener(this);
 
-        profileImageUrl = mAniCareService.getPetImageUrl(mThisUser.getId());
+//        profileImageUrl = mAniCareService.getPetImageUrl(mThisUser.getId());
 
-        imageTask = new ImageAsyncTask();
-        imageTask.execute(profileImageUrl);
+//        imageTask = new ImageAsyncTask();
+//        imageTask.execute(profileImageUrl);
 
 //        textView = (TextView) findViewById(R.id.pet_setting_text_view);
 //        randSet = (Button) findViewById(R.id.pet_setting_rand_set);
@@ -113,7 +111,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private AniCarePet.Personality checkPersonality() {
         AniCarePet.Personality personality;
 
-        switch(petPersonanlity.getCheckedRadioButtonId()) {
+        switch(petPersonality.getCheckedRadioButtonId()) {
             case R.id.pet_bright:
                 personality = AniCarePet.Personality.BRIGHT;
                 break;
@@ -135,7 +133,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private AniCarePet.Size checkSize() {
         AniCarePet.Size size;
 
-        switch(petPersonanlity.getCheckedRadioButtonId()) {
+        switch(petPersonality.getCheckedRadioButtonId()) {
             case R.id.pet_size_large:
                 size = AniCarePet.Size.BIG;
                 break;
@@ -190,7 +188,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
 
                 pet.setName(petName.getText().toString());
                 pet.setCategory(Category);
-                //pet.setUserid(mThisUser.getId());
+                pet.setUserId(mThisUser.getId());
 
                 pet.setPersonality(checkPersonality());
                 pet.setSize(checkSize());

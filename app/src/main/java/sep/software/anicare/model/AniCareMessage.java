@@ -1,10 +1,8 @@
-package sep.software.anicare.event;
+package sep.software.anicare.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import sep.software.anicare.model.AniCareDateTime;
-import sep.software.anicare.model.AniCareModel;
 import sep.software.anicare.util.RandomUtil;
 
 public class AniCareMessage extends AniCareModel {

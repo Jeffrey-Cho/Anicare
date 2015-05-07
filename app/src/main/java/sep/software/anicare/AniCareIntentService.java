@@ -1,6 +1,6 @@
 package sep.software.anicare;
 
-import sep.software.anicare.event.AniCareMessage;
+import sep.software.anicare.model.AniCareMessage;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;

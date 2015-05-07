@@ -6,6 +6,7 @@ import sep.software.anicare.fragment.ListFriendFragment;
 import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
 import sep.software.anicare.fragment.SettingFragment;
+import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.CircleImageView;
 import android.app.Fragment;
@@ -44,9 +45,6 @@ public class MainActivity extends AniCareActivity {
 
     private CircleImageView mProfileImage;
     private TextView mPetName;
-
-    private String sampleImageUrl =
-            "http://images5.fanpop.com/image/photos/27300000/Doggy-dogs-27378007-400-300.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +95,11 @@ public class MainActivity extends AniCareActivity {
         mTitle = getTitle();
         mDrawerTitle = "Select Menu";
 
-        Picasso.with(mAppContext).load(sampleImageUrl).into(mProfileImage);
-        mPetName.setText("Happy");
+        AniCarePet myPet = mAniCareService.getCurrentPet();
+        if (myPet != null) {
+            mAniCareService.setPetImageIntro(myPet.getId(), mProfileImage);
+            mPetName.setText(myPet.getName());
+        }
 
         if (savedInstanceState == null) {
             selectItem(0);

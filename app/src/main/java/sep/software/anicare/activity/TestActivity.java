@@ -3,30 +3,18 @@ package sep.software.anicare.activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.List;
 
 import sep.software.anicare.R;
-import sep.software.anicare.callback.DialogCallback;
-import sep.software.anicare.event.AniCareMessage;
-import sep.software.anicare.model.AniCarePet;
-import sep.software.anicare.model.AniCareUser;
-import sep.software.anicare.model.CareHistory;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.service.AniCareDBService;
 import sep.software.anicare.service.AniCareDBServicePreference;
-import sep.software.anicare.util.AniCareLogger;
-import sep.software.anicare.view.AniCareAlertDialog;
 
-/**
- * Created by hongkunyoo on 15. 5. 3..
- */
 public class TestActivity extends AniCareActivity {
 
     ListView listView;

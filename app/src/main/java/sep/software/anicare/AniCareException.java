@@ -1,4 +1,4 @@
-package sep.software.anicare.event;
+package sep.software.anicare;
 
 import com.google.gson.Gson;
 

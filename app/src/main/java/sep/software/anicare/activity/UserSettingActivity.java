@@ -2,7 +2,6 @@ package sep.software.anicare.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,8 +18,8 @@ import java.io.IOException;
 
 import de.greenrobot.event.EventBus;
 import sep.software.anicare.R;
-import sep.software.anicare.callback.EntityCallback;
-import sep.software.anicare.event.AniCareException;
+import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.AniCareException;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.ImageUtil;
@@ -65,10 +64,15 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         submitBtn = (Button) findViewById(R.id.user_setting_submit);
         submitBtn.setOnClickListener(this);
 
+        userName.setText(mThisUser.getName());
         profileImageUrl = mAniCareService.getUserImageUrl(mThisUser.getId());
 
-        imageTask = new ImageAsyncTask();
-        imageTask.execute(profileImageUrl);
+//        imageTask = new ImageAsyncTask();
+//        imageTask.execute(profileImageUrl);
+
+        // 성래 형님, 이미지 로드하실 때, 다음과 같은 API도 사용 가능합니다. 참고바랍니다. (내부적으로는 마찬가지로 Picasso 이용함.)
+        // Implementation : AniCareServiceTest class Line #177
+        mAniCareService.setUserImageIntro(mThisUser.getId(), userImage);
 
     }
 

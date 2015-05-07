@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
-import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.callback.EntityCallback;
+import sep.software.anicare.AniCareException;
+import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AniCareLogger;
@@ -17,18 +17,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.facebook.AppEventsLogger;
-import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
-import com.google.gson.Gson;
 //import com.kakao.APIErrorResult;
 //import com.kakao.MeResponseCallback;
 //import com.kakao.Session;

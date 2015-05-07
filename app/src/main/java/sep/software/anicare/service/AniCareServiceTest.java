@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sep.software.anicare.AniCareApp;
-import sep.software.anicare.callback.EntityCallback;
-import sep.software.anicare.callback.ListCallback;
-import sep.software.anicare.event.AniCareMessage;
+import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.interfaces.ListCallback;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.model.CareHistory;

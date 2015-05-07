@@ -1,8 +1,8 @@
 package sep.software.anicare.activity;
 
 import sep.software.anicare.AniCareApp;
-import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.callback.DialogCallback;
+import sep.software.anicare.AniCareException;
+import sep.software.anicare.interfaces.DialogCallback;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.AniCareLogger;

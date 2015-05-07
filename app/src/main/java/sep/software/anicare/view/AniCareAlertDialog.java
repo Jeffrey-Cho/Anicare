@@ -1,6 +1,6 @@
 package sep.software.anicare.view;
 
-import sep.software.anicare.callback.DialogCallback;
+import sep.software.anicare.interfaces.DialogCallback;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

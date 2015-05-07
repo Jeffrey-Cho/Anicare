@@ -6,15 +6,14 @@ import java.util.List;
 
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.AniCareProtocol;
-import sep.software.anicare.callback.ListCallback;
-import sep.software.anicare.event.AniCareException;
-import sep.software.anicare.event.AniCareMessage;
-import sep.software.anicare.callback.EntityCallback;
+import sep.software.anicare.interfaces.ListCallback;
+import sep.software.anicare.AniCareException;
+import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -27,7 +26,6 @@ import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 
 import de.greenrobot.event.EventBus;
 import sep.software.anicare.model.CareHistory;
-import sep.software.anicare.util.AsyncChainer;
 
 
 public class AniCareServiceAzure implements AniCareService {
