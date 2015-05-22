@@ -36,7 +36,7 @@ public class ListFriendFragment extends AniCareFragment {
         
 		View rootView = inflater.inflate(R.layout.fragment_list_friend, container, false);
 
-        RecyclerView recList = (RecyclerView) getView().findViewById(R.id.cardList);
+        RecyclerView recList = (RecyclerView) rootView.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(mThisActivity);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
