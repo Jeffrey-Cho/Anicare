@@ -20,7 +20,7 @@ import sep.software.anicare.service.AniCareService;
 public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListViewHolder> {
 
     private List<AniCarePet> petList;
-    private AniCareService mAniCareService;
+    private AniCareService mAniCareService; // For Using AniCareService.setPetImageIntro (Picasso library)
     private AniCareApp mAppContext;
 
     public PetListAdapter(List<AniCarePet> petList) {
