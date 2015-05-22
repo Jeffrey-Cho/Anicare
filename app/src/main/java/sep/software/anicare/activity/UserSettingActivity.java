@@ -72,7 +72,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
         // 성래 형님, 이미지 로드하실 때, 다음과 같은 API도 사용 가능합니다. 참고바랍니다. (내부적으로는 마찬가지로 Picasso 이용함.)
         // Implementation : AniCareServiceTest class Line #177
-        mAniCareService.setUserImageIntro(mThisUser.getId(), userImage);
+        mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
 
     }
 

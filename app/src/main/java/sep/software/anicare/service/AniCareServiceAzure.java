@@ -198,12 +198,12 @@ public class AniCareServiceAzure implements AniCareService {
     }
 
     @Override
-    public void setUserImageIntro(String userId, ImageView view) {
+    public void setUserImageInto(String userId, ImageView view) {
 
     }
 
     @Override
-    public void setPetImageIntro(String petId, ImageView view) {
+    public void setPetImageInto(String petId, ImageView view) {
 
     }
 

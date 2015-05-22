@@ -97,7 +97,7 @@ public class MainActivity extends AniCareActivity {
 
         AniCarePet myPet = mAniCareService.getCurrentPet();
         if (myPet != null) {
-            mAniCareService.setPetImageIntro(myPet.getId(), mProfileImage);
+            mAniCareService.setPetImageInto(myPet.getId(), mProfileImage);
             mPetName.setText(myPet.getName());
         }
 

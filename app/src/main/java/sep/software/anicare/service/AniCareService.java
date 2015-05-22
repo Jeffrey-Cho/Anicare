@@ -74,8 +74,8 @@ public interface AniCareService {
     public void uploadUserImage(String id, Bitmap image, EntityCallback<String> callback);
     public void uploadPetImage(String id, Bitmap image, EntityCallback<String> callback);
 
-    public void setUserImageIntro(String userId, ImageView view);
-    public void setPetImageIntro(String petId, ImageView view);
+    public void setUserImageInto(String userId, ImageView view);
+    public void setPetImageInto(String petId, ImageView view);
     public String getUserImageUrl(String id);
     public String getPetImageUrl(String id);
 

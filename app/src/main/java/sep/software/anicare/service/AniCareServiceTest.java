@@ -174,12 +174,12 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void setUserImageIntro(String userId, ImageView view){
+    public void setUserImageInto(String userId, ImageView view){
         Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId)).into(view);
     }
 
     @Override
-    public void setPetImageIntro(String petId, ImageView view){
+    public void setPetImageInto(String petId, ImageView view){
         Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(petId)).into(view);
     }
 

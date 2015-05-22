@@ -46,8 +46,9 @@ public class AniCarePet extends AniCareModel {
     }
 
     private String id;
-    private String userId;
     private String name;
+    private String userId;
+    private String userName;
     private int rawCategory;
     private int rawSize;
     private int rawPersonality;
@@ -139,6 +140,14 @@ public class AniCarePet extends AniCareModel {
 
     public void setRawPersonality(int rawPersonality) {
         this.rawPersonality = rawPersonality;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public static AniCarePet rand() {
