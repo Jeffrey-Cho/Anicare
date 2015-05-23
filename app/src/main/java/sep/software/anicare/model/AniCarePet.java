@@ -47,8 +47,13 @@ public class AniCarePet extends AniCareModel {
 
     private String id;
     private String name;
+
     private String userId;
     private String userName;
+
+    private String location;
+    private String imageURL;
+
     private int rawCategory;
     private int rawSize;
     private int rawPersonality;
@@ -73,6 +78,21 @@ public class AniCarePet extends AniCareModel {
         this.name = name;
     }
 
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setImageURL(String url) {
+        this.imageURL = url;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
     public Category getCategory() {
         return Category.values()[this.rawCategory];
     }

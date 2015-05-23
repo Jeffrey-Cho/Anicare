@@ -69,6 +69,7 @@
     <string name="item_yes">Yes</string>
     <string name="item_no">No</string>
     <string name="item_confirm">확인</string>
+    <string name="item_cancle">취소</string>
     <string name="item_large">대</string>
     <string name="item_medium">중</string>
     <string name="item_small">소</string>
@@ -77,5 +78,6 @@
     <string name="item_bright">활발함</string>
     <string name="item_normal">보통</string>
     <string name="item_shy">내성적임</string>
+    <string name="period">돌봄기간</string>
 
 </resources>

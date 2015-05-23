@@ -1,0 +1,62 @@
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="4dp"
+    android:layout_margin="5dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp">
+        <ImageView
+            android:id="@+id/pet_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Name: "
+            android:layout_below="@id/pet_image"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/pet_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pet_image"
+            android:layout_toRightOf="@id/name"
+            android:maxLength="12"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_alignBaseline="@id/name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Location: "
+            android:id="@+id/location"
+            android:layout_toRightOf="@id/pet_name"
+            android:layout_alignBaseline="@id/name"
+            android:layout_marginLeft="15dp"
+            />
+
+        <TextView
+            android:id="@+id/pet_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_toRightOf="@id/location"
+            android:layout_marginRight="10dp"
+            android:layout_alignBaseline="@id/name"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
