@@ -37,7 +37,7 @@ public class AniCareServiceAzure implements AniCareService {
 
 
     public AniCareServiceAzure(Context context) {
-        RestClient.init();
+
         try {
             mobileClient = new MobileServiceClient(
                     AZURE_URL,
@@ -113,7 +113,7 @@ public class AniCareServiceAzure implements AniCareService {
     }
 
     @Override
-    public void listPet(int page, String userId, ListCallback<AniCarePet> callback) {
+    public void listPet(String userId, ListCallback<AniCarePet> callback) {
 
     }
 

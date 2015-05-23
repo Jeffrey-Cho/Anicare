@@ -29,6 +29,9 @@
     <string name="pet_setting_normalize">중성화</string>
     <string name="pet_setting_feed">사료</string>
 
+
+    <string name="select_picture">Select Picture</string>
+
     <!-- Nav Drawer Menu Items -->
     <string-array name="anicare_menu">
         <item>친구 보기</item>

@@ -1,15 +1,30 @@
 package sep.software.anicare.service;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.facebook.Session;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
+import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
+import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import sep.software.anicare.AniCareApp;
+import sep.software.anicare.AniCareException;
+import sep.software.anicare.AniCareProtocol;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.interfaces.ListCallback;
 import sep.software.anicare.model.AniCareMessage;
@@ -28,10 +43,18 @@ public class AniCareServiceTest implements AniCareService {
     private ObjectPreferenceUtil mObjectPreference = AniCareApp.getAppContext().getObjectPreference();
     private AniCareDBService mDbService;
 
+    private MobileServiceClient mMobileClient;
+    private final String AZURE_URL = "https://ani-care.azure-mobile.net/";
+    private final String AZURE_KEY = "yHhHAGwAeqdZDFgMZkXYWVZEgQucFr12";
+    private BlobStorageService mBlobStorageService;
+    private GsonBuilder mGb;
+
+    private String BASE_IMAGE_URL = "https://portalvhdsj2ksq9qld7v06.blob.core.windows.net";
+
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
     private List<CareHistory> historyList = new ArrayList<CareHistory>();
 
-    public AniCareServiceTest() {
+    public AniCareServiceTest(Context context) {
         mDbService = new AniCareDBServicePreference();
 
         for (int i = 0 ; i < 10 ; i++) {
@@ -42,6 +65,18 @@ public class AniCareServiceTest implements AniCareService {
             historyList.add(CareHistory.rand(true));
         }
 
+        try {
+            mMobileClient = new MobileServiceClient(
+                    AZURE_URL,
+                    AZURE_KEY,
+                    context);
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        mBlobStorageService = new BlobStorageService();
+        mGb = new GsonBuilder();
     }
 
     private void delay() {
@@ -52,12 +87,37 @@ public class AniCareServiceTest implements AniCareService {
         }
     }
 
+    private boolean internetAvailable() {
+        return AniCareApp.getAppContext().isInternetAvailable();
+    }
     @Override
-    public void login(AniCareUser user, EntityCallback<AniCareUser> callback) {
-        delay();
-        user.setId(RandomUtil.getId());
-        mObjectPreference.put("user", user);
-        callback.onCompleted(user);
+    public void login(AniCareUser user, final EntityCallback<AniCareUser> callback) {
+
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject userJson = mGb.create().fromJson(mGb.create().toJson(user), JsonObject.class);
+        JsonObject jo = new JsonObject();
+        jo.add("user", userJson);
+
+        mMobileClient.invokeApi("login", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    AniCareUser savedUser = mGb.create().fromJson(arg0, AniCareUser.class);
+                    mObjectPreference.put("user", savedUser);
+                    callback.onCompleted(savedUser);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+
+            }
+        });
     }
 
     @Override
@@ -73,21 +133,17 @@ public class AniCareServiceTest implements AniCareService {
     public boolean isLoggedIn() {
         AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
         if (user == null) return false;
-        AniCareLogger.log("isLoggedIn : "+ user != null && user.getId() != null && !user.getId().equals(""));
         return user != null && user.getId() != null && !user.getId().equals("");
     }
 
     @Override
-    public void putUser(AniCareUser user, EntityCallback<AniCareUser> callback) {
-        delay();
-        mObjectPreference.put("user", user);
-        callback.onCompleted(user);
+    public void putUser(AniCareUser user, final EntityCallback<AniCareUser> callback) {
+        this.login(user, callback);
     }
 
     @Override
     public boolean isUserSet() {
         AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-        AniCareLogger.log("isUserSet : "+ user);
         if (user != null) {
             if (user.getId() != null && !user.getId().equals("") &&
                     user.getLocation() != null && !"".equals(user.getLocation())) return true;
@@ -97,17 +153,36 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public AniCareUser getCurrentUser() {
-        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-        AniCareLogger.log("getCurrentUser : "+user);
-        return user;
+        return mObjectPreference.get("user", AniCareUser.class);
     }
 
     @Override
-    public void putPet(AniCarePet pet, EntityCallback<AniCarePet> callback) {
-        delay();
-        pet.setId(RandomUtil.getId());
-        mObjectPreference.put("pet",pet);
-        callback.onCompleted(pet);
+    public void putPet(AniCarePet pet, final EntityCallback<AniCarePet> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject json = mGb.create().fromJson(mGb.create().toJson(pet), JsonObject.class);
+        JsonObject jo = new JsonObject();
+        jo.add("pet", json);
+
+        mMobileClient.invokeApi("put_pet", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                AniCareLogger.log("onCompleted");
+                if (arg1 == null) {
+                    AniCarePet savedPet = mGb.create().fromJson(arg0, AniCarePet.class);
+                    mObjectPreference.put("pet", savedPet);
+                    callback.onCompleted(savedPet);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+            }
+        });
     }
 
     @Override
@@ -127,28 +202,117 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void listPet(int page, String userId, ListCallback<AniCarePet> callback) {
-        delay();
-        callback.onCompleted(petList, petList.size());
+    public void listPet(String userId, final ListCallback<AniCarePet> callback) {
+
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        if (true) return;
+
+        JsonObject jo = new JsonObject();
+        jo.addProperty("userId", userId);
+
+        mMobileClient.invokeApi("list_pet", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    JsonElement json = arg0.getAsJsonArray();
+                    List<AniCarePet> list = new Gson().fromJson(json, new TypeToken<List<AniCarePet>>() {}.getType());
+                    callback.onCompleted(list, list.size());
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+            }
+        });
     }
 
     @Override
-    public void makeFriend(AniCarePet pet, EntityCallback<AniCarePet> callback) {
-        pet.setId(RandomUtil.getId());
-        petList.add(pet);
-        callback.onCompleted(pet);
+    public void makeFriend(AniCarePet pet, final EntityCallback<AniCarePet> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject jo = new JsonObject();
+        jo.add("pet", mGb.create().fromJson(mGb.create().toJson(pet), JsonElement.class));
+
+        mMobileClient.invokeApi("make_friend", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    AniCarePet _pet = mGb.create().fromJson(arg0, AniCarePet.class);
+                    callback.onCompleted(_pet);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+            }
+        });
+
     }
 
     @Override
-    public void getGcmRegistrationId(EntityCallback<String> callback) {
-        callback.onCompleted(RandomUtil.getId());
+    public void getGcmRegistrationId(final EntityCallback<String> callback) {
+
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        (new AniCareAsyncTask<GoogleCloudMessaging, Void, String>() {
+
+            @Override
+            protected String doInBackground(GoogleCloudMessaging... params) {
+                GoogleCloudMessaging gcm = params[0];
+                try {
+                    return gcm.register(AniCareProtocol.GCM_SENDER_ID);
+                } catch (IOException e) {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                super.onPostExecute(result);
+                callback.onCompleted(result);
+            }
+        }).execute(GoogleCloudMessaging.getInstance(AniCareApp.getAppContext()));
+
     }
 
     @Override
-    public void sendMessage(AniCareMessage message, EntityCallback<AniCareMessage> callback) {
-        delay();
-        message.setId(RandomUtil.getId());
-        callback.onCompleted(message);
+    public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject jo = new JsonObject();
+        jo.add("message", mGb.create().fromJson(mGb.create().toJson(message), JsonElement.class));
+
+        mMobileClient.invokeApi("send_message", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    AniCareMessage msg = mGb.create().fromJson(arg0, AniCareMessage.class);
+                    mDbService.addMessage(msg);
+                    callback.onCompleted(msg);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+            }
+        });
     }
 
     @Override
@@ -162,15 +326,33 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void uploadUserImage(String id, Bitmap image, EntityCallback<String> callback) {
-        delay();
-        callback.onCompleted(RandomUtil.getId());
+    public void uploadUserImage(String id, Bitmap image, final EntityCallback<String> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        mBlobStorageService.uploadBitmapAsync(BlobStorageService.CONTAINER_USER_PROFILE, id, image, new EntityCallback<String>() {
+            @Override
+            public void onCompleted(String entity) {
+                callback.onCompleted(entity);
+            }
+        });
     }
 
     @Override
-    public void uploadPetImage(String id, Bitmap image, EntityCallback<String> callback) {
-        delay();
-        callback.onCompleted(RandomUtil.getId());
+    public void uploadPetImage(String id, Bitmap image, final EntityCallback<String> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        mBlobStorageService.uploadBitmapAsync(BlobStorageService.CONTAINER_IMAGE, id, image, new EntityCallback<String>() {
+            @Override
+            public void onCompleted(String entity) {
+                callback.onCompleted(entity);
+            }
+        });
     }
 
     @Override
@@ -185,12 +367,12 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public String getUserImageUrl(String id){
-        return "http://thecontentwrangler.com/wp-content/uploads/2011/08/User.png";
+        return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_USER_PROFILE + "/" + id;
     }
 
     @Override
     public String getPetImageUrl(String id) {
-        return "http://images5.fanpop.com/image/photos/27300000/Doggy-dogs-27378007-400-300.jpg";
+        return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_IMAGE + "/" + id;
     }
 
 

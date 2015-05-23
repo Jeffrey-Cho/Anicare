@@ -5,7 +5,8 @@ import android.graphics.Bitmap;
 
 public class ImageUtil {
 
-	public static final int PROFILE_IMAGE_SIZE = 212;
+//	public static final int PROFILE_IMAGE_SIZE = 212;
+    public static final int PROFILE_IMAGE_SIZE = 800;
 	public static final int PROFILE_THUMBNAIL_IMAGE_SIZE = 75;
 	public static final String PROFILE_THUMBNAIL_IMAGE_POSTFIX = "_thumbnail";
 

@@ -56,6 +56,9 @@ public class AniCarePet extends AniCareModel {
     private boolean isNeutralized;
     private boolean isPetFood;
 
+    private String start;
+    private String end;
+
     public String getId(){ return id; }
     public void setId(String id) { this.id = id; }
     public String getUserId() { return  userId; }
@@ -148,6 +151,22 @@ public class AniCarePet extends AniCareModel {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public AniCareDateTime getStartDate() {
+        return new AniCareDateTime(start);
+    }
+
+    public void setStartDate(AniCareDateTime start) {
+        this.start = start.toString();
+    }
+
+    public AniCareDateTime getEndDate() {
+        return new AniCareDateTime(end);
+    }
+
+    public void setEndDate(AniCareDateTime end) {
+        this.end = end.toString();
     }
 
     public static AniCarePet rand() {

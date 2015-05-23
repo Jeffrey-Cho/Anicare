@@ -39,7 +39,7 @@ public class AniCareApp extends Application {
 
         // initialize AniCareService
         if (AniCareProtocol.isDebugMode)
-            mAniCareService = new AniCareServiceTest();
+            mAniCareService = new AniCareServiceTest(instance);
         else
             mAniCareService = new AniCareServiceAzure(instance);
     }

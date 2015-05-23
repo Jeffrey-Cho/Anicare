@@ -3,6 +3,7 @@ package sep.software.anicare.activity;
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.interfaces.DialogCallback;
+import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.AniCareLogger;
@@ -20,6 +21,7 @@ public class AniCareActivity extends Activity {
     protected AniCareService mAniCareService;
     protected ObjectPreferenceUtil mObjectPreference;
     protected AniCareUser mThisUser;
+    protected AniCarePet mThisPet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class AniCareActivity extends Activity {
         mAniCareService = mAppContext.getAniCareService();
         mObjectPreference = mAppContext.getObjectPreference();
         mThisUser = mAniCareService.getCurrentUser();
+        mThisPet = mAniCareService.getCurrentPet();
     }
 
     public void onEvent(AniCareException exception){

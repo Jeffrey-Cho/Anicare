@@ -1,7 +1,9 @@
 package sep.software.anicare.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,12 +24,14 @@ import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
+import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
 
 public class UserSettingActivity extends AniCareActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String TAG = UserSettingActivity.class.getSimpleName();
     private String profileImageUrl;
+    private Uri mProfileImageUri;
 
     private ImageView userImage;
     private TextView userName;
@@ -40,7 +44,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private AniCareUser.HouseType livingType;
     private int defaultPoint = 100;
 
-    private ImageAsyncTask imageTask;
+//    private ImageAsyncTask imageTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         userName.setText(mThisUser.getName());
         profileImageUrl = mAniCareService.getUserImageUrl(mThisUser.getId());
 
+        setImageButton();
 //        imageTask = new ImageAsyncTask();
 //        imageTask.execute(profileImageUrl);
 
@@ -117,6 +122,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         if (v.equals(submitBtn)) {
 
             if (checkContent()) {
+                mAppContext.showProgressDialog(mThisActivity);
                 AniCareUser user = mAniCareService.getCurrentUser();
 
                 user.setName(userName.getText().toString());
@@ -136,7 +142,8 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                         Intent intent = new Intent();
                         intent.setClass(mThisActivity, PetSettingActivity.class);
                         startActivity(intent);
-                        //finish();
+                        mAppContext.dismissProgressDialog();
+                        finish();
                     }
                 });
 
@@ -146,26 +153,63 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         }
     }
 
-    public class ImageAsyncTask extends AniCareAsyncTask <String, Integer, Bitmap> {
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            // TODO Auto-generated method stub
-            try {
-                return Picasso.with(mThisActivity).load(profileImageUrl).get();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
-                return null;
+    private void setImageButton(){
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileUtil.getMediaFromGallery(mThisActivity);
             }
-        }
+        });
+    }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            Bitmap profileImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
-            userImage.setImageBitmap(profileImageBitmap);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            String imagePath = null;
+
+            switch(requestCode){
+                case FileUtil.GALLERY:
+                    mProfileImageUri = data.getData();
+                    imagePath = FileUtil.getMediaPathFromGalleryUri(mThisActivity, mProfileImageUri);
+                    break;
+                case FileUtil.CAMERA:
+                    mProfileImageUri = FileUtil.getMediaUriFromCamera(mThisActivity, data, mProfileImageUri);
+                    imagePath = mProfileImageUri.getPath();
+                    break;
+            }
+
+            updateProfileImage(imagePath);
         }
     }
+
+    private void updateProfileImage(String imagePath){
+        mAppContext.showProgressDialog(mThisActivity);
+        Bitmap profileImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_IMAGE_SIZE);
+        Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
+//        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
+    }
+
+//    public class ImageAsyncTask extends AniCareAsyncTask <String, Integer, Bitmap> {
+//
+//        @Override
+//        protected Bitmap doInBackground(String... params) {
+//            // TODO Auto-generated method stub
+//            try {
+//                return Picasso.with(mThisActivity).load(profileImageUrl).get();
+//            } catch (IOException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Bitmap bitmap) {
+//            Bitmap profileImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
+//            userImage.setImageBitmap(profileImageBitmap);
+//        }
+//    }
 
 }

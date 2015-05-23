@@ -10,4 +10,9 @@
         android:layout_height="wrap_content"
         android:text="helloWorld" />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_friend_pet_list" />
+
 </LinearLayout>

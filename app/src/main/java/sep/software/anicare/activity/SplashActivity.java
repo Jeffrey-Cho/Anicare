@@ -190,8 +190,8 @@ public class SplashActivity extends AniCareActivity {
             @Override
             public void doNext(final Object obj, Object... params) {
                 Bitmap profileImage = (Bitmap) params[0];
-                Bitmap profileImageBitmap = ImageUtil.refineSquareImage(profileImage, ImageUtil.PROFILE_IMAGE_SIZE);
-                String userId = mObjectPreference.getClass(AniCareUser.class).getId();
+//                Bitmap profileImageBitmap = ImageUtil.refineSquareImage(profileImage, ImageUtil.PROFILE_IMAGE_SIZE);
+                String userId = mAniCareService.getCurrentUser().getId();
                 mAniCareService.uploadUserImage(userId, profileImage, new EntityCallback<String>() {
                     @Override
                     public void onCompleted(String entity) {

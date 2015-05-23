@@ -1,7 +1,9 @@
 package sep.software.anicare.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,9 @@ import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareAsyncTask;
+import sep.software.anicare.util.AniCareLogger;
+import sep.software.anicare.util.AsyncChainer;
+import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
 
 public class PetSettingActivity extends AniCareActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
@@ -30,6 +35,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private static final String TAG = PetSettingActivity.class.getSimpleName();
 
     private ImageView petImage;
+    private Uri mProfileImageUri;
     private TextView petName;
     private Spinner petCategory;
     private RadioGroup petSize;
@@ -40,8 +46,10 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private Button submitBtn;
 
     private AniCarePet.Category Category;
-    private ImageAsyncTask imageTask;
+//    private ImageAsyncTask imageTask;
     private String profileImageUrl;
+
+    private Bitmap petImageBitmap;
 
 
     @Override
@@ -69,6 +77,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         submitBtn = (Button) findViewById(R.id.pet_setting_submit);
         submitBtn.setOnClickListener(this);
 
+        setImageButton();
 //        profileImageUrl = mAniCareService.getPetImageUrl(mThisUser.getId());
 
 //        imageTask = new ImageAsyncTask();
@@ -184,7 +193,8 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         if (v.equals(submitBtn)) {
 
             if (checkContent()) {
-                AniCarePet pet = new AniCarePet();
+                mAppContext.showProgressDialog(mThisActivity);
+                final AniCarePet pet = new AniCarePet();
 
                 pet.setName(petName.getText().toString());
                 pet.setCategory(Category);
@@ -197,16 +207,37 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setNeutralized(petNeutralized.getCheckedRadioButtonId() == R.id.pet_neutralized_yes);
                 pet.setPetFood(petFeed.getCheckedRadioButtonId() == R.id.pet_feed_yes);
 
-
-                mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
+                AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
                     @Override
-                    public void onCompleted(AniCarePet entity) {
-                        Intent intent = new Intent();
-                        intent.setClass(mThisActivity, MainActivity.class);
-                        startActivity(intent);
-                        //finish();
+                    public void doNext(final Object obj, Object... params) {
+                        mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
+                            @Override
+                            public void onCompleted(AniCarePet entity) {
+                                AsyncChainer.notifyNext(obj, entity.getId());
+                                AniCareLogger.log("notifyNext");
+                            }
+                        });
+
+                    }
+                }, new AsyncChainer.Chainable() {
+                    @Override
+                    public void doNext(Object obj, Object... params) {
+                        String id = (String)params[0];
+                        AniCareLogger.log("upload Image");
+
+                        mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
+                            @Override
+                            public void onCompleted(String entity) {
+                                mAppContext.dismissProgressDialog();
+                                Intent intent = new Intent();
+                                intent.setClass(mThisActivity, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
                     }
                 });
+
 
 
             } else {
@@ -214,6 +245,44 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 Log.d(TAG, "Empty name");
             }
         }
+    }
+
+    private void setImageButton(){
+        petImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileUtil.getMediaFromGallery(mThisActivity);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK){
+            String imagePath = null;
+
+            switch(requestCode){
+                case FileUtil.GALLERY:
+                    mProfileImageUri = data.getData();
+                    imagePath = FileUtil.getMediaPathFromGalleryUri(mThisActivity, mProfileImageUri);
+                    break;
+                case FileUtil.CAMERA:
+                    mProfileImageUri = FileUtil.getMediaUriFromCamera(mThisActivity, data, mProfileImageUri);
+                    imagePath = mProfileImageUri.getPath();
+                    break;
+            }
+
+            updateProfileImage(imagePath);
+        }
+    }
+
+    private void updateProfileImage(String imagePath){
+//        mAppContext.showProgressDialog(mThisActivity);
+        petImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_IMAGE_SIZE);
+        Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
+//        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
+        petImage.setImageBitmap(petImageBitmap);
     }
 
     public class ImageAsyncTask extends AniCareAsyncTask<String, Integer, Bitmap> {
