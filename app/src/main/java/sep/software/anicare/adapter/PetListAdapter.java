@@ -38,7 +38,7 @@ public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListV
     public void onBindViewHolder(PetListViewHolder petViewHolder, int i) {
         AniCarePet petItem = petList.get(i);
 
-        mAniCareService.setPetImageInto(petItem.getImageURL(),petViewHolder.cardImage);
+        mAniCareService.setPetImageInto(petItem.getId(),petViewHolder.cardImage);
         petViewHolder.petName.setText(petItem.getName());
         petViewHolder.petLocation.setText(petItem.getLocation());
     }

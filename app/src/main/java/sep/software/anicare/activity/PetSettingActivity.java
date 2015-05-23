@@ -200,7 +200,8 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setCategory(Category);
                 pet.setUserId(mThisUser.getId());
                 pet.setUserName(mThisUser.getName());
-
+                pet.setLocation(mThisUser.getLocation());
+                AniCareLogger.log(pet.getLocation());
                 pet.setPersonality(checkPersonality());
                 pet.setSize(checkSize());
 

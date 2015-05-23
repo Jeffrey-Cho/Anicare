@@ -97,6 +97,7 @@ public class MainActivity extends AniCareActivity {
 
         AniCarePet myPet = mAniCareService.getCurrentPet();
         if (myPet != null) {
+            Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(myPet.getId()));
             mAniCareService.setPetImageInto(myPet.getId(), mProfileImage);
             mPetName.setText(myPet.getName());
         }

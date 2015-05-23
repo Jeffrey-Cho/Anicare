@@ -12,21 +12,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListFriendFragment extends AniCareFragment {
 
     private static final String TAG = ListFriendFragment.class.getSimpleName();
-    private PetListAdapter petList;
-
+    private PetListAdapter petListAdapter;
+    private List<AniCarePet> petList = new ArrayList<AniCarePet>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        petListAdapter = new PetListAdapter(petList);
+        mAppContext.showProgressDialog(mThisActivity);
         mAniCareService.listPet(mThisUser.getId(), new ListCallback<AniCarePet>() {
             @Override
             public void onCompleted(List<AniCarePet> list, int count) {
-                petList = new PetListAdapter(list);
+                petList.addAll(list);
+                petListAdapter.notifyDataSetChanged();
+                mAppContext.dismissProgressDialog();
             }
         });
     }
@@ -41,7 +46,7 @@ public class ListFriendFragment extends AniCareFragment {
         LinearLayoutManager llm = new LinearLayoutManager(mThisActivity);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-        recList.setAdapter(petList);
+        recList.setAdapter(petListAdapter);
 
         return rootView;
     }

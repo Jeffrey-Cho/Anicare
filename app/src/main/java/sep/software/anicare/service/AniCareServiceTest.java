@@ -204,16 +204,14 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public void listPet(String userId, final ListCallback<AniCarePet> callback) {
 
-        if (true) {
-            callback.onCompleted(petList, petList.size());
-        }
+//        if (true) {
+//            callback.onCompleted(petList, petList.size());
+//        }
 
         if (!internetAvailable()) {
             EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
             return;
         }
-
-        if (true) return;
 
         JsonObject jo = new JsonObject();
         jo.addProperty("userId", userId);
@@ -227,6 +225,7 @@ public class AniCareServiceTest implements AniCareService {
                 if (arg1 == null) {
                     JsonElement json = arg0.getAsJsonArray();
                     List<AniCarePet> list = new Gson().fromJson(json, new TypeToken<List<AniCarePet>>() {}.getType());
+                    AniCareLogger.log(list);
                     callback.onCompleted(list, list.size());
                 } else {
                     EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));

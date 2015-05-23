@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -111,6 +113,8 @@ public class MakeFriendFragment extends AniCareFragment {
                 pet.setCategory(category);
                 pet.setSize(size);
                 mAppContext.showProgressDialog(mThisActivity);
+                
+                Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
                 mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {
                     @Override
                     public void onCompleted(AniCarePet entity) {
