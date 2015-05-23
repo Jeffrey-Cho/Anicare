@@ -199,6 +199,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setName(petName.getText().toString());
                 pet.setCategory(Category);
                 pet.setUserId(mThisUser.getId());
+                pet.setUserName(mThisUser.getName());
 
                 pet.setPersonality(checkPersonality());
                 pet.setSize(checkSize());
@@ -214,7 +215,6 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                             @Override
                             public void onCompleted(AniCarePet entity) {
                                 AsyncChainer.notifyNext(obj, entity.getId());
-                                AniCareLogger.log("notifyNext");
                             }
                         });
 
@@ -223,7 +223,6 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                     @Override
                     public void doNext(Object obj, Object... params) {
                         String id = (String)params[0];
-                        AniCareLogger.log("upload Image");
 
                         mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
                             @Override
@@ -237,8 +236,6 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                         });
                     }
                 });
-
-
 
             } else {
                 // alert window show

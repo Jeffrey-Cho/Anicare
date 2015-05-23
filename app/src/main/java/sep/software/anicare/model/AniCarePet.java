@@ -181,12 +181,20 @@ public class AniCarePet extends AniCareModel {
         this.start = start.toString();
     }
 
+    public void setStartDate(String start) {
+        this.start = start;
+    }
+
     public AniCareDateTime getEndDate() {
         return new AniCareDateTime(end);
     }
 
     public void setEndDate(AniCareDateTime end) {
         this.end = end.toString();
+    }
+
+    public void setEndDate(String end) {
+        this.end = end;
     }
 
     public static AniCarePet rand() {
