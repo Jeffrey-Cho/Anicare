@@ -1,12 +1,15 @@
 package sep.software.anicare;
 
+import sep.software.anicare.activity.MainActivity;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.util.AniCareLogger;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -60,7 +63,9 @@ public class AniCareIntentService extends IntentService {
         AniCareUser user = mGb.create().fromJson(userObj, AniCareUser.class);
 
 
-        ((Vibrator)mAppContext.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
+
+        notifyMessage(msg);
+
 //        if(AudioManager.RINGER_MODE_SILENT != audioManager.getRingerMode()){
 //            ((Vibrator)getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
 //        }
@@ -143,12 +148,58 @@ public class AniCareIntentService extends IntentService {
 	private Notification getNotification(AniCareMessage message, PendingIntent resultPendingIntent, Bitmap largeIcon){
 		// Set Notification
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mAppContext)
-//		.setSmallIcon(R.drawable.ic_stat_notify)
-		.setLargeIcon(largeIcon)
-//		.setContentTitle(noti.getWhoMade())
-//		.setContentText(noti.notiContent())
+		.setSmallIcon(R.drawable.ic_launcher)
+//		.setLargeIcon(largeIcon)
+		.setContentTitle(message.getSender())
+		.setContentText(message.getContent())
 		.setAutoCancel(true)
 		.setContentIntent(resultPendingIntent);
 		return mBuilder.build();
 	}
+
+
+    private void notifyMessage(AniCareMessage message){
+		/*
+		 * Creates an explicit intent for an Activity in your app
+		 */
+        Intent resultIntent = new Intent(this, MainActivity.class);
+        String title = message.getSender();
+        String content = message.getContent();
+
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(mAppContext);
+
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+
+        // Set intent and bitmap
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+		/*
+		 * Set Notification
+		 */
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mAppContext)
+                .setSmallIcon(R.drawable.ic_launcher)
+//                .setLargeIcon(bitmap)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(true);
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        // Notify!
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(1, mBuilder.build());
+
+        // For Vibration
+        AudioManager audioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+        if(AudioManager.RINGER_MODE_SILENT != audioManager.getRingerMode()){
+            ((Vibrator)getSystemService(Context.VIBRATOR_SERVICE)).vibrate(800);
+        }
+    }
 }

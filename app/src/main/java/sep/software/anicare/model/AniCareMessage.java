@@ -104,6 +104,18 @@ public class AniCareMessage extends AniCareModel {
 		return relationId;
 	}
 
+    public void makeRelation() {
+        if (senderId == null || receiverId == null) {
+            this.relationId = "00000000";
+            return;
+        }
+        if (senderId.compareTo(receiverId) > 0) {
+            this.relationId = senderId + receiverId;
+        } else {
+            this.relationId = receiverId + senderId;
+        }
+    }
+
 	public void setRelationId(String relationId) {
 		this.relationId = relationId;
 	}
@@ -146,5 +158,8 @@ public class AniCareMessage extends AniCareModel {
 			return new AniCareMessage[size];
 		}
 	};
-	
+
+    static class MessageBuilder {
+
+    }
 }

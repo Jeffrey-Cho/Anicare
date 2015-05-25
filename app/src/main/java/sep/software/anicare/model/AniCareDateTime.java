@@ -29,6 +29,12 @@ public class AniCareDateTime {
 		dateTime.switchTimezone(TimeZone.getDefault().getID());
 	}
 
+    public static AniCareDateTime now() {
+        Time time = new Time();
+        time.setToNow();
+        return new AniCareDateTime(time.format("%Y%m%d%H%M%S"));
+    }
+
 	public static AniCareDateTime getToday() {
 		Time time = new Time();
 		time.setToNow();
