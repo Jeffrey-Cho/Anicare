@@ -1,21 +1,31 @@
 package sep.software.anicare;
 
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.util.AniCareLogger;
+
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 public class AniCareIntentService extends IntentService {
 
 	public static final int NOTIFICATION_ID = 1;
 
-	private Context mThis;
+	private Context mAppContext;
+    private GsonBuilder mGb = new GsonBuilder();
 
 	public AniCareIntentService() {
 		this("AniCareIntentService");
@@ -26,19 +36,34 @@ public class AniCareIntentService extends IntentService {
 
 
 	public void onHandleIntent(Intent intent) {
-		String unRegisterd = intent.getStringExtra("unregistered");
-		if (unRegisterd != null && unRegisterd.equals(AniCareProtocol.GOOGLE_PLAY_APP_ID)){
+        mAppContext = AniCareApp.getAppContext();
+		String unRegistered = intent.getStringExtra("unregistered");
+		if (unRegistered != null && unRegistered.equals(AniCareProtocol.GOOGLE_PLAY_APP_ID)){
 			return;	
 		}
-
-		String message = intent.getExtras().getString("message");
-		alertNotification(message);
+		String dataFromServer = intent.getExtras().getString("message");
+		alertNotification(dataFromServer);
 	}
 
 
-	private void alertNotification(String messageStr){
-		final AniCareMessage message = new Gson().fromJson(messageStr, AniCareMessage.class);
-		final PendingIntent pendingIntent = getPendingIntent(message);
+	private void alertNotification(String dataFromServerStr){
+		final JsonObject dataFromServer = mGb.create().fromJson(dataFromServerStr, JsonObject.class);
+//		final PendingIntent pendingIntent = getPendingIntent(message);
+        if (dataFromServer == null) {
+            AniCareLogger.log("message is NULL");
+            return;
+        }
+        JsonObject msgObj = dataFromServer.get("message").getAsJsonObject();
+        JsonObject userObj = dataFromServer.get("user").getAsJsonObject();
+
+        AniCareMessage msg = mGb.create().fromJson(msgObj, AniCareMessage.class);
+        AniCareUser user = mGb.create().fromJson(userObj, AniCareUser.class);
+
+
+        ((Vibrator)mAppContext.getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
+//        if(AudioManager.RINGER_MODE_SILENT != audioManager.getRingerMode()){
+//            ((Vibrator)getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
+//        }
 
 //		AsyncChainer.asyncChain(mThis, new Chainable(){
 //
@@ -117,7 +142,7 @@ public class AniCareIntentService extends IntentService {
 
 	private Notification getNotification(AniCareMessage message, PendingIntent resultPendingIntent, Bitmap largeIcon){
 		// Set Notification
-		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mThis)
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mAppContext)
 //		.setSmallIcon(R.drawable.ic_stat_notify)
 		.setLargeIcon(largeIcon)
 //		.setContentTitle(noti.getWhoMade())
