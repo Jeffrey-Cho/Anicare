@@ -14,6 +14,8 @@ public class AniCareUser extends AniCareModel {
     private String imageUrl;
     private String location;
     private String selfIntro;
+    private double longitude;
+    private double latitude;
     private int point;
     private int rawHouseType;
     private boolean hasPet;
@@ -106,6 +108,14 @@ public class AniCareUser extends AniCareModel {
     public void setHasPet(boolean hasPet) {
         this.hasPet = hasPet;
     }
+
+    public double getLongitude() { return this.longitude; }
+
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
+    public double getLatitude() { return this.latitude; }
+
+    public void setLatitude(double latitude) { this.latitude = latitude; }
 
     public static AniCareUser rand() {
         return rand(false);

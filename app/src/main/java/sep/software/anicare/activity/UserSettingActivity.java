@@ -24,6 +24,7 @@ import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
 
@@ -40,6 +41,9 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private RadioGroup havePet;
     private TextView selfIntro;
     private Button submitBtn;
+
+    private double longitude;
+    private double latitude;
 
     private AniCareUser.HouseType livingType;
     private int defaultPoint = 100;
@@ -75,6 +79,16 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
         Picasso.with(mThisActivity).invalidate(mAniCareService.getUserImageUrl(mThisUser.getId()));
         mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
+
+
+        userLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setClass(mThisActivity, MapActivity.class);
+                startActivityForResult(intent, MapActivity.MAP_REQUEST);
+            }
+        });
 
     }
 
@@ -133,6 +147,9 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 user.setHouseType(livingType);
                 user.setHasPet(havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_yes);
 
+                user.setLongitude(this.longitude);
+                user.setLatitude((this.latitude));
+
                 mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                     @Override
                     public void onCompleted(AniCareUser entity) {
@@ -169,14 +186,23 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 case FileUtil.GALLERY:
                     mProfileImageUri = data.getData();
                     imagePath = FileUtil.getMediaPathFromGalleryUri(mThisActivity, mProfileImageUri);
+                    updateProfileImage(imagePath);
                     break;
                 case FileUtil.CAMERA:
                     mProfileImageUri = FileUtil.getMediaUriFromCamera(mThisActivity, data, mProfileImageUri);
                     imagePath = mProfileImageUri.getPath();
+                    updateProfileImage(imagePath);
+                    break;
+                case MapActivity.MAP_REQUEST:
+                    double longitude = data.getDoubleExtra(MapActivity.RESULT_LONGITUDE, 0);
+                    double latitude = data.getDoubleExtra(MapActivity.RESULT_LATITUDE, 0);
+                    userLocation.setText("longitude : "+longitude +"\n latitude : "+ latitude);
+                    this.longitude = longitude;
+                    this.latitude = latitude;
                     break;
             }
 
-            updateProfileImage(imagePath);
+
         }
     }
 

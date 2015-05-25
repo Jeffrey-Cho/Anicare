@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<fragment
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="com.google.android.gms.maps.MapFragment">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:text="Pick Location"
+        android:id="@+id/pick_btn"
+        android:padding="10dp"
+        android:layout_marginBottom="20dp"
+        android:paddingRight="10dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/line_width"
+        android:background="@color/list_background"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/x_line"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="@dimen/line_width"
+        android:layout_height="match_parent"
+        android:background="@color/list_background"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/y_line"/>
+    </RelativeLayout>
+
+    </fragment>
+
+
+

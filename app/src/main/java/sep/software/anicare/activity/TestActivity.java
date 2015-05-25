@@ -206,23 +206,15 @@ public class TestActivity extends AniCareActivity {
 
                     @Override
                     public String title() {
-                        return "Test putPet";
+                        return "Go to Map Activity";
                     }
 
                     @Override
                     public void describe() {
 
-                        mAniCareService.putPet(mThisPet, new EntityCallback<AniCarePet>() {
-                            @Override
-                            public void onCompleted(AniCarePet entity) {
-                                new AlertDialog.Builder(mThisActivity)
-                                        .setMessage("Success")
-                                        .setPositiveButton("ok", null)
-                                        .show();
-                            }
-                        });
-
-
+                        Intent intent = new Intent();
+                        intent.setClass(mThisActivity, MapActivity.class);
+                        startActivity(intent);
                     }
                 });
             }

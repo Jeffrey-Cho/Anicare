@@ -66,6 +66,7 @@
     <string name="title_activity_user_setting">UserSettingActivity</string>
     <string name="title_activity_pet_setting">PetSettingActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_map">MapActivity</string>
     <string name="item_yes">Yes</string>
     <string name="item_no">No</string>
     <string name="item_confirm">확인</string>

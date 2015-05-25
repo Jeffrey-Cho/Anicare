@@ -1,7 +1,6 @@
 package sep.software.anicare.fragment;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -113,7 +112,7 @@ public class MakeFriendFragment extends AniCareFragment {
                 pet.setCategory(category);
                 pet.setSize(size);
                 mAppContext.showProgressDialog(mThisActivity);
-                
+
                 Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
                 mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {
                     @Override

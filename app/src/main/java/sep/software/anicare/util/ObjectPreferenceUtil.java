@@ -49,6 +49,7 @@ public class ObjectPreferenceUtil {
 
     public <E> E getClass(Class<E> clazz) {
         String jsonStr = mPref.getString(clazz.getName(), DEFAULT_VALUE);
+        if (jsonStr.equals(DEFAULT_VALUE)) return null;
         return gb.create().fromJson(jsonStr, clazz);
     }
 

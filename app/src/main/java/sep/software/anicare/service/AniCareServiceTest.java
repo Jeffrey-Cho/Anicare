@@ -225,7 +225,6 @@ public class AniCareServiceTest implements AniCareService {
                 if (arg1 == null) {
                     JsonElement json = arg0.getAsJsonArray();
                     List<AniCarePet> list = new Gson().fromJson(json, new TypeToken<List<AniCarePet>>() {}.getType());
-                    AniCareLogger.log(list);
                     callback.onCompleted(list, list.size());
                 } else {
                     EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
