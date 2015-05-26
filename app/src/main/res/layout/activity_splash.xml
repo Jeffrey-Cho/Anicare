@@ -26,15 +26,18 @@
         facebook:login_text="@string/facebook_login"
         facebook:logout_text="@string/facebook_login" />
 
-    <!--
+
     <com.kakao.widget.LoginButton
-        android:id="@+id/login_kakao"
+        android:id="@+id/com_kakao_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="@string/kakao_login"
         android:textStyle="bold"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp" />
-    -->
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
+
 </RelativeLayout>

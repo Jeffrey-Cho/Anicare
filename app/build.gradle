@@ -26,15 +26,27 @@ android {
             debuggable false
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':facebook')
 //    compile project(':kakaosdk')
-    compile 'com.google.android.gms:play-services:7.3.0'
+//    compile 'com.google.android.gms:play-services:7.3.0'
+    compile 'com.google.android.gms:play-services-base:7.3.0'
+    compile 'com.google.android.gms:play-services-maps:7.3.0'
+    compile 'com.google.android.gms:play-services-gcm:7.3.0'
+    compile 'com.google.android.gms:play-services-plus:7.3.0'
     compile 'com.android.support:cardview-v7:21.0.0'
     compile 'com.android.support:recyclerview-v7:21.0.0'
-  //compile 'com.facebook.android:facebook-android-sdk:4.0.1'
+//    compile 'com.facebook.android:facebook-android-sdk:4.0.1'
 //    compile 'com.kakao.sdk:usermgmt:1.0.52'
+    compile group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    compile group: 'com.google', name: 'volley', version: project.VOLLEY_VERSION
+//    compile group: 'com.google.android', name: 'support-v4', version: project.SUPPORTV4_VERSION
 }

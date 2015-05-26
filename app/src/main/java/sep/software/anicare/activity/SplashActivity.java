@@ -26,13 +26,14 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
-//import com.kakao.APIErrorResult;
-//import com.kakao.MeResponseCallback;
-//import com.kakao.Session;
-//import com.kakao.SessionCallback;
-//import com.kakao.UserManagement;
-//import com.kakao.UserProfile;
-//import com.kakao.exception.KakaoException;
+import com.google.gson.Gson;
+import com.kakao.APIErrorResult;
+import com.kakao.MeResponseCallback;
+import com.kakao.Session;
+import com.kakao.SessionCallback;
+import com.kakao.UserManagement;
+import com.kakao.UserProfile;
+import com.kakao.exception.KakaoException;
 
 import com.squareup.picasso.Picasso;
 
@@ -46,9 +47,9 @@ public class SplashActivity extends AniCareActivity {
 
     private UiLifecycleHelper mFacebookUiHelper;
 
-//    private com.kakao.widget.LoginButton mKakaoButton;
-//    private Session session;
-//    private final SessionCallback mySessionCallback = new MySessionStatusCallback();
+    private com.kakao.widget.LoginButton mKakaoButton;
+    private Session session;
+    private final SessionCallback mySessionCallback = new MySessionStatusCallback();
 
 
     @Override
@@ -60,7 +61,7 @@ public class SplashActivity extends AniCareActivity {
 
         initializeFacebook(savedInstanceState);
 
-//        initializeKakao();
+        initializeKakao();
     }
 
     private void initializeFacebook(Bundle savedInstanceState) {
@@ -107,12 +108,13 @@ public class SplashActivity extends AniCareActivity {
 
     }
 
-//    private void initializeKakao() {
-//
-//
-//        session = Session.getCurrentSession();
-//        session.addCallback(mySessionCallback);
-//    }
+    private void initializeKakao() {
+
+        Session.initialize(mAppContext);
+        mKakaoButton = (com.kakao.widget.LoginButton) findViewById(R.id.com_kakao_login);
+        session = Session.getCurrentSession();
+        session.addCallback(mySessionCallback);
+    }
 
     private void login(final AniCareUser aniCareUser){
         if (mAniCareService.isLoggedIn()) {
@@ -230,18 +232,18 @@ public class SplashActivity extends AniCareActivity {
         AppEventsLogger.activateApp(mThisActivity);
 
         // KakaoTalk
-//        if (session.isClosed()){
-//            mKakaoButton.setVisibility(View.VISIBLE);
-//        }
-//        // 세션을 가지고 있거나, 갱신할 수 있는 상태로 명시적 오픈을 위한 로그인 버튼을 보여주지 않는다.
-//        else {
-//            mKakaoButton.setVisibility(View.GONE);
-//
-//            // 갱신이 가능한 상태라면 갱신을 시켜준다.
-//            if (session.isOpenable()) {
-//                session.implicitOpen();
-//            }
-//        }
+        if (session.isClosed()){
+            mKakaoButton.setVisibility(View.VISIBLE);
+        }
+        // 세션을 가지고 있거나, 갱신할 수 있는 상태로 명시적 오픈을 위한 로그인 버튼을 보여주지 않는다.
+        else {
+            mKakaoButton.setVisibility(View.GONE);
+
+            // 갱신이 가능한 상태라면 갱신을 시켜준다.
+            if (session.isOpenable()) {
+                session.implicitOpen();
+            }
+        }
     }
 
 
@@ -252,9 +254,9 @@ public class SplashActivity extends AniCareActivity {
         mFacebookUiHelper.onActivityResult(requestCode, resultCode, data);
 
         // kakao
-//        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-//            return;
-//        }
+        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -278,7 +280,7 @@ public class SplashActivity extends AniCareActivity {
     public void onDestroy() {
         super.onDestroy();
         mFacebookUiHelper.onDestroy();
-//        session.removeCallback(mySessionCallback);
+        session.removeCallback(mySessionCallback);
     }
 
 
@@ -288,54 +290,54 @@ public class SplashActivity extends AniCareActivity {
         mFacebookUiHelper.onSaveInstanceState(outState);
     }
 
-//    private class MySessionStatusCallback implements SessionCallback {
-//        @Override
-//        public void onSessionOpened() {
-//
-//            AniCareLogger.log("SessionOpend");
-//
-//            UserManagement.requestMe(new MeResponseCallback() {
-//
-//                @Override
-//                protected void onSuccess(final UserProfile userProfile) {
-//                    String profileImageURL = userProfile.getProfileImagePath();
-//
-//                    AniCareUser aniCareUser = new AniCareUser();
-//                    aniCareUser.setPlatformId(String.valueOf(userProfile.getId()));
-//                    aniCareUser.setName(userProfile.getNickname());
-//                    aniCareUser.setImageUrl(profileImageURL);
-//
-//                    AniCareLogger.log(new Gson().toJson(userProfile));
-//
-//                    login(aniCareUser);
-//                }
-//
-//                @Override
-//                protected void onNotSignedUp() {
-//
-//                }
-//
-//                @Override
-//                protected void onSessionClosedFailure(final APIErrorResult errorResult) {
-//
-//                }
-//
-//                @Override
-//                protected void onFailure(final APIErrorResult errorResult) {
-//
-//                }
-//            });
-//        }
-//
-//        @Override
-//        public void onSessionClosed(final KakaoException exception) {
-//
-//            mKakaoButton.setVisibility(View.VISIBLE);
-//        }
-//
-//        @Override
-//        public void onSessionOpening() {
-//
-//        }
-//    }
+    private class MySessionStatusCallback implements SessionCallback {
+        @Override
+        public void onSessionOpened() {
+
+            AniCareLogger.log("SessionOpend");
+
+            UserManagement.requestMe(new MeResponseCallback() {
+
+                @Override
+                protected void onSuccess(final UserProfile userProfile) {
+                    String profileImageURL = userProfile.getProfileImagePath();
+
+                    AniCareUser aniCareUser = new AniCareUser();
+                    aniCareUser.setPlatformId(String.valueOf(userProfile.getId()));
+                    aniCareUser.setName(userProfile.getNickname());
+                    aniCareUser.setImageUrl(profileImageURL);
+
+                    AniCareLogger.log(new Gson().toJson(userProfile));
+
+                    login(aniCareUser);
+                }
+
+                @Override
+                protected void onNotSignedUp() {
+
+                }
+
+                @Override
+                protected void onSessionClosedFailure(final APIErrorResult errorResult) {
+
+                }
+
+                @Override
+                protected void onFailure(final APIErrorResult errorResult) {
+
+                }
+            });
+        }
+
+        @Override
+        public void onSessionClosed(final KakaoException exception) {
+
+            mKakaoButton.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onSessionOpening() {
+
+        }
+    }
 }
