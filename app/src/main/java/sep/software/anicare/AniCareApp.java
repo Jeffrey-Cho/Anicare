@@ -11,6 +11,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.kakao.Session;
+
 //import com.kakao.Session;
 
 public class AniCareApp extends Application {
@@ -32,7 +34,7 @@ public class AniCareApp extends Application {
         instance = this;
 
         // initialize KakaoTalk
-//        Session.initialize(this);
+        Session.initialize(this);
 
         // initialize ObjectPreferenceUtil
         mObjectPreference = new ObjectPreferenceUtil(instance);

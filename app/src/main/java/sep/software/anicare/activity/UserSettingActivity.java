@@ -3,6 +3,8 @@ package sep.software.anicare.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +16,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import sep.software.anicare.R;
@@ -44,6 +49,10 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
     private double longitude;
     private double latitude;
+    private String location;
+    private String address1;
+    private String address2;
+    private String address3;
 
     private AniCareUser.HouseType livingType;
     private int defaultPoint = 100;
@@ -149,6 +158,10 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
                 user.setLongitude(this.longitude);
                 user.setLatitude((this.latitude));
+                user.setLocation(this.location);
+                user.setAddress1(this.address1);
+                user.setAddress2(this.address2);
+                user.setAddress3(this.address3);
 
                 mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                     @Override
@@ -196,14 +209,35 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 case MapActivity.MAP_REQUEST:
                     double longitude = data.getDoubleExtra(MapActivity.RESULT_LONGITUDE, 0);
                     double latitude = data.getDoubleExtra(MapActivity.RESULT_LATITUDE, 0);
-                    userLocation.setText("longitude : "+longitude +"\n latitude : "+ latitude);
+                    Address address = getLocationName(latitude, longitude);
+
+                    this.location = address.getAddressLine(0).replace("한국 ", "");
                     this.longitude = longitude;
                     this.latitude = latitude;
+                    this.address1 = address.getAdminArea();
+                    this.address2 = address.getLocality();
+                    this.address3 = address.getThoroughfare();
+
+                    userLocation.setText(this.location);
+
                     break;
             }
 
 
         }
+    }
+
+    private Address getLocationName(double latitude, double longitude) {
+        Geocoder gc = new Geocoder(mThisActivity, Locale.KOREA);
+        try {
+            List<Address> addressList = gc.getFromLocation(latitude, longitude, 1);
+            if (addressList != null && addressList.size() == 1) {
+                return addressList.get(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private void updateProfileImage(String imagePath){

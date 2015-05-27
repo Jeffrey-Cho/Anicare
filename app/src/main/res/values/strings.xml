@@ -2,7 +2,7 @@
 <resources>
 
     <string name="facebook_app_id">652540274852758</string>
-    <string name="facebook_login">Login with Facebook</string>
+    <string name="facebook_login">"   Log in with the Facebook Account  "</string>
     <string name="kakao_app_key">41ef00b068314b2c961dbcc0c77ffe86</string>
     <string name="kakao_login">Login with Kakao</string>
     <string name="app_name">AniCare</string>

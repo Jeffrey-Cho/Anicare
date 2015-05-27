@@ -123,7 +123,17 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public void logout() {
         Session session = com.facebook.Session.getActiveSession();
-        if (session != null) session.close();
+        if (session != null) {
+            if (!session.isClosed()) {
+                session.closeAndClearTokenInformation();
+            }
+        } else {
+
+            session = new Session(AniCareApp.getAppContext());
+            Session.setActiveSession(session);
+
+            session.closeAndClearTokenInformation();
+        }
 
         mObjectPreference.remove("user");
         mObjectPreference.remove("pet");

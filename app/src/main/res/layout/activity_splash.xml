@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="90dp"
+        android:layout_marginBottom="100dp"
         android:layout_centerHorizontal="true"
         facebook:login_text="@string/facebook_login"
         facebook:logout_text="@string/facebook_login" />
@@ -37,7 +37,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
 </RelativeLayout>
