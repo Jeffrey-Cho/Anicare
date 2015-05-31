@@ -7,6 +7,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -89,15 +90,31 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         Picasso.with(mThisActivity).invalidate(mAniCareService.getUserImageUrl(mThisUser.getId()));
         mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
 
+        userLocation.setOnTouchListener(new View.OnTouchListener() {
 
-        userLocation.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(mThisActivity, MapActivity.class);
-                startActivityForResult(intent, MapActivity.MAP_REQUEST);
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getActionMasked()) {
+                    case MotionEvent.ACTION_UP:
+                        Intent intent = new Intent();
+                        intent.setClass(mThisActivity, MapActivity.class);
+                        startActivityForResult(intent, MapActivity.MAP_REQUEST);
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
             }
         });
+
+//        userLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent();
+//                intent.setClass(mThisActivity, MapActivity.class);
+//                startActivityForResult(intent, MapActivity.MAP_REQUEST);
+//            }
+//        });
 
     }
 

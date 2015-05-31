@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
@@ -32,17 +34,17 @@ public class MakeFriendFragment extends AniCareFragment {
     private int mDay;
     private Button confirm;
     private Button cancel;
+    private DatePickerDialog dialog;
 
     private DatePickerDialog.OnDateSetListener fromDateSetListener = new DatePickerDialog.OnDateSetListener() {
-
         public void onDateSet(DatePicker view, int year, int monthOfYear,
                               int dayOfMonth) {
-            Log.d(TAG, "onDateSet");
             mYear=year;
             mMonth=monthOfYear;
             mDay=dayOfMonth;
             setFromDate();
         }
+
     };
 
     private DatePickerDialog.OnDateSetListener toDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -56,6 +58,31 @@ public class MakeFriendFragment extends AniCareFragment {
         }
     };
 
+
+    // for checking the valid date
+    private boolean checkValidDate() {
+        if (fromDate.getText()!=null && toDate.getText() != null
+                && fromDate.getTextSize() != 0 && toDate.getTextSize() != 0) {
+
+            SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
+            Date date1 = new Date();
+            Date date2 = new Date();
+
+            try {
+                date1 = dateFormat.parse(fromDate.getText().toString());
+                date2 = dateFormat.parse(toDate.getText().toString());
+
+
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            return date2.after(date1);
+        }
+
+        return false;
+    }
 
 
     @Override
@@ -76,17 +103,39 @@ public class MakeFriendFragment extends AniCareFragment {
         confirm = (Button)rootView.findViewById(R.id.confirm);
         cancel =  (Button)rootView.findViewById(R.id.cancel);
 
-        fromDate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d(TAG,"fromDate onClick");
-                showFromDialog();
+
+        // select date event
+        fromDate.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_UP:
+                        dialog = new DatePickerDialog(mThisActivity, fromDateSetListener, mYear, mMonth, mDay);
+                        dialog.show();
+                        break;
+                    default:
+                        return false;
+
+                }
+                return true;
             }
+
         });
 
-        toDate.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Log.d(TAG,"toDate onClick");
-                showToDialog();
+        toDate.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_UP:
+                        dialog = new DatePickerDialog(mThisActivity, toDateSetListener, mYear, mMonth, mDay);
+                        dialog.show();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
             }
         });
 
@@ -139,7 +188,6 @@ public class MakeFriendFragment extends AniCareFragment {
 
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
         try {
-
             return (sd.format(sd.parse(datetime)).replace("-", ""));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
@@ -148,17 +196,6 @@ public class MakeFriendFragment extends AniCareFragment {
         return null;
     }
 
-    protected void showFromDialog() {
-        Log.d(TAG,"showFromDialog");
-        DatePickerDialog dialog = new DatePickerDialog(mThisActivity, fromDateSetListener, mYear, mMonth, mDay);
-        dialog.show();
-    }
-
-    protected void showToDialog() {
-        Log.d(TAG,"showToDialog");
-        DatePickerDialog dialog = new DatePickerDialog(mThisActivity, toDateSetListener, mYear, mMonth, mDay);
-        dialog.show();
-    }
 
     private void setFromDate() {
         Log.d(TAG,"setFromDate");
