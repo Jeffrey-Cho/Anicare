@@ -10,5 +10,9 @@
     <color name="drawer_shadow">#00000000</color>
     <color name="my_background">#93BEBE</color>
     <color name="gray">#808085</color>
+
+    <color name="anicare_background">#18bc9c</color>
+    <color name="anicare_hint">#2c3e50</color>
+    <color name="anicare_background_blue">#33ddff</color>
     
 </resources>

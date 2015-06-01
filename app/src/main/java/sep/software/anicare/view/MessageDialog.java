@@ -2,11 +2,13 @@ package sep.software.anicare.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import sep.software.anicare.AniCareApp;
@@ -25,8 +27,8 @@ public class MessageDialog extends Dialog {
     Context context;
     TextView toWhom;
     EditText content;
-    Button cancelBtn;
-    Button sendBtn;
+    ImageButton cancelBtn;
+    ImageButton sendBtn;
 
     AniCareApp mApp;
     AniCareService mAniCareService;
@@ -57,10 +59,10 @@ public class MessageDialog extends Dialog {
 
         toWhom = (TextView) findViewById(R.id.custom_message_dialog_to_whom);
         content = (EditText)findViewById(R.id.custom_message_dialog_content);
-        cancelBtn = (Button)findViewById(R.id.custom_message_dialog_cancel_btn);
-        sendBtn =   (Button)findViewById(R.id.custom_message_dialog_send_btn);
+        cancelBtn = (ImageButton)findViewById(R.id.custom_message_dialog_cancel_btn);
+        sendBtn =   (ImageButton)findViewById(R.id.custom_message_dialog_send_btn);
 
-        toWhom.setText(this.receiver);
+        toWhom.setText("To : "+this.receiver);
         setTitle("Send Message");
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +78,7 @@ public class MessageDialog extends Dialog {
                 AniCareMessage msg = new AniCareMessage();
 
                 AniCareUser me = mAniCareService.getCurrentUser();
-                msg.setRawType(1);
+                msg.setType(AniCareMessage.Type.MESSAGE);
                 msg.setSender(me.getName());
                 msg.setSenderId(me.getId());
                 msg.setReceiver(receiver);

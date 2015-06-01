@@ -7,7 +7,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
-        android:textSize="30sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textSize="25sp"
+        android:textColor="@color/anicare_hint"
         android:id="@+id/custom_message_dialog_to_whom" />
 
     <EditText
@@ -25,16 +30,22 @@
         android:gravity="center"
         android:layout_gravity="center_horizontal">
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:layout_height="fill_parent"
+            android:padding="6dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/custom_btn_bg"
+            android:src="@drawable/ic_cancel_white_48dp"
             android:id="@+id/custom_message_dialog_cancel_btn" />
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
+            android:background="@drawable/custom_btn_bg"
+            android:padding="6dp"
+            android:layout_margin="5dp"
+            android:layout_height="fill_parent"
+            android:src="@drawable/ic_send_white_48dp"
             android:id="@+id/custom_message_dialog_send_btn" />
     </LinearLayout>
 </LinearLayout>

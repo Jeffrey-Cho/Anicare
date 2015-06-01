@@ -71,6 +71,8 @@ public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListV
             cardImage = (DynamicHeightImageView) v.findViewById(R.id.pet_image);
             petName =  (TextView) v.findViewById(R.id.pet_name);
             petLocation = (TextView)  v.findViewById(R.id.pet_location);
+
+//            v.setBackgroundColor(v.getResources().getColor(R.color.anicare_background));
         }
     }
 

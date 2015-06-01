@@ -212,11 +212,7 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void listPet(String userId, final ListCallback<AniCarePet> callback) {
-
-//        if (true) {
-//            callback.onCompleted(petList, petList.size());
-//        }
+    public void listPet(int mode, String userId, final ListCallback<AniCarePet> callback) {
 
         if (!internetAvailable()) {
             EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
@@ -225,6 +221,7 @@ public class AniCareServiceTest implements AniCareService {
 
         JsonObject jo = new JsonObject();
         jo.addProperty("userId", userId);
+        jo.addProperty("mode", mode);
 
         mMobileClient.invokeApi("list_pet", jo, new ApiJsonOperationCallback() {
 

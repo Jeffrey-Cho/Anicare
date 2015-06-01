@@ -1,6 +1,7 @@
 package sep.software.anicare.fragment;
 
 import sep.software.anicare.AniCareApp;
+import sep.software.anicare.R;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;

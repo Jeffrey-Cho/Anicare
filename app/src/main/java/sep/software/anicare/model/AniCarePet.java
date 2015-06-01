@@ -53,6 +53,7 @@ public class AniCarePet extends AniCareModel {
     private String userName;
 
     private String location;
+    private int houseType;
     private String imageURL;
 
     private int rawCategory;
@@ -172,6 +173,14 @@ public class AniCarePet extends AniCareModel {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public AniCareUser.HouseType getHouseType() {
+        return AniCareUser.HouseType.values()[this.houseType];
+    }
+
+    public void setHouseType(AniCareUser.HouseType houseType) {
+        this.houseType = houseType.getValue();
     }
 
     public AniCareDateTime getStartDate() {

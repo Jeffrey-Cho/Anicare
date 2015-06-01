@@ -17,13 +17,14 @@ import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareDBService;
 import sep.software.anicare.service.AniCareDBServicePreference;
+import sep.software.anicare.service.AniCareDBServiceSQLite;
 
 public class TestActivity extends AniCareActivity {
 
     ListView listView;
 
     ArrayAdapter<String> adapter = null;
-    AniCareDBService dbService = new AniCareDBServicePreference();
+    AniCareDBService dbService;
 
     ArrayList<DescriptionInterface> descriptions; // = new ArrayList<DescriptionInterface>();
 
@@ -31,7 +32,7 @@ public class TestActivity extends AniCareActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-
+        dbService = new AniCareDBServiceSQLite(mThisActivity);
         adapter = new ArrayAdapter<String>(mThisActivity, android.R.layout.simple_list_item_1);
         listView = (ListView) findViewById(R.id.test_activity_list_view);
 
@@ -215,6 +216,45 @@ public class TestActivity extends AniCareActivity {
                         Intent intent = new Intent();
                         intent.setClass(mThisActivity, MapActivity.class);
                         startActivity(intent);
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
+                        return "Add random message to DB";
+                    }
+
+                    @Override
+                    public void describe() {
+                        AniCareMessage msg = AniCareMessage.rand();
+                        String str = msg.toString();
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(str)
+                                .setPositiveButton("ok", null)
+                                .show();
+                        dbService.addMessage(msg);
+
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
+                        return "Get every message list from DB";
+                    }
+
+                    @Override
+                    public void describe() {
+                        List<AniCareMessage> list = dbService.listMessage();
+                        if (list == null) return;
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage(list.toString())
+                                .setPositiveButton("ok", null)
+                                .show();
+
                     }
                 });
             }

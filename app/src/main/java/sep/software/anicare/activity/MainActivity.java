@@ -1,14 +1,16 @@
 package sep.software.anicare.activity;
 
 import sep.software.anicare.R;
+import sep.software.anicare.fragment.AniCareFragment;
 import sep.software.anicare.fragment.CareHistoryFragment;
 import sep.software.anicare.fragment.ListFriendFragment;
 import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
 import sep.software.anicare.fragment.SettingFragment;
 import sep.software.anicare.model.AniCarePet;
-import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.CircleImageView;
+
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -17,11 +19,11 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -29,6 +31,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Field;
 
 public class MainActivity extends AniCareActivity {
 
@@ -45,6 +49,9 @@ public class MainActivity extends AniCareActivity {
 
     private CircleImageView mProfileImage;
     private TextView mPetName;
+
+    // update the menu_main_ content by replacing fragments
+    Fragment fragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +96,10 @@ public class MainActivity extends AniCareActivity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setBackgroundDrawable(mThisActivity.getResources().getDrawable(R.drawable.custom_action_bar));
 
         mTitle = getTitle();
         mDrawerTitle = "Select Menu";
@@ -104,6 +113,17 @@ public class MainActivity extends AniCareActivity {
 
         if (savedInstanceState == null) {
             selectItem(0);
+        }
+
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore
         }
     }
 
@@ -139,8 +159,31 @@ public class MainActivity extends AniCareActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mLinearLayout);
+        menu.findItem(R.id.action_menu0).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_menu1).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_menu2).setVisible(!drawerOpen);
+        menu.findItem(R.id.action_menu3).setVisible(!drawerOpen);
         menu.findItem(R.id.action_test).setVisible(!drawerOpen);
+
+        AniCareFragment myFragment = (AniCareFragment)getFragmentManager().findFragmentByTag(ListFriendFragment.class.getSimpleName());
+
+        if (myFragment != null) {
+            menu.findItem(R.id.action_menu0).setVisible(myFragment.isVisible());
+            menu.findItem(R.id.action_menu1).setVisible(myFragment.isVisible());
+            menu.findItem(R.id.action_menu2).setVisible(myFragment.isVisible());
+            menu.findItem(R.id.action_menu3).setVisible(myFragment.isVisible());
+            menu.findItem(R.id.action_test).setVisible(myFragment.isVisible());
+        } else {
+            menu.findItem(R.id.action_menu0).setVisible(false);
+            menu.findItem(R.id.action_menu1).setVisible(false);
+            menu.findItem(R.id.action_menu2).setVisible(false);
+            menu.findItem(R.id.action_menu3).setVisible(false);
+            menu.findItem(R.id.action_test).setVisible(false);
+        }
+
+
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -149,10 +192,24 @@ public class MainActivity extends AniCareActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
+
+        ListFriendFragment listFrag = (ListFriendFragment)fragment;
         switch(item.getItemId()) {
+            case R.id.action_menu0:
+                listFrag.listFriend(0);
+                return true;
+            case R.id.action_menu1:
+                listFrag.listFriend(1);
+                return true;
+            case R.id.action_menu2:
+                listFrag.listFriend(2);
+                return true;
+            case R.id.action_menu3:
+                listFrag.listFriend(3);
+                return true;
             case R.id.action_test:
                 Intent intent = new Intent();
-                intent.setClass(MainActivity.this, TestActivity.class);
+                intent.setClass(mThisActivity, TestActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -170,9 +227,8 @@ public class MainActivity extends AniCareActivity {
     }
 
     private void selectItem(int position) {
-        // update the menu_main_ content by replacing fragments
-        Fragment fragment = null;
 
+        String tag = "";
         switch (position) {
             case 0:
                 fragment = new ListFriendFragment();
@@ -196,9 +252,9 @@ public class MainActivity extends AniCareActivity {
 //        Bundle args = new Bundle();
 //        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 //        fragment.setArguments(args);
-
+        tag = fragment.getClass().getSimpleName();
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment, tag).commit();
 
         // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);

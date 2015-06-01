@@ -7,7 +7,7 @@ import sep.software.anicare.util.RandomUtil;
 
 public class AniCareMessage extends AniCareModel {
 	public enum Type {
-		PUSH(0), MESSAGE(1);
+		SYSTEM(0), MESSAGE(1);
 
         private final int value;
         Type(int value) {
@@ -135,7 +135,7 @@ public class AniCareMessage extends AniCareModel {
 	public static AniCareMessage rand() {
 		AniCareMessage msg = new AniCareMessage();
 		msg.id = RandomUtil.getString(10);
-		msg.rawType = RandomUtil.getInt(1) == 0 ? Type.PUSH.getValue() : Type.MESSAGE.getValue();
+		msg.rawType = RandomUtil.getInt(1) == 0 ? Type.SYSTEM.getValue() : Type.MESSAGE.getValue();
 		msg.sender = RandomUtil.getName();
 		msg.senderId = RandomUtil.getString(10);
 		msg.receiver = RandomUtil.getName();

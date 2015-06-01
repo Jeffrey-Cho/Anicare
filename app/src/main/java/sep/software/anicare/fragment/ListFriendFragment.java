@@ -58,8 +58,12 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
         super.onCreate(savedInstanceState);
 
         petListAdapter = new PetListAdapter(petList);
+        listFriend(0);
+    }
+
+    public void listFriend(int mode) {
         mAppContext.showProgressDialog(mThisActivity);
-        mAniCareService.listPet(mThisUser.getId(), new ListCallback<AniCarePet>() {
+        mAniCareService.listPet(mode, mThisUser.getId(), new ListCallback<AniCarePet>() {
             @Override
             public void onCompleted(List<AniCarePet> list, int count) {
                 petList.addAll(list);
@@ -82,6 +86,8 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
         recList.setAdapter(petListAdapter);
 
         recList.addOnItemTouchListener(new RecyclerItemClickListener(this.getActivity(), recList, this));
+
+        rootView.setBackgroundColor(getResources().getColor(R.color.anicare_hint));
 
         return rootView;
     }

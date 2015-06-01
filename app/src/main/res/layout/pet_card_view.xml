@@ -19,14 +19,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:background="@drawable/rounded_corner"
+            />
 
-        <TextView
+        <sep.software.anicare.view.AniCareTextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Name: "
+            android:text="Name"
+            android:layout_marginRight="5dp"
             android:layout_below="@id/pet_image"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"/>
@@ -41,12 +44,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_alignBaseline="@id/name"/>
 
-        <TextView
+        <sep.software.anicare.view.AniCareTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Location: "
+            android:text="Location"
             android:id="@+id/location"
+            android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/pet_name"
             android:layout_alignBaseline="@id/name"
             android:layout_marginLeft="15dp"

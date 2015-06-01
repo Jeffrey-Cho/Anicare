@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import sep.software.anicare.R;
+
 public class DynamicHeightImageView extends ImageView {
 
 	private double mHeightRatio;
@@ -18,6 +20,8 @@ public class DynamicHeightImageView extends ImageView {
 
 	public DynamicHeightImageView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+
+        this.setBackground(context.getResources().getDrawable(R.drawable.rounded_corner));
 	}
 	
 	public void setHeightRatio(double ratio) {

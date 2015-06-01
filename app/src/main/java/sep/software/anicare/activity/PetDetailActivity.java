@@ -2,7 +2,9 @@ package sep.software.anicare.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +36,7 @@ import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
+import sep.software.anicare.view.AniCareButton;
 import sep.software.anicare.view.MessageDialog;
 
 /**
@@ -54,8 +57,8 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
     private TextView petPersonality;
     private TextView petNeutralized;
     private TextView petFeed;
-    private Button friendRequestBtn;
-    private Button sendMsgBtn;
+    private AniCareButton friendRequestBtn;
+    private AniCareButton sendMsgBtn;
 
     private AniCarePet.Category Category;
     private Bitmap petImageBitmap;
@@ -76,15 +79,16 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         Bundle bundle = getIntent().getExtras();
         selectedPet = bundle.getParcelable("petInfo"); // get selected pet information
 
-        //getActionBar().hide();
+        getActionBar().setBackgroundDrawable(mThisActivity.getResources().getDrawable(R.drawable.custom_action_bar));
 
         petImage = (ImageView) findViewById(R.id.petProfileImage);
         petName = (TextView) findViewById(R.id.pet_detail_name);
         petName.setText(selectedPet.getName());
         petName.setSelected(false);
         petLocation = (TextView) findViewById(R.id.pet_detail_location);
-        //petLocation.setText(selectedPet.getLocation());
+        petLocation.setText(selectedPet.getLocation());
         petLocation.setSelected(false);
+
 
         petCategory = (TextView)findViewById(R.id.pet_detail_category);
 
@@ -111,7 +115,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         //petCategory.setOnItemSelectedListener(this);
 
         petDetailLivingType = (TextView) findViewById(R.id.pet_detail_living_type);
-        //petDetailLivingType.setText(selectedPet.getLivingType());
+        petDetailLivingType.setText(selectedPet.getHouseType().toString());
         petDetailLivingType.setSelected(false);
 
         petSize = (TextView) findViewById(R.id.pet_size);
@@ -158,8 +162,8 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         petFeed.setText(selectedPet.isPetFood() ? yesStr : noStr);
         petFeed.setSelected(false);
 
-        friendRequestBtn = (Button) findViewById(R.id.pet_detail_submit);
-        sendMsgBtn = (Button) findViewById(R.id.pet_detail_send_message);
+        friendRequestBtn = (AniCareButton) findViewById(R.id.pet_detail_submit);
+        sendMsgBtn = (AniCareButton) findViewById(R.id.pet_detail_send_message);
 
         friendRequestBtn.setOnClickListener(this);
         sendMsgBtn.setOnClickListener(this);
@@ -176,12 +180,12 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.pet_detail_submit: // friend request
-                //sendRequest(receiver, receiverId);
-                sendRequest(me.getName(), me.getId()); // for testing
+                sendRequest(receiver, receiverId);
+//                sendRequest(me.getName(), me.getId()); // for testing
                 break;
             case R.id.pet_detail_send_message: // send messaage
-                //MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId); // for testing
-                MessageDialog dialog = new MessageDialog(mThisActivity, me.getName(), me.getId()); // for testing
+                MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId);
+//                MessageDialog dialog = new MessageDialog(mThisActivity, me.getName(), me.getId()); // for testing
                 dialog.show();
                 break;
             default:
@@ -196,7 +200,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
 
         String requestMsg = "System Msg: "+ me.getName()+ " want to make friend with your pet." ;
 
-        msg.setRawType(1);
+        msg.setType(AniCareMessage.Type.SYSTEM);
         msg.setSender(me.getName());
         msg.setSenderId(me.getId());
         msg.setReceiver(receiver);

@@ -15,7 +15,21 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/action_menu0"
+        android:title="전체"
+        android:showAsAction="collapseActionView"/>
+    <item android:id="@+id/action_menu1"
+          android:title="1~2주"
+        android:showAsAction="collapseActionView"
+        />
+    <item android:id="@+id/action_menu2"
+        android:title="2~4주"
+        android:showAsAction="collapseActionView" />
+    <item android:id="@+id/action_menu3"
+        android:title="1달 이상"
+        android:showAsAction="collapseActionView" />
     <item android:id="@+id/action_test"
-          android:title="goto_test"
-          android:showAsAction="ifRoom|withText" />
+        android:title="TestActivity"
+        android:showAsAction="collapseActionView" />
 </menu>

@@ -241,7 +241,7 @@ public class SplashActivity extends AniCareActivity {
 
         // KakaoTalk
         if (session.isClosed()){
-            mKakaoButton.setVisibility(View.VISIBLE);
+//            mKakaoButton.setVisibility(View.VISIBLE);
         }
         // 세션을 가지고 있거나, 갱신할 수 있는 상태로 명시적 오픈을 위한 로그인 버튼을 보여주지 않는다.
         else {
@@ -338,7 +338,7 @@ public class SplashActivity extends AniCareActivity {
         @Override
         public void onSessionClosed(final KakaoException exception) {
 
-            mKakaoButton.setVisibility(View.VISIBLE);
+//            mKakaoButton.setVisibility(View.VISIBLE);
         }
 
         @Override
