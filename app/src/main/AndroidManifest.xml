@@ -100,6 +100,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.AniCareActivity" />
         </activity>
+
+        <activity
+            android:name=".activity.PetDetailActivity"
+            android:label="@string/title_activity_pet_detail"
+            android:parentActivityName=".activity.AniCareActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.AniCareActivity" />
+        </activity>
+
         <activity
             android:name=".activity.TestActivity"
             android:label="@string/title_activity_test">

@@ -1,25 +1,58 @@
 package sep.software.anicare.fragment;
 
 import sep.software.anicare.R;
+import sep.software.anicare.activity.PetDetailActivity;
 import sep.software.anicare.adapter.PetListAdapter;
 import sep.software.anicare.interfaces.ListCallback;
 import sep.software.anicare.model.AniCarePet;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListFriendFragment extends AniCareFragment {
+public class ListFriendFragment extends AniCareFragment implements RecyclerItemClickListener.OnItemClickListener {
 
     private static final String TAG = ListFriendFragment.class.getSimpleName();
+
     private PetListAdapter petListAdapter;
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
+
+    @Override
+    public void onItemClick(View view, int position)
+    {
+        AniCarePet selectedPet;
+        selectedPet = petListAdapter.getItem(position);
+
+        Toast toast = Toast.makeText(mThisActivity, selectedPet.getName(), Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
+
+        Intent intent = new Intent();
+        intent.setClass(mThisActivity, PetDetailActivity.class);
+        intent.putExtra("petInfo", selectedPet);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onItemLongClick(View view, int position)
+    {
+        //do nothing for now
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +81,9 @@ public class ListFriendFragment extends AniCareFragment {
         recList.setLayoutManager(llm);
         recList.setAdapter(petListAdapter);
 
+        recList.addOnItemTouchListener(new RecyclerItemClickListener(this.getActivity(), recList, this));
+
         return rootView;
     }
-
-
 
 }

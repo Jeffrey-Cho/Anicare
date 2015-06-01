@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 public class AniCareModel implements Parcelable {
 
     private static GsonBuilder gb = new GsonBuilder();
+
     @Override
     public int describeContents() {
         return 0;

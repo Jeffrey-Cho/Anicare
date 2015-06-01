@@ -11,6 +11,7 @@ import sep.software.anicare.util.RandomUtil;
  * Created by hongkunyoo on 15. 5. 2..
  */
 public class AniCarePet extends AniCareModel {
+
     public enum Category {
         DOG(0), CAT(1), BIRD(2), ETC(3);
 

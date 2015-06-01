@@ -28,6 +28,8 @@
     <string name="pet_setting_sex">성별</string>
     <string name="pet_setting_normalize">중성화</string>
     <string name="pet_setting_feed">사료</string>
+    <string name="yes">유</string>
+    <string name="no">무</string>
 
 
     <string name="select_picture">Select Picture</string>
@@ -65,6 +67,7 @@
 
     <string name="title_activity_user_setting">UserSettingActivity</string>
     <string name="title_activity_pet_setting">PetSettingActivity</string>
+    <string name="title_activity_pet_detail">친구 자세히 보기</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="item_yes">Yes</string>
@@ -80,5 +83,11 @@
     <string name="item_normal">보통</string>
     <string name="item_shy">내성적임</string>
     <string name="period">돌봄기간</string>
+    <string name="friend_request">서비스 요청</string>
+    <string name="send_message">메세지 보내기</string>
+    <string name="item_dog">개</string>
+    <string name="item_cat">고양이</string>
+    <string name="item_bird">새</string>
+    <string name="item_default">기타</string>
 
 </resources>

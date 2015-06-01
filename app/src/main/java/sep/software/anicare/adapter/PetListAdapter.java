@@ -34,6 +34,10 @@ public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListV
         return petList.size();
     }
 
+    public AniCarePet getItem(int position) {
+        return petList.get(position);
+    }
+
     @Override
     public void onBindViewHolder(PetListViewHolder petViewHolder, int i) {
         AniCarePet petItem = petList.get(i);
