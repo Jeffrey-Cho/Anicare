@@ -17,9 +17,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             >
-            <TextView
+            <sep.software.anicare.view.AniCareTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:text="@string/period"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
             <EditText
@@ -46,11 +47,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp">
 
-            <TextView
+            <sep.software.anicare.view.AniCareTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/pet_setting_category"
+                android:textSize="18sp"
                 />
 
             <Spinner
@@ -70,11 +72,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
-            <TextView
+            <sep.software.anicare.view.AniCareTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/pet_setting_size"
+                android:textSize="18sp"
                 />
 
             <RadioGroup
@@ -119,17 +122,19 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
 
-        <Button
+        <sep.software.anicare.view.AniCareButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/item_cancle"
             android:id="@+id/cancel"
+            android:layout_margin="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-        <Button
+        <sep.software.anicare.view.AniCareButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/item_confirm"
+            android:layout_margin="10dp"
             android:id="@+id/confirm"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 

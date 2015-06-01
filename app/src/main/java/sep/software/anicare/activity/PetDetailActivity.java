@@ -1,41 +1,20 @@
 package sep.software.anicare.activity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
-
-import de.greenrobot.event.EventBus;
-import sep.software.anicare.AniCareException;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCareDateTime;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
-import sep.software.anicare.service.AniCareAsyncTask;
-import sep.software.anicare.util.AniCareLogger;
-import sep.software.anicare.util.AsyncChainer;
-import sep.software.anicare.util.FileUtil;
-import sep.software.anicare.util.ImageUtil;
 import sep.software.anicare.view.AniCareButton;
 import sep.software.anicare.view.MessageDialog;
 

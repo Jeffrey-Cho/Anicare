@@ -31,6 +31,7 @@ import java.util.Date;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.view.AniCareButton;
 
 
 public class MakeFriendFragment extends AniCareFragment implements AdapterView.OnItemSelectedListener{
@@ -42,8 +43,8 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
     private int mYear;
     private int mMonth;
     private int mDay;
-    private Button confirm;
-    private Button cancel;
+    private AniCareButton confirm;
+    private AniCareButton cancel;
     private DatePickerDialog dialog;
 
     private Spinner petCategory;
@@ -123,8 +124,8 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
 
 
         // buttons
-        confirm = (Button)rootView.findViewById(R.id.confirm);
-        cancel =  (Button)rootView.findViewById(R.id.cancel);
+        confirm = (AniCareButton)rootView.findViewById(R.id.confirm);
+        cancel =  (AniCareButton)rootView.findViewById(R.id.cancel);
 
 
         // select date event

@@ -30,8 +30,8 @@ public class AniCareButton extends Button {
     }
 
     private void setCustomSettings(Context context) {
-        Typeface typeFace= Typeface.createFromAsset(context.getAssets(), "NotoSansCJKkr-Bold.otf");
-        this.setTypeface(typeFace);
+//        Typeface typeFace= Typeface.createFromAsset(context.getAssets(), "NotoSansCJKkr-Bold.otf");
+//        this.setTypeface(typeFace);
         this.setTextColor(getResources().getColor(android.R.color.white));
         this.setBackground(getResources().getDrawable(R.drawable.custom_btn_bg));
         this.setPadding(8,2,8,2);
