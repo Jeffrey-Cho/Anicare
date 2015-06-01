@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +25,16 @@ import de.greenrobot.event.EventBus;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.model.AniCareDateTime;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
+import sep.software.anicare.view.MessageDialog;
 
 /**
  * Created by apple on 2015. 6. 1..
@@ -164,16 +170,52 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        String receiver = selectedPet.getUserName();
+        String receiverId = selectedPet.getUserId();
+        AniCareUser me = mAniCareService.getCurrentUser(); // for testing
 
         switch (v.getId()) {
             case R.id.pet_detail_submit: // friend request
+                //sendRequest(receiver, receiverId);
+                sendRequest(me.getName(), me.getId()); // for testing
                 break;
             case R.id.pet_detail_send_message: // send messaage
+                //MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId); // for testing
+                MessageDialog dialog = new MessageDialog(mThisActivity, me.getName(), me.getId()); // for testing
+                dialog.show();
                 break;
             default:
                 break;
         }
 
+    }
+
+    private void sendRequest(String receiver, String receiverId) {
+        AniCareMessage msg = new AniCareMessage();
+        AniCareUser me = mAniCareService.getCurrentUser();
+
+        String requestMsg = "System Msg: "+ me.getName()+ " want to make friend with your pet." ;
+
+        msg.setRawType(1);
+        msg.setSender(me.getName());
+        msg.setSenderId(me.getId());
+        msg.setReceiver(receiver);
+        msg.setReceiverId(receiverId);
+        msg.setDateTime(AniCareDateTime.now());
+        msg.makeRelation();
+        msg.setContent(requestMsg);
+
+        mAppContext.showProgressDialog(mThisActivity);
+
+        mAniCareService.sendMessage(msg, new EntityCallback<AniCareMessage>() {
+            @Override
+            public void onCompleted(AniCareMessage entity) {
+                mAppContext.dismissProgressDialog();
+                Toast t = Toast.makeText(mThisActivity, "Complete Send Message.", Toast.LENGTH_LONG); // for debugging
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
+            }
+        });
     }
 
 //    private void setImageButton(){
