@@ -142,7 +142,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private AniCarePet.Size checkSize() {
         AniCarePet.Size size;
 
-        switch(petPersonality.getCheckedRadioButtonId()) {
+        switch(petSize.getCheckedRadioButtonId()) {
             case R.id.pet_size_large:
                 size = AniCarePet.Size.BIG;
                 break;
