@@ -1,15 +1,25 @@
 package sep.software.anicare.fragment;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +33,7 @@ import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
 
 
-public class MakeFriendFragment extends AniCareFragment {
+public class MakeFriendFragment extends AniCareFragment implements AdapterView.OnItemSelectedListener{
 
     private static final String TAG = MakeFriendFragment.class.getSimpleName();
 
@@ -35,6 +45,12 @@ public class MakeFriendFragment extends AniCareFragment {
     private Button confirm;
     private Button cancel;
     private DatePickerDialog dialog;
+
+    private Spinner petCategory;
+    private RadioGroup petSize;
+
+    private AniCarePet.Category category;
+    private AniCarePet.Size size;
 
     private DatePickerDialog.OnDateSetListener fromDateSetListener = new DatePickerDialog.OnDateSetListener() {
         public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -97,6 +113,13 @@ public class MakeFriendFragment extends AniCareFragment {
 
         fromDate = (TextView)rootView.findViewById(R.id.from_period);
         toDate = (TextView)rootView.findViewById(R.id.to_period);
+        petCategory = (Spinner) rootView.findViewById(R.id.pet_setting_category);
+        petSize = (RadioGroup) rootView.findViewById(R.id.pet_size);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mThisActivity, R.array.pet_category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        petCategory.setAdapter(adapter);
+        petCategory.setOnItemSelectedListener(this);
 
 
         // buttons
@@ -150,38 +173,83 @@ public class MakeFriendFragment extends AniCareFragment {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String from = parseDateTime(fromDate.getText().toString());
-                String to = parseDateTime(toDate.getText().toString());
-                AniCarePet.Category category = AniCarePet.Category.DOG;
-                AniCarePet.Size size = AniCarePet.Size.MIDDLE;
 
-                AniCarePet pet = mThisPet;
-                pet.setStartDate(from);
-                pet.setEndDate(to);
-                pet.setCategory(category);
-                pet.setSize(size);
-                mAppContext.showProgressDialog(mThisActivity);
+                if (checkValidDate()) {
 
-                Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
-                mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {
-                    @Override
-                    public void onCompleted(AniCarePet entity) {
-                        mAppContext.dismissProgressDialog();
-                    }
-                });
+                    size = checkSize();
+
+                    String from = parseDateTime(fromDate.getText().toString());
+                    String to = parseDateTime(toDate.getText().toString());
+
+                    AniCarePet pet = mThisPet;
+                    pet.setStartDate(from);
+                    pet.setEndDate(to);
+                    pet.setCategory(category);
+                    pet.setSize(size);
+
+                    mAppContext.showProgressDialog(mThisActivity);
+
+                    Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
+                    mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {
+                        @Override
+                        public void onCompleted(AniCarePet entity) {
+                            mAppContext.dismissProgressDialog();
+                            Toast t = Toast.makeText(mThisActivity, "Complete make friend with S: "+ size.getValue() +"C: " +category.getValue(), Toast.LENGTH_LONG); // for debugging
+                            t.setGravity(Gravity.CENTER, 0, 0);
+                            t.show();
+                        }
+                    });
+                } else {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
+                    builder1.setTitle("Alert");
+                    builder1.setMessage("Please check your date");
+                    builder1.setCancelable(true);
+                    builder1.setNeutralButton(android.R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                    AlertDialog alert11 = builder1.create();
+                    alert11.show();
+                }
             }
         });
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                // do nothing..??
+            public void onClick(View v) { // return to list Friends
+                Fragment fragment = new ListFriendFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
+                mThisActivity.getActionBar().setTitle(getResources().getStringArray(R.array.anicare_menu)[0]);
             }
         });
 
 
         return rootView;
 
+    }
+
+    private AniCarePet.Size checkSize() {
+        switch(petSize.getCheckedRadioButtonId()) {
+            case R.id.pet_size_large:
+                size = AniCarePet.Size.BIG;
+                break;
+            case R.id.pet_size_medium:
+                size = AniCarePet.Size.MIDDLE;
+                break;
+            case R.id.pet_size_small:
+                size = AniCarePet.Size.SMALL;
+                break;
+            default:
+                size = AniCarePet.Size.MIDDLE;
+                break;
+        }
+
+        return size;
     }
 
     private String parseDateTime(String datetime) {
@@ -216,4 +284,27 @@ public class MakeFriendFragment extends AniCareFragment {
         );
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getSelectedItemPosition()) {
+            case 0:
+                category = AniCarePet.Category.DOG;
+                break;
+            case 1:
+                category = AniCarePet.Category.CAT;
+                break;
+            case 2:
+                category = AniCarePet.Category.BIRD;
+                break;
+            case 3:
+                category = AniCarePet.Category.ETC;
+                break;
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        category = AniCarePet.Category.DOG;
+    }
 }
