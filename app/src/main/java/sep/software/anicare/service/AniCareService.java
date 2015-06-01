@@ -52,7 +52,7 @@ public interface AniCareService {
     /*
         Match API
      */
-//    public void match(AniCarePet pet, final EntityCallback<AniCareMessage> callback);
+//    public void match(AniCareMessage msg, final EntityCallback<AniCareMessage> callback);
 
 
     /*

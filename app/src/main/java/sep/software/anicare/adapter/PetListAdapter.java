@@ -13,6 +13,7 @@ import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareService;
+import sep.software.anicare.view.DynamicHeightImageView;
 
 /**
  * Created by Jeffrey on 2015. 5. 22..
@@ -59,13 +60,15 @@ public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListV
 
     public static class PetListViewHolder extends RecyclerView.ViewHolder {
 
-        protected ImageView cardImage;
+//        protected ImageView cardImage;
+        protected DynamicHeightImageView cardImage;
         protected TextView petName;
         protected TextView petLocation;
 
         public PetListViewHolder(View v) {
             super(v);
-            cardImage = (ImageView) v.findViewById(R.id.pet_image);
+//            cardImage = (ImageView) v.findViewById(R.id.pet_image);
+            cardImage = (DynamicHeightImageView) v.findViewById(R.id.pet_image);
             petName =  (TextView) v.findViewById(R.id.pet_name);
             petLocation = (TextView)  v.findViewById(R.id.pet_location);
         }

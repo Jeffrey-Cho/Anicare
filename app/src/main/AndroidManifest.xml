@@ -104,10 +104,10 @@
         <activity
             android:name=".activity.PetDetailActivity"
             android:label="@string/title_activity_pet_detail"
-            android:parentActivityName=".activity.AniCareActivity" >
+            android:parentActivityName=".activity.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.AniCareActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
 
         <activity

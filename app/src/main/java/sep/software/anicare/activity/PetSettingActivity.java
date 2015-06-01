@@ -278,7 +278,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private void updateProfileImage(String imagePath){
 //        mAppContext.showProgressDialog(mThisActivity);
         petImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_IMAGE_SIZE);
-        Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
+//        Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
 //        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
         petImage.setImageBitmap(petImageBitmap);
     }

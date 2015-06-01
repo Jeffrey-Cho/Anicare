@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -23,12 +25,14 @@ import de.greenrobot.event.EventBus;
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
+import sep.software.anicare.view.MessageDialog;
 
 /**
  * Created by apple on 2015. 6. 1..
@@ -167,13 +171,48 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.pet_detail_submit: // friend request
+                matchWith(selectedPet);
                 break;
             case R.id.pet_detail_send_message: // send messaage
+                sendMessageTo(selectedPet);
                 break;
             default:
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void matchWith(AniCarePet pet) {
+        AniCareMessage msg = new AniCareMessage();
+
+//        msg.
+        mAniCareService.sendMessage(msg, new EntityCallback<AniCareMessage>() {
+            @Override
+            public void onCompleted(AniCareMessage entity) {
+
+            }
+        });
+
+    }
+
+    private void sendMessageTo(AniCarePet pet) {
+        String receiver = pet.getUserName();
+        String receiverId = pet.getUserId();
+        MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId);
+        dialog.show();
+        Toast.makeText(mThisActivity, "This message will be send to " + receiver+"("+receiverId+")", Toast.LENGTH_SHORT).show();
     }
 
 //    private void setImageButton(){
