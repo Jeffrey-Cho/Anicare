@@ -1,6 +1,9 @@
 package sep.software.anicare.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -33,6 +36,7 @@ import sep.software.anicare.util.ImageUtil;
 public class PetSettingActivity extends AniCareActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     private static final String TAG = PetSettingActivity.class.getSimpleName();
+    private static final String SETTING_FLAG = "FROM_SETTING";
 
     private ImageView petImage;
     private Uri mProfileImageUri;
@@ -50,6 +54,8 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private String profileImageUrl;
 
     private Bitmap petImageBitmap;
+    private String flag;
+    private CharSequence mTitle;
 
 
     @Override
@@ -57,7 +63,20 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_setting);
 
-        getActionBar().hide();
+        Intent intent = getIntent();
+        flag = intent.getType();
+
+        if (flag != null && flag.equals(SETTING_FLAG)) {
+            // enable ActionBar app icon to behave as action to toggle nav drawer
+            ActionBar actionBar = getActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setBackgroundDrawable(mThisActivity.getResources().getDrawable(R.drawable.custom_action_bar));
+            mTitle = getResources().getString(R.string.title_activity_pet_setting);
+            getActionBar().setTitle(mTitle);
+        } else {
+            getActionBar().hide();
+        }
 
         petImage = (ImageView) findViewById(R.id.petProfileImage);
         petName = (TextView) findViewById(R.id.pet_setting_name);
@@ -78,6 +97,8 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         submitBtn.setOnClickListener(this);
 
         setImageButton();
+
+        if (flag != null && flag.equals(SETTING_FLAG)) enableEdit(); // for edit
 //        profileImageUrl = mAniCareService.getPetImageUrl(mThisUser.getId());
 
 //        imageTask = new ImageAsyncTask();
@@ -106,6 +127,73 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
 //                finish();
 //            }
 //        });
+    }
+
+    private void enableEdit() {
+
+        petName.setText(mThisPet.getName());
+
+        switch(mThisPet.getRawCategory()) {
+            case 0:
+                petCategory.setSelection(0);
+                break;
+            case 1:
+                petCategory.setSelection(1);
+                break;
+            case 2:
+                petCategory.setSelection(2);
+                break;
+            case 3:
+                petCategory.setSelection(3);
+                break;
+        }
+
+        switch(mThisPet.getRawSize()) {
+            case 0:
+                petSize.check(R.id.pet_size_large);
+                break;
+            case 1:
+                petSize.check(R.id.pet_size_medium);
+                break;
+            case 2:
+                petSize.check(R.id.pet_size_small);
+                break;
+        }
+
+        switch(mThisPet.getRawPersonality()) {
+            case 0:
+                petPersonality.check(R.id.pet_bright);
+                break;
+            case 1:
+                petPersonality.check(R.id.pet_normal);
+                break;
+            case 2:
+                petPersonality.check(R.id.pet_shy);
+                break;
+        }
+
+
+        if(mThisPet.isMale()) {
+            petSex.check(R.id.pet_male);
+        } else {
+            petSex.check(R.id.pet_female);
+        }
+
+        if(mThisPet.isNeutralized()) {
+            petNeutralized.check(R.id.pet_neutralized_yes);
+        } else {
+            petNeutralized.check(R.id.pet_neutralized_no);
+        }
+
+        if(mThisPet.isPetFood()) {
+            petFeed.check(R.id.pet_feed_yes);
+        } else {
+            petFeed.check(R.id.pet_feed_no);
+        }
+
+        Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(mThisPet.getId()));
+        mAniCareService.setPetImageInto(mThisPet.getId(), petImage);
+
     }
 
 
@@ -209,38 +297,80 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setNeutralized(petNeutralized.getCheckedRadioButtonId() == R.id.pet_neutralized_yes);
                 pet.setPetFood(petFeed.getCheckedRadioButtonId() == R.id.pet_feed_yes);
 
-                AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
-                    @Override
-                    public void doNext(final Object obj, Object... params) {
-                        mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
-                            @Override
-                            public void onCompleted(AniCarePet entity) {
-                                AsyncChainer.notifyNext(obj, entity.getId());
-                            }
-                        });
+                if (flag != null && flag.equals(SETTING_FLAG)) {
 
-                    }
-                }, new AsyncChainer.Chainable() {
-                    @Override
-                    public void doNext(Object obj, Object... params) {
-                        String id = (String)params[0];
+                    AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(final Object obj, Object... params) {
+                            mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
+                                @Override
+                                public void onCompleted(AniCarePet entity) {
+                                    AsyncChainer.notifyNext(obj, entity.getId());
+                                }
+                            });
 
-                        mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
-                            @Override
-                            public void onCompleted(String entity) {
-                                mAppContext.dismissProgressDialog();
-                                Intent intent = new Intent();
-                                intent.setClass(mThisActivity, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                        });
-                    }
-                });
+                        }
+                    }, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(Object obj, Object... params) {
+                            String id = (String) params[0];
+
+                            mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
+                                @Override
+                                public void onCompleted(String entity) {
+                                    mAppContext.dismissProgressDialog();
+                                    onBackPressed();
+                                }
+                            });
+                        }
+                    });
+
+                } else {
+                    AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(final Object obj, Object... params) {
+                            mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
+                                @Override
+                                public void onCompleted(AniCarePet entity) {
+                                    AsyncChainer.notifyNext(obj, entity.getId());
+                                }
+                            });
+
+                        }
+                    }, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(Object obj, Object... params) {
+                            String id = (String) params[0];
+
+                            mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
+                                @Override
+                                public void onCompleted(String entity) {
+                                    mAppContext.dismissProgressDialog();
+                                    Intent intent = new Intent();
+                                    intent.setClass(mThisActivity, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+                    });
+
+                }
 
             } else {
-                // alert window show
-                Log.d(TAG, "Empty name");
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
+                builder1.setTitle("Alert");
+                builder1.setMessage("Pet Name is mandatory!");
+                builder1.setCancelable(true);
+                builder1.setNeutralButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             }
         }
     }
