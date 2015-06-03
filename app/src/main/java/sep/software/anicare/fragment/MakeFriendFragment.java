@@ -31,6 +31,7 @@ import java.util.Date;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.AniCareButton;
 
 
@@ -189,7 +190,7 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
                     pet.setSize(size);
 
                     mAppContext.showProgressDialog(mThisActivity);
-
+                    AniCareLogger.log(pet);
                     Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
                     mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {
                         @Override

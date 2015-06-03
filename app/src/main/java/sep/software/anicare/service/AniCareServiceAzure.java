@@ -145,6 +145,11 @@ public class AniCareServiceAzure implements AniCareService {
         }).execute(GoogleCloudMessaging.getInstance(AniCareApp.getAppContext()));
     }
 
+    @Override
+    public void addMessage(AniCareMessage msg) {
+//        mDbService.addMessage(msg);
+    }
+
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback){
 
         mobileClient.invokeApi("send_message", new Gson().fromJson(message.toString(), JsonElement.class), new ApiJsonOperationCallback() {

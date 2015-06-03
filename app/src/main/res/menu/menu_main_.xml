@@ -20,14 +20,14 @@
         android:title="전체"
         android:showAsAction="collapseActionView"/>
     <item android:id="@+id/action_menu1"
-          android:title="1~2주"
+          android:title="1주 이내"
         android:showAsAction="collapseActionView"
         />
     <item android:id="@+id/action_menu2"
-        android:title="2~4주"
+        android:title="보름 이내"
         android:showAsAction="collapseActionView" />
     <item android:id="@+id/action_menu3"
-        android:title="1달 이상"
+        android:title="1달 이내"
         android:showAsAction="collapseActionView" />
     <item android:id="@+id/action_test"
         android:title="TestActivity"

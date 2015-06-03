@@ -3,6 +3,7 @@ package sep.software.anicare.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import sep.software.anicare.AniCareApp;
 import sep.software.anicare.util.RandomUtil;
 
 public class AniCareMessage extends AniCareModel {
@@ -127,6 +128,11 @@ public class AniCareMessage extends AniCareModel {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+    public boolean isMine() {
+        if (this.id == null) return false;
+        return this.id.equals(AniCareApp.getAppContext().getAniCareService().getCurrentUser().getId());
+    }
 
 	public static Parcelable.Creator<AniCareMessage> getCreator() {
 		return CREATOR;

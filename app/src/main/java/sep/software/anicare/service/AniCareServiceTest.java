@@ -301,7 +301,10 @@ public class AniCareServiceTest implements AniCareService {
         }).execute(GoogleCloudMessaging.getInstance(AniCareApp.getAppContext()));
 
     }
-
+    @Override
+    public void addMessage(AniCareMessage msg) {
+        mDbService.addMessage(msg);
+    }
     @Override
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback) {
         if (!internetAvailable()) {

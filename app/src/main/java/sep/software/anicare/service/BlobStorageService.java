@@ -5,6 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 
 import sep.software.anicare.AniCareException;
 import sep.software.anicare.interfaces.EntityCallback;
@@ -13,6 +16,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.microsoft.azure.storage.CloudStorageAccount;
+import com.microsoft.azure.storage.CorsHttpMethods;
+import com.microsoft.azure.storage.CorsProperties;
+import com.microsoft.azure.storage.CorsRule;
+import com.microsoft.azure.storage.ServiceProperties;
+import com.microsoft.azure.storage.StorageCredentials;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
@@ -20,7 +28,9 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 
 import de.greenrobot.event.EventBus;
 
-class BlobStorageService {
+import static com.microsoft.azure.storage.CorsHttpMethods.PUT;
+
+public class BlobStorageService {
 
     private static final String storageConnectionString =
             "DefaultEndpointsProtocol=http;AccountName=portalvhdsj2ksq9qld7v06;AccountKey=EKOOgf0UchaHBQ25meKH3utLq8bTLZK0fIIwmeXAYlXcTujIlpTkCaycMmkyasMjxUmSpmKTls2hJK7+gV46RA==";
@@ -41,6 +51,7 @@ class BlobStorageService {
             EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.BLOBSTORAGE_ERROR));
         }
         blobClient = account.createCloudBlobClient();
+
     }
 
 
@@ -254,5 +265,41 @@ class BlobStorageService {
                 callback.onCompleted(result);
             }
         }).execute(id);
+    }
+
+    public boolean setHeader() {
+
+        CorsRule corsRule = new CorsRule();
+
+//            AllowedHeaders = new List<string> { "x-ms-*", "content-type", "accept" },
+//            AllowedMethods = CorsHttpMethods.Put,//Since we'll only be calling Put Blob, let's just allow PUT verb
+//            AllowedOrigins = new List<string> { "http://localhost:61233" },//This is the URL of our application.
+//            MaxAgeInSeconds = 1 * 60 * 60,//Let the browswer cache it for an hour
+
+
+        corsRule.setAllowedHeaders(new ArrayList<String>() { { add("x-ms-*"); add("content-type"); add("accept"); }});
+
+        EnumSet<CorsHttpMethods> methods = EnumSet.of(CorsHttpMethods.PUT, CorsHttpMethods.GET, CorsHttpMethods.POST, CorsHttpMethods.OPTIONS, CorsHttpMethods.DELETE, CorsHttpMethods.HEAD);
+        corsRule.setAllowedMethods(methods);
+        corsRule.setAllowedOrigins(new ArrayList<String>() {
+            {
+                add("http://localhost");
+                add("http://hongkunyoo.github.io/dummydata");
+                add("*");
+
+        }});
+        corsRule.setMaxAgeInSeconds(1 * 60 * 60);
+
+        try {
+            ServiceProperties serviceProperties = blobClient.downloadServiceProperties();
+            CorsProperties corsSettings = serviceProperties.getCors();
+            corsSettings.getCorsRules().add(corsRule);
+            blobClient.uploadServiceProperties(serviceProperties);
+        } catch (StorageException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 }

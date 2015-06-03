@@ -2,6 +2,7 @@ package sep.software.anicare.activity;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,8 @@ import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareDBService;
 import sep.software.anicare.service.AniCareDBServicePreference;
 import sep.software.anicare.service.AniCareDBServiceSQLite;
+import sep.software.anicare.service.BlobStorageService;
+import sep.software.anicare.util.AniCareLogger;
 
 public class TestActivity extends AniCareActivity {
 
@@ -254,6 +257,36 @@ public class TestActivity extends AniCareActivity {
                                 .setMessage(list.toString())
                                 .setPositiveButton("ok", null)
                                 .show();
+
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
+                        return "Set Blob storage CORS";
+                    }
+
+                    @Override
+                    public void describe() {
+                        final BlobStorageService blobStorageService = new BlobStorageService();
+                        new AsyncTask<Void, Void, Boolean>(){
+
+
+                            @Override
+                            protected Boolean doInBackground(Void... params) {
+
+                                return blobStorageService.setHeader();
+                            }
+
+                            @Override
+                            protected void onPostExecute(Boolean aVoid) {
+                                super.onPostExecute(aVoid);
+                                AniCareLogger.log(aVoid);
+                            }
+                        }.execute();
+
 
                     }
                 });

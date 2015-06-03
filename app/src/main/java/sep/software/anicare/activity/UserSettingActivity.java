@@ -89,7 +89,9 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
         Picasso.with(mThisActivity).invalidate(mAniCareService.getUserImageUrl(mThisUser.getId()));
         mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
-
+//        userLocation.setText("서울특별시 강남구 역삼동 819");
+//        this.latitude = 37.49917189202619;
+//        this.longitude = 127.02813148498535;
         userLocation.setOnTouchListener(new View.OnTouchListener() {
 
             @Override

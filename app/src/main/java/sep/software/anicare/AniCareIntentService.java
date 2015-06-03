@@ -3,6 +3,7 @@ package sep.software.anicare;
 import sep.software.anicare.activity.MainActivity;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.service.AniCareService;
 import sep.software.anicare.util.AniCareLogger;
 
 import android.app.IntentService;
@@ -62,7 +63,9 @@ public class AniCareIntentService extends IntentService {
         AniCareMessage msg = mGb.create().fromJson(msgObj, AniCareMessage.class);
         AniCareUser user = mGb.create().fromJson(userObj, AniCareUser.class);
 
-
+        AniCareApp appContext = AniCareApp.getAppContext();
+        AniCareService aniCareService = appContext.getAniCareService();
+        aniCareService.addMessage(msg);
 
         notifyMessage(msg);
 

@@ -135,6 +135,7 @@ public class MainActivity extends AniCareActivity {
 
     private void checkSettings() {
         if (!mAniCareService.isUserSet()) {
+//        if (false) {
         //if (true) {
             Intent intent = new Intent();
             intent.setClass(this, UserSettingActivity.class);
@@ -143,6 +144,7 @@ public class MainActivity extends AniCareActivity {
         }
 
         if (!mAniCareService.isPetSet()) {
+//        if (false) {
             Intent intent = new Intent();
             intent.setClass(this, PetSettingActivity.class);
             startActivity(intent);

@@ -61,6 +61,7 @@ public interface AniCareService {
     // This method is used in SplashActivity
     public void getGcmRegistrationId(final EntityCallback<String> callback) ;
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback);
+    public void addMessage(AniCareMessage msg);
     public List<AniCareMessage> listMessage();
 
     /*
