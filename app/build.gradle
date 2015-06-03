@@ -49,9 +49,5 @@ dependencies {
     compile group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     compile group: 'com.google', name: 'volley', version: project.VOLLEY_VERSION
 //    compile group: 'com.google.android', name: 'support-v4', version: project.SUPPORTV4_VERSION
-    //Core card library
-    compile 'com.github.gabrielemariotti.cards:library:1.9.1'
 
-    //Extra card library, it is required only if you want to use integrations with other libraries
-    compile 'com.github.gabrielemariotti.cards:library-extra:1.9.1'
 }
