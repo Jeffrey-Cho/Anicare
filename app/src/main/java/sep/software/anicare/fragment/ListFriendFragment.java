@@ -30,6 +30,10 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
     private PetListAdapter petListAdapter;
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
 
+    private int page = 0;
+    private int mode = 0;
+    private boolean isAdding = false;
+
     @Override
     public void onItemClick(View view, int position)
     {
@@ -59,17 +63,19 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
         super.onCreate(savedInstanceState);
 
         petListAdapter = new PetListAdapter(petList);
-        listFriend(0);
+        listFriend(page, mode);
     }
 
-    public void listFriend(int mode) {
+    public void listFriend(int page, int _mode) {
         mAppContext.showProgressDialog(mThisActivity);
-        mAniCareService.listPet(mode, mThisUser.getId(), new ListCallback<AniCarePet>() {
+        isAdding = true;
+        mAniCareService.listPet(page, _mode, mThisUser.getId(), new ListCallback<AniCarePet>() {
             @Override
             public void onCompleted(List<AniCarePet> list, int count) {
                 petList.addAll(list);
                 petListAdapter.notifyDataSetChanged();
                 mAppContext.dismissProgressDialog();
+                isAdding = false;
             }
         });
     }
@@ -81,7 +87,7 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
 
         RecyclerView recList = (RecyclerView) rootView.findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(mThisActivity);
+        final LinearLayoutManager llm = new LinearLayoutManager(mThisActivity);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
         recList.setAdapter(petListAdapter);
@@ -90,7 +96,26 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
 
         rootView.setBackgroundColor(getResources().getColor(R.color.anicare_hint));
 
+        recList.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Add more items when grid reaches bottom
+                int position = llm.findLastVisibleItemPosition();
+                int totalItemCount = llm.getItemCount();
+                if (position >= totalItemCount-5 && !isAdding) {
+                    addNextItem();
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    private void addNextItem() {
+        listFriend(++page, mode);
     }
 
 }

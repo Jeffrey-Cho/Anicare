@@ -113,7 +113,7 @@ public class AniCareServiceAzure implements AniCareService {
     }
 
     @Override
-    public void listPet(int mode, String userId, ListCallback<AniCarePet> callback) {
+    public void listPet(int page, int mode, String userId, ListCallback<AniCarePet> callback) {
 
     }
 

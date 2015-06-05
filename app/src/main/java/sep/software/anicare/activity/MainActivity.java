@@ -208,16 +208,16 @@ public class MainActivity extends AniCareActivity {
         ListFriendFragment listFrag = (ListFriendFragment)fragment;
         switch(item.getItemId()) {
             case R.id.action_menu0:
-                listFrag.listFriend(0);
+                listFrag.listFriend(0, 0);
                 return true;
             case R.id.action_menu1:
-                listFrag.listFriend(1);
+                listFrag.listFriend(0, 1);
                 return true;
             case R.id.action_menu2:
-                listFrag.listFriend(2);
+                listFrag.listFriend(0, 2);
                 return true;
             case R.id.action_menu3:
-                listFrag.listFriend(3);
+                listFrag.listFriend(0, 3);
                 return true;
             case R.id.action_test:
                 Intent intent = new Intent();

@@ -42,7 +42,7 @@ public interface AniCareService {
     /*
         ListFriend API
      */
-    public void listPet(int mode, String userId, final ListCallback<AniCarePet> callback);
+    public void listPet(int page, int mode, String userId, final ListCallback<AniCarePet> callback);
 
     /*
         MakeFriend API
