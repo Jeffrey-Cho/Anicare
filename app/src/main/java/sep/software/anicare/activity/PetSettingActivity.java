@@ -192,7 +192,8 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         }
 
         Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(mThisPet.getId()));
-        mAniCareService.setPetImageInto(mThisPet.getId(), petImage);
+        mThisPet.setImageURL(mThisPet.getId());
+        mAniCareService.setPetImageInto(mThisPet, petImage);
 
     }
 
@@ -307,6 +308,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                             mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
                                 @Override
                                 public void onCompleted(AniCarePet entity) {
+//                                    pet.setImageURL(pet.getId());
                                     AsyncChainer.notifyNext(obj, entity.getId());
                                 }
                             });
@@ -316,7 +318,13 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                         @Override
                         public void doNext(Object obj, Object... params) {
                             String id = (String) params[0];
-
+//                            ((MainActivity)PetSettingActivity.this.getParent()).changeName();
+                            EventBus.getDefault().post(new Exception());
+                            if (petImageBitmap == null) {
+                                mAppContext.dismissProgressDialog();
+                                onBackPressed();
+                                return;
+                            }
                             mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
                                 @Override
                                 public void onCompleted(String entity) {
@@ -328,6 +336,13 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                     });
 
                 } else {
+                    if (petImageBitmap == null) {
+                        new AlertDialog.Builder(mThisActivity)
+                                .setMessage("You should upload your pet image")
+                                .setPositiveButton("ok", null)
+                                .show();
+                        return;
+                    }
                     AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
                         @Override
                         public void doNext(final Object obj, Object... params) {

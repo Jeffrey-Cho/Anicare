@@ -100,13 +100,13 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         petSize = (TextView) findViewById(R.id.pet_size);
 
         switch (selectedPet.getRawSize()) {
-            case 0:
+            case 3:
                 petSize.setText(getResources().getString(R.string.item_large));
                 break;
-            case 1:
+            case 2:
                 petSize.setText(getResources().getString(R.string.item_medium));
                 break;
-            case 2:
+            case 1:
                 petSize.setText(getResources().getString(R.string.item_small));
                 break;
         }
@@ -120,7 +120,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         petPersonality = (TextView) findViewById(R.id.pet_talenet);
 
         switch(selectedPet.getRawPersonality()) {
-            case 0: // bright
+            case 3: // bright
                 petPersonality.setText(getResources().getString(R.string.item_bright));
                 break;
             case 1: // shy
@@ -147,7 +147,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         friendRequestBtn.setOnClickListener(this);
         sendMsgBtn.setOnClickListener(this);
 
-        mAniCareService.setPetImageInto(selectedPet.getId(), petImage);
+        mAniCareService.setPetImageInto(selectedPet, petImage);
         //setImageButton();
     }
 

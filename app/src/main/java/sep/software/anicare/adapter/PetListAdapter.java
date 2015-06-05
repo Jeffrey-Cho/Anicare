@@ -13,6 +13,7 @@ import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.service.AniCareService;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.DynamicHeightImageView;
 
 /**
@@ -42,8 +43,7 @@ public class PetListAdapter extends RecyclerView.Adapter<PetListAdapter.PetListV
     @Override
     public void onBindViewHolder(PetListViewHolder petViewHolder, int i) {
         AniCarePet petItem = petList.get(i);
-
-        mAniCareService.setPetImageInto(petItem.getId(),petViewHolder.cardImage);
+        mAniCareService.setPetImageInto(petItem,petViewHolder.cardImage);
         petViewHolder.petName.setText(petItem.getName());
         petViewHolder.petLocation.setText(petItem.getLocation());
     }

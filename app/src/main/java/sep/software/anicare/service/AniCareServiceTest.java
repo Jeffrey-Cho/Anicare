@@ -186,6 +186,7 @@ public class AniCareServiceTest implements AniCareService {
                 AniCareLogger.log("onCompleted");
                 if (arg1 == null) {
                     AniCarePet savedPet = mGb.create().fromJson(arg0, AniCarePet.class);
+                    savedPet.setImageURL(savedPet.getId());
                     mObjectPreference.put("pet", savedPet);
                     callback.onCompleted(savedPet);
                 } else {
@@ -378,8 +379,16 @@ public class AniCareServiceTest implements AniCareService {
     }
 
     @Override
-    public void setPetImageInto(String petId, ImageView view){
-        Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(petId)).into(view);
+    public void setPetImageInto(AniCarePet pet, final ImageView view){
+        if (pet == null) return;
+
+        if (pet.isTestData() == true) {
+//            AniCareLogger.log(getRandomPetImageUrl(pet));
+            Picasso.with(AniCareApp.getAppContext()).load(getRandomPetImageUrl(pet)).into(view);
+        } else {
+//            AniCareLogger.log("[[[",pet.getName(), pet.isTestData(), getPetImageUrl(pet.getId()),pet.getImageURL(), "]]]");
+            Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(pet.getImageURL())).into(view);
+        }
     }
 
     @Override
@@ -390,6 +399,13 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public String getPetImageUrl(String id) {
         return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_IMAGE + "/" + id;
+    }
+
+    private String getRandomPetImageUrl(AniCarePet pet) {
+        int randNum = RandomUtil.getHash(pet.getId(), 31);
+        AniCareLogger.log(pet.getName(), pet.getRawSize(), randNum);
+        return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_IMAGE + "/dog_pic/" + pet.getRawSize()
+                + "/"+randNum;
     }
 
 

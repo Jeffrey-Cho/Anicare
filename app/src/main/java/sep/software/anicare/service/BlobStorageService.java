@@ -104,6 +104,7 @@ public class BlobStorageService {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
             // Add header for picasso
+            blob.getProperties().setContentType("image/jpeg");
             blob.getProperties().setCacheControl("only-if-cached, max-age=" + Integer.MAX_VALUE);
 
             blob.upload(new ByteArrayInputStream(baos.toByteArray()), baos.size());

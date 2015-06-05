@@ -36,6 +36,7 @@ import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
+import sep.software.anicare.view.DynamicHeightImageView;
 
 public class UserSettingActivity extends AniCareActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
@@ -89,6 +90,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
 
         userImage = (ImageView) findViewById(R.id.profileImage);
+        userImage.setScaleType(ImageView.ScaleType.FIT_XY);
         userName = (TextView) findViewById(R.id.user_setting_name);
         userLocation = (TextView) findViewById(R.id.user_setting_location);
 

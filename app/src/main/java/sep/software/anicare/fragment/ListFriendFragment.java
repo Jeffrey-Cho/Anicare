@@ -5,6 +5,7 @@ import sep.software.anicare.activity.PetDetailActivity;
 import sep.software.anicare.adapter.PetListAdapter;
 import sep.software.anicare.interfaces.ListCallback;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.util.AniCareLogger;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,5 +1,7 @@
 package sep.software.anicare.activity;
 
+import de.greenrobot.event.EventBus;
+import sep.software.anicare.AniCareException;
 import sep.software.anicare.R;
 import sep.software.anicare.fragment.AniCareFragment;
 import sep.software.anicare.fragment.CareHistoryFragment;
@@ -8,6 +10,7 @@ import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
 import sep.software.anicare.fragment.SettingFragment;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.CircleImageView;
 
 import android.app.ActionBar;
@@ -106,8 +109,9 @@ public class MainActivity extends AniCareActivity {
 
         AniCarePet myPet = mAniCareService.getCurrentPet();
         if (myPet != null) {
-            Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(myPet.getId()));
-            mAniCareService.setPetImageInto(myPet.getId(), mProfileImage);
+//            Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(myPet.getImageURL()));
+            myPet.setImageURL(myPet.getId());
+            mAniCareService.setPetImageInto(myPet, mProfileImage);
             mPetName.setText(myPet.getName());
         }
 
@@ -125,6 +129,12 @@ public class MainActivity extends AniCareActivity {
         } catch (Exception ex) {
             // Ignore
         }
+    }
+
+    public void onEvent(Exception exception){
+        AniCarePet myPet = mAniCareService.getCurrentPet();
+        if (myPet == null) return;
+        mPetName.setText(myPet.getName());
     }
 
     @Override

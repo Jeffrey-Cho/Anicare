@@ -97,7 +97,7 @@ public class AniCareUser extends AniCareModel {
     }
 
     public HouseType getHouseType() {
-        return HouseType.values()[this.rawHouseType];
+        return HouseType.values()[this.rawHouseType-1];
     }
 
     public void setHouseType(HouseType houseType) {

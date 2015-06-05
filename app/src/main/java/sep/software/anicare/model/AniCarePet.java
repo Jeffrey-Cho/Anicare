@@ -69,6 +69,8 @@ public class AniCarePet extends AniCareModel {
     private double longitude;
     private double latitude;
 
+    private boolean isTestData;
+
     public String getId(){ return id; }
     public void setId(String id) { this.id = id; }
     public String getUserId() { return  userId; }
@@ -107,7 +109,7 @@ public class AniCarePet extends AniCareModel {
     }
 
     public Size getSize() {
-        return Size.values()[this.rawSize];
+        return Size.values()[this.rawSize-1];
     }
 
     public void setSize(Size size) {
@@ -115,7 +117,7 @@ public class AniCarePet extends AniCareModel {
     }
 
     public Personality getPersonality() {
-        return Personality.values()[this.rawPersonality];
+        return Personality.values()[this.rawPersonality-1];
     }
 
     public void setPersonality(Personality personality) {
@@ -179,7 +181,7 @@ public class AniCarePet extends AniCareModel {
     }
 
     public AniCareUser.HouseType getHouseType() {
-        return AniCareUser.HouseType.values()[this.houseType];
+        return AniCareUser.HouseType.values()[this.houseType-1];
     }
 
     public void setHouseType(AniCareUser.HouseType houseType) {
@@ -217,6 +219,12 @@ public class AniCarePet extends AniCareModel {
     public double getLatitude() { return this.latitude; }
 
     public void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public boolean isTestData() { return isTestData; }
+
+    public void setTestData(boolean isTestData) {
+        this.isTestData = isTestData;
+    }
 
     public static AniCarePet rand() {
         return rand(false);

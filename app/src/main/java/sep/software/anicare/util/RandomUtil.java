@@ -66,6 +66,15 @@ public class RandomUtil {
 		return "http://www." + getString(8) + ".com";
 	}
 
+    public static int getHash(String key, int mode) {
+
+        return Math.abs(key.hashCode() % mode);
+//        for (int i=0; i < key.length(); i++) {
+//            hash = hash*31+key.charAt(i);
+//        }
+//        return hash % mode;
+    }
+
 	private static List<String> nameList = new ArrayList<String>(){
 		/**
 		 * 
