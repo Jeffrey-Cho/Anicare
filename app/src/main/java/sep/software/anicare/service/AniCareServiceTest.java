@@ -384,10 +384,8 @@ public class AniCareServiceTest implements AniCareService {
         if (pet == null) return;
 
         if (pet.isTestData() == true) {
-//            AniCareLogger.log(getRandomPetImageUrl(pet));
             Picasso.with(AniCareApp.getAppContext()).load(getRandomPetImageUrl(pet)).into(view);
         } else {
-//            AniCareLogger.log("[[[",pet.getName(), pet.isTestData(), getPetImageUrl(pet.getId()),pet.getImageURL(), "]]]");
             Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(pet.getImageURL())).into(view);
         }
     }
@@ -404,7 +402,7 @@ public class AniCareServiceTest implements AniCareService {
 
     private String getRandomPetImageUrl(AniCarePet pet) {
         int randNum = RandomUtil.getHash(pet.getId(), 31);
-        AniCareLogger.log(pet.getName(), pet.getRawSize(), randNum);
+//        AniCareLogger.log(pet.getName(), pet.getRawSize(), randNum);
         return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_IMAGE + "/dog_pic/" + pet.getRawSize()
                 + "/"+randNum;
     }
