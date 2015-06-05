@@ -3,69 +3,63 @@ package sep.software.anicare.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.internal.Card;
-import it.gmariotti.cardslib.library.internal.CardArrayAdapter;
-import it.gmariotti.cardslib.library.internal.CardHeader;
-import it.gmariotti.cardslib.library.view.CardListView;
 import sep.software.anicare.R;
 import sep.software.anicare.adapter.MessageListAdapter;
-import sep.software.anicare.adapter.PetListAdapter;
-import sep.software.anicare.interfaces.ListCallback;
 import sep.software.anicare.model.AniCareMessage;
-import sep.software.anicare.model.AniCarePet;
-import sep.software.anicare.view.MessageDialog;
 
-public class MessageBoxFragment extends AniCareFragment {
+public class MessageBoxFragment extends AniCareFragment implements RecyclerItemClickListener.OnItemClickListener {
 
     private final static String TAG = MessageBoxFragment.class.getCanonicalName();
 
-    Button testBtn;
-
-    private MessageListAdapter msgListAdapter;
+    private MessageListAdapter msgAdapter;
     private List<AniCareMessage> msgList = new ArrayList<AniCareMessage>();
-    private List<AniCarePet> petList = new ArrayList<AniCarePet>();
+
+    @Override
+    public void onItemClick(View view, int position)
+    {
+        //do nothing for now
+    }
+
+
+    @Override
+    public void onItemLongClick(View view, int position)
+    {
+        //do nothing for now
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        msgList = mAniCareService.listMessage();
-        msgListAdapter = new MessageListAdapter(msgList);
+        msgAdapter = new MessageListAdapter(msgList);
 
         // for testing
-        mAniCareService.listPet(0, mThisUser.getId(), new ListCallback<AniCarePet>() {
-            @Override
-            public void onCompleted(List<AniCarePet> list, int count) {
-                petList.addAll(list);
-            }
-        });
+        AniCareMessage msg1 = new AniCareMessage();
+        msg1.setContent("Test Purpose");
+        msg1.setRawDateTime("2015-06-03");
+        msg1.setRawType(0);
+        msg1.setSender("Me");
+        msg1.setReceiver("Tom");
+        msgList.add(msg1);
 
-        Log.d(TAG, "petList size: " + petList.size());
+        AniCareMessage msg2 = new AniCareMessage();
+        msg2.setContent("Test Purpose2");
+        msg2.setRawDateTime("2015-06-04");
+        msg2.setRawType(1);
+        msg2.setSender("Jane");
+        msg2.setReceiver("Tom");
+        msgList.add(msg2);
 
-//     listMessage();
+        //msgList = mAniCareService.listMessage();
+        msgAdapter.notifyDataSetChanged();
 
-    }
-
-    private void listMessage() {
-//        mAppContext.showProgressDialog(mThisActivity);
-//        msgList = mAniCareService.listMessage();
-////        mAniCareService.listMessage(mThisUser.getId(), new ListCallback<AniCarePet>() {
-////            @Override
-////            public void onCompleted(List<AniCarePet> list, int count) {
-////                msgList.addAll(list);
-////                msgListAdapter.notifyDataSetChanged();
-////                mAppContext.dismissProgressDialog();
-////            }
-////        });
     }
 
     @Override
@@ -73,46 +67,16 @@ public class MessageBoxFragment extends AniCareFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_message_box, container, false);
 
-        ArrayList<Card> cards = new ArrayList<Card>();
+        RecyclerView recList = (RecyclerView) rootView.findViewById(R.id.msg_List);
+        recList.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(mThisActivity);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        recList.setAdapter(msgAdapter);
 
-        //Create a Card
-        Card card = new Card(mAppContext);
-        //Create a CardHeader
-        CardHeader header = new CardHeader(mAppContext);
-        //Add Header to card
-        card.addCardHeader(header);
+        recList.addOnItemTouchListener(new RecyclerItemClickListener(this.getActivity(), recList, this));
 
-        for (int i = 0; i< 100;i++ ) {
-            card.setTitle("Test+"+i);
-            cards.add(card);
-        }
-
-        Log.d(TAG, "Card list size: " + cards.size());
-
-        for (int i = 0; i< 100;i++ ) {
-            Log.d(TAG, cards.get(i).getTitle());
-        }
-
-        CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(getActivity(),cards);
-
-        CardListView listView = (CardListView) getActivity().findViewById(R.id.message_list);
-
-        if (listView!=null){
-            listView.setAdapter(mCardArrayAdapter);
-        }
-
-//        testBtn = (Button)rootView.findViewById(R.id.fragment_message_box_btn);
-//
-//        testBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String receiver = "To myself";
-//                String receiverId = mThisUser.getId();
-//                MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId);
-//                dialog.show();
-//            }
-//        });
-
+        //rootView.setBackgroundColor(getResources().getColor(R.color.anicare_hint));
 
         return rootView;
     }

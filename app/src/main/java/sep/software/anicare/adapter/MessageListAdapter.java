@@ -1,69 +1,89 @@
 package sep.software.anicare.adapter;
 
-import android.database.DataSetObserver;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.widget.TextView;
 
 import java.util.List;
 
+import sep.software.anicare.AniCareApp;
+import sep.software.anicare.R;
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.service.AniCareService;
 
 /**
- * Created by apple on 2015. 6. 3..
+ * Created by Jeffrey on 2015. 6. 3..
  */
-public class MessageListAdapter implements Adapter {
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageViewHolder> {
+
+    private List<AniCareMessage> msgList;
+    private AniCareService mAniCareService; // For Using AniCareService.setPetImageIntro (Picasso library)
+    private AniCareApp mAppContext;
+
     public MessageListAdapter(List<AniCareMessage> msgList) {
-
+        this.msgList = msgList;
+        mAppContext = AniCareApp.getAppContext();
+        mAniCareService = mAppContext.getAniCareService();
     }
 
     @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
+    public int getItemCount() {
+        return msgList.size();
+    }
 
+    public AniCareMessage getItem(int position) {
+        return msgList.get(position);
     }
 
     @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
+    public void onBindViewHolder(MessageViewHolder MessageViewHolder, int i) {
+        AniCareMessage msgItem = msgList.get(i);
 
+        if(msgItem.getRawType() == 0) {
+            MessageViewHolder.name.setText(msgItem.getReceiver());
+        } else {
+            MessageViewHolder.name.setText(msgItem.getSender());
+        }
+
+        MessageViewHolder.msgContent.setText(msgItem.getContent());
+        MessageViewHolder.date.setText(msgItem.getRawDateTime());
     }
 
     @Override
-    public int getCount() {
-        return 0;
+    public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+
+        AniCareMessage msgItem = msgList.get(i);
+        View itemView;
+
+        if (msgItem.getRawType() == 0) { // Send Msg
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.send_message_card_view, viewGroup, false);
+
+        } else  { // Receive Msg
+            itemView = LayoutInflater.
+                    from(viewGroup.getContext()).
+                    inflate(R.layout.receive_message_card_view, viewGroup, false);
+        }
+
+        return new MessageViewHolder(itemView);
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
 
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
+        protected TextView name;
+        protected TextView msgContent;
+        protected TextView date;
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
-    }
+        public MessageViewHolder(View v) {
+            super(v);
 
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
+            name = (TextView) v.findViewById(R.id.name);
+            msgContent = (TextView) v.findViewById(R.id.msg_content);
+            date = (TextView) v.findViewById(R.id.msg_date);
+        }
     }
 }
