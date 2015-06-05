@@ -24,7 +24,7 @@ public class AniCarePet extends AniCareModel {
         }
     }
     public enum Size {
-        BIG(0), MIDDLE(1), SMALL(2);
+        SMALL(1), MIDDLE(2), BIG(3);
 
         private final int value;
         Size(int value) {
@@ -35,7 +35,7 @@ public class AniCarePet extends AniCareModel {
         }
     }
     public enum Personality {
-        BRIGHT(0), SHY(1), NORMAL(2);
+        SHY(1), NORMAL(2), BRIGHT(3);
 
         private final int value;
         Personality(int value) {

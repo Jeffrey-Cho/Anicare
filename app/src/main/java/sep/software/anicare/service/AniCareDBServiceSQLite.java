@@ -160,7 +160,12 @@ public class AniCareDBServiceSQLite implements AniCareDBService {
 
     @Override
     public void updateMessage(String id, AniCareMessage message) {
-        //
+        SQLiteDatabase db = this.openDataBase();
+        ContentValues values = new ContentValues();
+        values.put(OBJECT, message.toString());
+        values.put(TIME_STAMP, message.getRawDateTime());
+        db.update(TABLE_NAME_MESSAGE, values, ID + "= ?", new String[] { String.valueOf(id) });
+        this.closeDatabase();
     }
 
     @Override

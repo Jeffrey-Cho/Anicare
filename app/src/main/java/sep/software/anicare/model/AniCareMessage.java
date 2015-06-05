@@ -28,6 +28,7 @@ public class AniCareMessage extends AniCareModel {
 	private String rawDateTime;
 	private String relationId;
 	private String content;
+    private boolean resolved = false;
 	
 	public String getId() {
 		return id;
@@ -104,6 +105,14 @@ public class AniCareMessage extends AniCareModel {
 	public String getRelationId() {
 		return relationId;
 	}
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void resolved() {
+        this.resolved = true;
+    }
 
     public void makeRelation() {
         if (senderId == null || receiverId == null) {

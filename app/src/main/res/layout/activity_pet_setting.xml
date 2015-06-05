@@ -17,7 +17,10 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:divider="?android:dividerHorizontal"
+        android:dividerPadding="20dp"
+        android:showDividers="middle">
 
 
         <ImageView
@@ -25,28 +28,32 @@
             android:layout_height="193dp"
             android:id="@+id/petProfileImage"
             android:src="@drawable/profile_default_img"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"/>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.12">
+            android:layout_weight="0.12"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
 
-            <TextView
+            <sep.software.anicare.view.AniCareTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/pet_setting_name"/>
 
             <EditText
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/pet_setting_name"
                 android:layout_weight="1" />
         </LinearLayout>
+
 
         <LinearLayout
             android:orientation="horizontal"
@@ -57,17 +64,18 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/pet_setting_category"
-                    />
+                    android:text="@string/pet_setting_category" />
 
                 <Spinner
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/pet_setting_category"
                     android:layout_weight="1"
@@ -88,9 +96,11 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -138,9 +148,11 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -178,9 +190,11 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -225,9 +239,11 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -256,6 +272,8 @@
             </LinearLayout>
         </LinearLayout>
 
+
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -265,9 +283,11 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.12">
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
-                <TextView
+                <sep.software.anicare.view.AniCareTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
