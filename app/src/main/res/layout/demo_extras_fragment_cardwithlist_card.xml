@@ -19,10 +19,10 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              xmlns:card="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <ScrollView
         android:id="@+id/card_scrollview"
@@ -35,7 +35,7 @@
             android:layout_height="match_parent">
 
             <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/pointcard"
+                android:id="@+id/carddemo_weathercard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
@@ -48,7 +48,7 @@
                 android:layout_height="15dp"/>
 
             <it.gmariotti.cardslib.library.view.CardView
-                android:id="@+id/historycard"
+                android:id="@+id/carddemo_mayknowcard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
