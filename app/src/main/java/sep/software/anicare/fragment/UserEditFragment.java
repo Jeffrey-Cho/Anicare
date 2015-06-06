@@ -178,14 +178,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
                     });
                 }
 
-            } else if (v.equals(cancleBtn)) {
-                Fragment settingFragment = new SettingFragment();
-                String tag = settingFragment.getClass().getSimpleName();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
-                mAppContext.dismissProgressDialog();
-
-            } else {
+            }  else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
                 builder1.setTitle("Alert");
                 builder1.setMessage("User Name and User Location are mandatory!");
@@ -200,6 +193,13 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
+        } else if (v.equals(cancleBtn)) {
+            Fragment settingFragment = new SettingFragment();
+            String tag = settingFragment.getClass().getSimpleName();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+            mAppContext.dismissProgressDialog();
+
         }
 
     }

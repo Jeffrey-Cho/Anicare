@@ -152,14 +152,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                     }
                 });
 
-            } else if (v.equals(cancleBtn)) {
-                Fragment settingFragment = new SettingFragment();
-                String tag = settingFragment.getClass().getSimpleName();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
-                mAppContext.dismissProgressDialog();
-
-            } else {
+            }  else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
                 builder1.setTitle("Alert");
                 builder1.setMessage("Pet Name is mandatory!");
@@ -174,6 +167,13 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
             }
+        } else if (v.equals(cancleBtn)) {
+            Fragment settingFragment = new SettingFragment();
+            String tag = settingFragment.getClass().getSimpleName();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+            mAppContext.dismissProgressDialog();
+
         }
 
     }
