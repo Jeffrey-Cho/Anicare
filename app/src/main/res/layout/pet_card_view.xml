@@ -42,7 +42,8 @@
             android:layout_toRightOf="@id/name"
             android:maxLength="12"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_alignBaseline="@id/name"/>
+            android:layout_alignBaseline="@id/name"
+            android:text="Name"/>
 
         <sep.software.anicare.view.AniCareTextView
             android:layout_width="wrap_content"
@@ -51,9 +52,10 @@
             android:text="Location"
             android:id="@+id/location"
             android:layout_marginRight="5dp"
-            android:layout_toRightOf="@id/pet_name"
-            android:layout_alignBaseline="@id/name"
-            android:layout_marginLeft="15dp"
+            android:layout_below="@id/name"
+            android:layout_alignLeft="@id/name"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
             />
 
         <TextView
@@ -63,6 +65,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_toRightOf="@id/location"
             android:layout_marginRight="10dp"
-            android:layout_alignBaseline="@id/name"/>
+            android:layout_alignBottom="@id/location"
+            android:text="Addess"
+            />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

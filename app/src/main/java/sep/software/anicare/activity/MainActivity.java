@@ -288,6 +288,10 @@ public class MainActivity extends AniCareActivity {
         mDrawerLayout.closeDrawer(mLinearLayout);
     }
 
+    public ListView getDrawer() {
+        return this.mDrawerList;
+    }
+
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
