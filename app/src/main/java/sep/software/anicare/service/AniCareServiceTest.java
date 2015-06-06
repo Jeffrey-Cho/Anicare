@@ -249,10 +249,6 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public void makeFriend(AniCarePet pet, final EntityCallback<AniCarePet> callback) {
 
-//        petList.add(pet);
-//        callback.onCompleted(pet);
-//        if (true) return;
-
         if (!internetAvailable()) {
             EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
             return;

@@ -189,7 +189,9 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
                     pet.setCategory(category);
                     pet.setSize(size);
                     pet.setImageURL(pet.getId());
-
+                    pet.setAddress1(mThisUser.getAddress1());
+                    pet.setAddress2(mThisUser.getAddress2());
+                    pet.setAddress3(mThisUser.getAddress3());
                     mAppContext.showProgressDialog(mThisActivity);
                     Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
                     mAniCareService.makeFriend(pet, new EntityCallback<AniCarePet>() {

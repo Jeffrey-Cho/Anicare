@@ -31,7 +31,7 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
     private List<AniCarePet> petList = new ArrayList<AniCarePet>();
 
     private int page = 0;
-    private int mode = 0;
+    private int mode = 3;
     private boolean isAdding = false;
 
     @Override
@@ -63,10 +63,14 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
         super.onCreate(savedInstanceState);
 
         petListAdapter = new PetListAdapter(petList);
-        listFriend(page, mode);
+        refreshList(mode);
     }
 
-    public void listFriend(int page, int _mode) {
+    public void refreshList(int _mode) {
+        this.mode = _mode;
+        this.page = 0;
+        petList.clear();
+        petListAdapter.notifyDataSetChanged();
         mAppContext.showProgressDialog(mThisActivity);
         isAdding = true;
         mAniCareService.listPet(page, _mode, mThisUser.getId(), new ListCallback<AniCarePet>() {
@@ -79,6 +83,7 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
             }
         });
     }
+
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -115,7 +120,17 @@ public class ListFriendFragment extends AniCareFragment implements RecyclerItemC
     }
 
     private void addNextItem() {
-        listFriend(++page, mode);
+        mAppContext.showProgressDialog(mThisActivity);
+        isAdding = true;
+        mAniCareService.listPet(++page, mode, mThisUser.getId(), new ListCallback<AniCarePet>() {
+            @Override
+            public void onCompleted(List<AniCarePet> list, int count) {
+                petList.addAll(list);
+                petListAdapter.notifyDataSetChanged();
+                mAppContext.dismissProgressDialog();
+                isAdding = false;
+            }
+        });
     }
 
 }
