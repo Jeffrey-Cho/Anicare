@@ -1,0 +1,219 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:fillViewport="true"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="sep.software.anicare.fragment.UserEditFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:weightSum="1"
+        android:divider="?android:dividerHorizontal"
+        android:dividerPadding="20dp"
+        android:showDividers="middle">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:id="@+id/profileImage"
+            android:layout_gravity="center_horizontal" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.12"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp">
+
+            <sep.software.anicare.view.AniCareTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/user_setting_name"/>
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/user_setting_name"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <sep.software.anicare.view.AniCareTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_location"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPostalAddress"
+                    android:ems="10"
+                    android:id="@+id/user_setting_location"
+                    android:layout_weight="1"/>
+
+                <!--               <EditText
+                                   android:layout_width="wrap_content"
+                                   android:layout_height="wrap_content"
+                                   android:inputType="textPersonName"
+                                   android:ems="10"
+                                   android:id="@+id/user_setting_location"
+                                   android:layout_weight="1" /> -->
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <sep.software.anicare.view.AniCareTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_living_type"
+                    />
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/user_setting_living_type"
+                    android:prompt="@string/user_setting_living_type"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <sep.software.anicare.view.AniCareTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:checkedButton="@+id/user_setting_pet_yes"
+                    android:text="@string/user_setting_is_pet"
+                    />
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:checkedButton="@+id/user_setting_pet_yes"
+                    android:id="@+id/is_pet">
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item_yes"
+                        android:id="@+id/user_setting_pet_yes" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/item_no"
+                        android:id="@+id/user_setting_pet_no" />
+                </RadioGroup>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
+
+                <sep.software.anicare.view.AniCareTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/user_setting_self_intro"
+                    />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="100dp"
+                    android:inputType="textMultiLine"
+                    android:ems="10"
+                    android:id="@+id/user_setting_self_intro"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <sep.software.anicare.view.AniCareButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_cancle"
+            android:id="@+id/user_setting_cancle"
+            android:layout_gravity="center_horizontal" />
+
+        <sep.software.anicare.view.AniCareButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_confirm"
+            android:id="@+id/user_setting_submit"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+</ScrollView>
+
