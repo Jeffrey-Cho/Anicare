@@ -2,9 +2,10 @@ package sep.software.anicare;
 
 
 import sep.software.anicare.service.AniCareService;
-import sep.software.anicare.service.AniCareServiceAzure;
 import sep.software.anicare.service.AniCareServiceTest;
 import sep.software.anicare.util.ObjectPreferenceUtil;
+import sep.software.anicare.util.PrefUtil;
+
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ public class AniCareApp extends Application {
 
     private AniCareService mAniCareService;
     private ObjectPreferenceUtil mObjectPreference;
+//    private PrefUtil prefUtil;
     private ProgressDialog progressDialog;
 
     public static synchronized AniCareApp getAppContext() {
@@ -40,10 +42,8 @@ public class AniCareApp extends Application {
         mObjectPreference = new ObjectPreferenceUtil(instance);
 
         // initialize AniCareService
-        if (AniCareProtocol.isDebugMode)
-            mAniCareService = new AniCareServiceTest(instance);
-        else
-            mAniCareService = new AniCareServiceAzure(instance);
+        mAniCareService = new AniCareServiceTest(instance);
+
     }
 
     public AniCareService getAniCareService() {

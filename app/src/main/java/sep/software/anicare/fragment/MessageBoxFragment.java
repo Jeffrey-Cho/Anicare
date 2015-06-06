@@ -14,6 +14,7 @@ import sep.software.anicare.adapter.ReceivedMessageList;
 import sep.software.anicare.adapter.SendedMessageList;
 import sep.software.anicare.adapter.SystemMessageList;
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.util.AniCareLogger;
 
 /**
  * Created by Jeffrey on 2015. 6. 5..
@@ -44,23 +45,26 @@ public class MessageBoxFragment extends AniCareFragment {
 
         //List<AniCareMessage> totalMsg = mAniCareService.listMessage(); // does not work properly now. we use fake function.
 
-        List<AniCareMessage> totalMsg = generateTempMessages(); // dummpy fake function
-
-        List<AniCareMessage> systemMsg = new ArrayList<AniCareMessage>();
-        List<AniCareMessage> receivedMsg = new ArrayList<AniCareMessage>();
-        List<AniCareMessage> sendedMsg = new ArrayList<AniCareMessage>();
-
-        for (AniCareMessage msg: totalMsg) {
-            if (msg.getRawType() == 0) {
-                systemMsg.add(msg);
-            } else {
-                if (true) { // for temp
-                    receivedMsg.add(msg);
-                } else {
-                    sendedMsg.add(msg);
-                }
-            }
+//        List<AniCareMessage> totalMsg = generateTempMessages(); // dummpy fake function
+        List<AniCareMessage> allList = mAniCareService.listMessage();
+        for(AniCareMessage msg : allList) {
+            AniCareLogger.log(msg);
         }
+        List<AniCareMessage> systemMsg = mAniCareService.listSystemMessage();
+        List<AniCareMessage> receivedMsg = mAniCareService.listReceivedMessage();
+        List<AniCareMessage> sendedMsg = mAniCareService.listSendedMessage();
+
+//        for (AniCareMessage msg: totalMsg) {
+//            if (msg.getRawType() == 0) {
+//                systemMsg.add(msg);
+//            } else {
+//                if (true) { // for temp
+//                    receivedMsg.add(msg);
+//                } else {
+//                    sendedMsg.add(msg);
+//                }
+//            }
+//        }
 
 
         // System Messages

@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
-class PrefUtil {
+public class PrefUtil {
 
 	public static final String DEFAULT_STRING = "";
 	public static final int DEFAULT_INT = 0;

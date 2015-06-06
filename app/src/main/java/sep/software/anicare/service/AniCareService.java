@@ -60,14 +60,30 @@ public interface AniCareService {
      */
     // This method is used in SplashActivity
     public void getGcmRegistrationId(final EntityCallback<String> callback) ;
+
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback);
-    public void addMessage(AniCareMessage msg);
     public List<AniCareMessage> listMessage();
+    public void addMessageDB(AniCareMessage msg);
+    public void updateMessageDB(String id, AniCareMessage msg);
+    public void deleteMessageDB(String id);
+    public void deleteAllMessageDB();
+
+    public boolean hasNotResolvedMessage();
+    public List<AniCareMessage> listNotResolvedMessage();
+    public List<AniCareMessage> listSystemMessage();
+    public List<AniCareMessage> listSendedMessage();
+    public List<AniCareMessage> listReceivedMessage();
 
     /*
         CareHistory API
      */
     public List<CareHistory> listHistory();
+    public void addHistoryDB(CareHistory history);
+    public void updateHistoryDB(String id, CareHistory history);
+    public void deleteHistoryDB(String id);
+    public void deleteAllHistoryDB();
+    public void plsPoint(int point);
+    public void minPoint(int point);
 
     /*
         BlobStorage API - To upload Bitmap Images
@@ -79,5 +95,8 @@ public interface AniCareService {
     public void setPetImageInto(AniCarePet pet, ImageView view);
     public String getUserImageUrl(String id);
     public String getPetImageUrl(String id);
+
+    public void saveFlag(String id, boolean value);
+    public boolean getFlag(String id);
 
 }

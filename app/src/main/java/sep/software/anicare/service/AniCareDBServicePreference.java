@@ -17,8 +17,13 @@ public class AniCareDBServicePreference implements AniCareDBService {
 
     private ObjectPreferenceUtil mObjectPreference;
 
+
     public AniCareDBServicePreference() {
         mObjectPreference = AniCareApp.getAppContext().getObjectPreference();
+    }
+
+    public void dropTable() {
+
     }
 
     @Override
@@ -97,7 +102,7 @@ public class AniCareDBServicePreference implements AniCareDBService {
     }
 
     @Override
-    public void updateMessage(String id, CareHistory history) {
+    public void updateHistory(String id, CareHistory history) {
 
     }
 }

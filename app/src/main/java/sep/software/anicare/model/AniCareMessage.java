@@ -19,8 +19,22 @@ public class AniCareMessage extends AniCareModel {
         }
 	}
 
+    public enum CommType {
+
+        REQUEST(0), ACCEPT(1), REJECT(2);
+
+        private final int value;
+        CommType(int value) {
+            this.value = value;
+        }
+        public int getValue() {
+            return value;
+        }
+    }
+
 	private String id;
 	private int rawType;
+    private int rawCommType;
 	private String sender;
 	private String senderId;
 	private String receiver;
@@ -53,6 +67,12 @@ public class AniCareMessage extends AniCareModel {
 	public void setRawType(int rawType) {
 		this.rawType = rawType;
 	}
+
+    public CommType getCommType() { return CommType.values()[this.rawCommType]; }
+
+    public void setCommType(CommType commType) {
+        this.rawCommType = commType.getValue();
+    }
 
 	public String getSender() {
 		return sender;

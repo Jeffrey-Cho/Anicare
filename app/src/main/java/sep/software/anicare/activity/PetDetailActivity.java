@@ -15,6 +15,7 @@ import sep.software.anicare.model.AniCareDateTime;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.AniCareButton;
 import sep.software.anicare.view.MessageDialog;
 
@@ -177,7 +178,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         AniCareMessage msg = new AniCareMessage();
         AniCareUser me = mAniCareService.getCurrentUser();
 
-        String requestMsg = "System Msg: "+ me.getName()+ " want to make friend with your pet." ;
+        String requestMsg = me.getName()+ " want to make friend with your pet." ;
 
         msg.setType(AniCareMessage.Type.SYSTEM);
         msg.setSender(me.getName());
@@ -189,11 +190,11 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         msg.setContent(requestMsg);
 
         mAppContext.showProgressDialog(mThisActivity);
-
         mAniCareService.sendMessage(msg, new EntityCallback<AniCareMessage>() {
             @Override
             public void onCompleted(AniCareMessage entity) {
                 mAppContext.dismissProgressDialog();
+//                mAniCareService.addMessageDB(entity);
                 Toast t = Toast.makeText(mThisActivity, "Complete Send Message.", Toast.LENGTH_LONG); // for debugging
                 t.setGravity(Gravity.CENTER, 0, 0);
                 t.show();

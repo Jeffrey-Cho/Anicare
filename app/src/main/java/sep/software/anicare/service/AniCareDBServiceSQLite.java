@@ -23,7 +23,8 @@ import sep.software.anicare.util.RandomUtil;
  */
 public class AniCareDBServiceSQLite implements AniCareDBService {
 
-    private static int DATABASE_VERSION = RandomUtil.getInt(100);
+    private static int DATABASE_VERSION = 2; //RandomUtil.getInt(100);
+//    private static int DATABASE_VERSION = RandomUtil.getInt(100);
 
     private static final String DATABASE_NAME = "anicareDB.db";
 
@@ -86,6 +87,12 @@ public class AniCareDBServiceSQLite implements AniCareDBService {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_MESSAGE);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARE_HISTORY);
         }
+    }
+
+    public void dropTable() {
+        SQLiteDatabase db = this.openDataBase();
+        mOpener.dropTable(db);
+        mOpener.onCreate(db);
     }
 
     public AniCareDBServiceSQLite(Context context) {
@@ -170,26 +177,59 @@ public class AniCareDBServiceSQLite implements AniCareDBService {
 
     @Override
     public List<CareHistory> listHistory() {
-        return null;
+        List<CareHistory> histories = new ArrayList<CareHistory>();
+
+        String selectQuery = "SELECT * FROM " + TABLE_NAME_CARE_HISTORY + " ORDER BY " + TIME_STAMP;
+        SQLiteDatabase db = this.openDataBase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                histories.add(convertToClass(cursor, CareHistory.class));
+            } while (cursor.moveToNext());
+        }
+
+        this.closeDatabase();
+        return histories;
+
     }
 
     @Override
     public boolean addHistory(CareHistory history) {
-        return false;
+        SQLiteDatabase db = this.openDataBase();
+
+        ContentValues values = new ContentValues();
+        values.put(OBJECT, history.toString());
+        values.put(TIME_STAMP, history.getRawDateTime());
+        db.insert(TABLE_NAME_CARE_HISTORY, null, values);
+        this.closeDatabase();
+
+        return true;
+
     }
 
     @Override
     public void deleteHistory(String id) {
-
+        SQLiteDatabase db = this.openDataBase();
+        db.delete(TABLE_NAME_CARE_HISTORY, ID + " = ?",
+                new String[] { String.valueOf(id) });
+        this.closeDatabase();
     }
 
     @Override
     public void deleteHistoryAll() {
-
+        SQLiteDatabase db = this.openDataBase();
+        db.delete(TABLE_NAME_CARE_HISTORY, null, null);
+        this.closeDatabase();
     }
 
     @Override
-    public void updateMessage(String id, CareHistory history) {
-
+    public void updateHistory(String id, CareHistory history) {
+        SQLiteDatabase db = this.openDataBase();
+        ContentValues values = new ContentValues();
+        values.put(OBJECT, history.toString());
+        values.put(TIME_STAMP, history.getRawDateTime());
+        db.update(TABLE_NAME_CARE_HISTORY, values, ID + "= ?", new String[] { String.valueOf(id) });
+        this.closeDatabase();
     }
 }

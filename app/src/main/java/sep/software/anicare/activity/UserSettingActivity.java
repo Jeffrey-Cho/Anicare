@@ -275,10 +275,27 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     }
 
     private void setImageButton(){
-        userImage.setOnClickListener(new View.OnClickListener() {
+//        userImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FileUtil.getMediaFromGallery(mThisActivity);
+//            }
+//        });
+
+        userImage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
-                FileUtil.getMediaFromGallery(mThisActivity);
+            public boolean onLongClick(View v) {
+
+                longitude = 126.97690095752479;
+                latitude = 37.48355207373753;
+                location = "서울특별시 종로구 세종로 1-72";
+                address1 = "서울특별시";
+                address2 = "종로구";
+                address3 = "세종로";
+
+                userLocation.setText(location);
+
+                return true;
             }
         });
     }

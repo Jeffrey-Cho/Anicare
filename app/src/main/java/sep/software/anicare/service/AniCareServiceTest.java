@@ -55,7 +55,7 @@ public class AniCareServiceTest implements AniCareService {
     private List<CareHistory> historyList = new ArrayList<CareHistory>();
 
     public AniCareServiceTest(Context context) {
-        mDbService = new AniCareDBServicePreference();
+        mDbService = new AniCareDBServiceSQLite(context);
 
         for (int i = 0 ; i < 10 ; i++) {
             petList.add(AniCarePet.rand(true));
@@ -164,6 +164,10 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public AniCareUser getCurrentUser() {
         return mObjectPreference.get("user", AniCareUser.class);
+    }
+
+    private void setCurrentUser(AniCareUser user) {
+        mObjectPreference.put("user", user);
     }
 
     @Override
@@ -303,10 +307,7 @@ public class AniCareServiceTest implements AniCareService {
         }).execute(GoogleCloudMessaging.getInstance(AniCareApp.getAppContext()));
 
     }
-    @Override
-    public void addMessage(AniCareMessage msg) {
-        mDbService.addMessage(msg);
-    }
+
     @Override
     public void sendMessage(AniCareMessage message, final EntityCallback<AniCareMessage> callback) {
         if (!internetAvailable()) {
@@ -325,7 +326,6 @@ public class AniCareServiceTest implements AniCareService {
                 // TODO Auto-generated method stub
                 if (arg1 == null) {
                     AniCareMessage msg = mGb.create().fromJson(arg0, AniCareMessage.class);
-                    mDbService.addMessage(msg);
                     callback.onCompleted(msg);
                 } else {
                     EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
@@ -334,14 +334,78 @@ public class AniCareServiceTest implements AniCareService {
         });
     }
 
-    @Override
     public List<AniCareMessage> listMessage() {
         return mDbService.listMessage();
     }
+    public void addMessageDB(AniCareMessage msg) {
+        mDbService.addMessage(msg);
+    }
+    public void updateMessageDB(String id, AniCareMessage msg) { mDbService.updateMessage(id, msg); }
+    public void deleteMessageDB(String id) { mDbService.deleteMessage(id); }
+    public void deleteAllMessageDB() { mDbService.deleteMessageAll(); }
 
-    @Override
+    public boolean hasNotResolvedMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        for (AniCareMessage msg : list) {
+            if (!msg.isResolved()) return true;
+        }
+        return false;
+    }
+    public List<AniCareMessage> listNotResolvedMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        List<AniCareMessage> notResolved = new ArrayList<AniCareMessage>();
+        for (AniCareMessage msg : list) {
+            if (!msg.isResolved()) notResolved.add(msg);
+        }
+        return notResolved;
+    }
+    public List<AniCareMessage> listSystemMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
+        for (AniCareMessage msg : list) {
+            if (msg.getRawType() == AniCareMessage.Type.SYSTEM.getValue()) retList.add(msg);
+        }
+        return retList;
+    }
+    public List<AniCareMessage> listSendedMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
+        for (AniCareMessage msg : list) {
+            if (msg.getRawType() == AniCareMessage.Type.MESSAGE.getValue()
+                    && msg.isMine()) retList.add(msg);
+        }
+        return retList;
+    }
+    public List<AniCareMessage> listReceivedMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
+        for (AniCareMessage msg : list) {
+            if (msg.getRawType() == AniCareMessage.Type.MESSAGE.getValue()
+                    && !msg.isMine()) retList.add(msg);
+        }
+        return retList;
+    }
+
     public List<CareHistory> listHistory() {
         return mDbService.listHistory();
+    }
+    public void addHistoryDB(CareHistory history) { mDbService.addHistory(history); }
+    public void updateHistoryDB(String id, CareHistory history) { mDbService.updateHistory(id, history); }
+    public void deleteHistoryDB(String id) { mDbService.deleteHistory(id); }
+    public void deleteAllHistoryDB() { mDbService.deleteHistoryAll(); }
+
+    public void plsPoint(int point) {
+        AniCareUser me = this.getCurrentUser();
+        int myPoint = me.getPoint();
+        me.setPoint(myPoint + point);
+        this.setCurrentUser(me);
+
+    }
+    public void minPoint(int point) {
+        AniCareUser me = this.getCurrentUser();
+        int myPoint = me.getPoint();
+        me.setPoint(myPoint - point);
+        this.setCurrentUser(me);
     }
 
     @Override
@@ -407,5 +471,10 @@ public class AniCareServiceTest implements AniCareService {
                 + "/"+randNum;
     }
 
-
+    public void saveFlag(String id, boolean value) {
+        mObjectPreference.put(id, value);
+    }
+    public boolean getFlag(String id) {
+        return mObjectPreference.get(id, Boolean.class);
+    }
 }

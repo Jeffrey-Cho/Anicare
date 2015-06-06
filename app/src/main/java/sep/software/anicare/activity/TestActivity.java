@@ -42,16 +42,6 @@ public class TestActivity extends AniCareActivity {
 
         listView.setAdapter(adapter);
 
-//        adapter.add("Logout");
-//        adapter.add("Remove Pet Setting");
-//        adapter.add("Remove AniCareMessage DB");
-//        adapter.add("Remove History DB");
-//
-//        adapter.add("Read User Setting");
-//        adapter.add("Read Pet Setting");
-//        adapter.add("Read AniCareMessage DB");
-//        adapter.add("Read History DB");
-
         descriptions = new ArrayList<DescriptionInterface>(){
             {
                 add(new DescriptionInterface() {
@@ -75,6 +65,20 @@ public class TestActivity extends AniCareActivity {
 
                     @Override
                     public String title() {
+                        return "Drop DB";
+                    }
+
+                    @Override
+                    public void describe() {
+                        dbService.dropTable();
+
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
                         return "Remove Pet Setting";
                     }
 
@@ -89,24 +93,6 @@ public class TestActivity extends AniCareActivity {
                     }
                 });
 
-                add(new DescriptionInterface() {
-
-                    @Override
-                    public String title() {
-                        return "Remove AniCareMessage DB";
-                    }
-
-                    @Override
-                    public void describe() {
-                        String str = "Removed AniCareMessage DB";
-                        new AlertDialog.Builder(mThisActivity)
-                                .setMessage(str)
-                                .setPositiveButton("ok", null)
-                                .show();
-
-
-                    }
-                });
 
                 add(new DescriptionInterface() {
 
@@ -222,75 +208,54 @@ public class TestActivity extends AniCareActivity {
                     }
                 });
 
+
                 add(new DescriptionInterface() {
 
                     @Override
                     public String title() {
-                        return "Add random message to DB";
+                        return "Save true Flag resolved";
                     }
 
                     @Override
                     public void describe() {
-                        AniCareMessage msg = AniCareMessage.rand();
-                        String str = msg.toString();
+                        mAniCareService.saveFlag("resolved", true);
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
+                        return "Save false Flag resolved";
+                    }
+
+                    @Override
+                    public void describe() {
+                        mAniCareService.saveFlag("resolved", false);
+                    }
+                });
+
+                add(new DescriptionInterface() {
+
+                    @Override
+                    public String title() {
+                        return "get Flag resolved";
+                    }
+
+                    @Override
+                    public void describe() {
+                        String str = ""+ mAniCareService.getFlag("resolved");
                         new AlertDialog.Builder(mThisActivity)
                                 .setMessage(str)
                                 .setPositiveButton("ok", null)
                                 .show();
-                        dbService.addMessage(msg);
 
                     }
                 });
 
-                add(new DescriptionInterface() {
-
-                    @Override
-                    public String title() {
-                        return "Get every message list from DB";
-                    }
-
-                    @Override
-                    public void describe() {
-                        List<AniCareMessage> list = dbService.listMessage();
-                        if (list == null) return;
-                        new AlertDialog.Builder(mThisActivity)
-                                .setMessage(list.toString())
-                                .setPositiveButton("ok", null)
-                                .show();
-
-                    }
-                });
-
-                add(new DescriptionInterface() {
-
-                    @Override
-                    public String title() {
-                        return "Set Blob storage CORS";
-                    }
-
-                    @Override
-                    public void describe() {
-                        final BlobStorageService blobStorageService = new BlobStorageService();
-                        new AsyncTask<Void, Void, Boolean>(){
-
-
-                            @Override
-                            protected Boolean doInBackground(Void... params) {
-
-                                return blobStorageService.setHeader();
-                            }
-
-                            @Override
-                            protected void onPostExecute(Boolean aVoid) {
-                                super.onPostExecute(aVoid);
-                                AniCareLogger.log(aVoid);
-                            }
-                        }.execute();
-
-
-                    }
-                });
             }
+
+
         };
 
 

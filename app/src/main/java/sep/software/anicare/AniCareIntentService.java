@@ -65,7 +65,8 @@ public class AniCareIntentService extends IntentService {
 
         AniCareApp appContext = AniCareApp.getAppContext();
         AniCareService aniCareService = appContext.getAniCareService();
-        aniCareService.addMessage(msg);
+        AniCareLogger.log("in intent : "+msg);
+        aniCareService.addMessageDB(msg);
 
         notifyMessage(msg);
 

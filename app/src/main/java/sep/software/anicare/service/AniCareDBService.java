@@ -9,6 +9,9 @@ import sep.software.anicare.model.CareHistory;
  * Created by hongkunyoo on 15. 5. 5..
  */
 public interface AniCareDBService {
+
+    public void dropTable();
+
     public List<AniCareMessage> listMessage();
     public boolean addMessage(AniCareMessage message);
     public void deleteMessage(String id);
@@ -20,7 +23,7 @@ public interface AniCareDBService {
     public boolean addHistory(CareHistory history);
     public void deleteHistory(String id);
     public void deleteHistoryAll();
-    public void updateMessage(String id, CareHistory history);
+    public void updateHistory(String id, CareHistory history);
 
 
 }

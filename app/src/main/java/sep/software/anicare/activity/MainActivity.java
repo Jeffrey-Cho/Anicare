@@ -129,6 +129,18 @@ public class MainActivity extends AniCareActivity {
         } catch (Exception ex) {
             // Ignore
         }
+
+        if (mAniCareService.hasNotResolvedMessage()) {
+//        if (false) {
+            mDrawerList.setItemChecked(2, true);
+            setTitle(mPlanetTitles[2]);
+            mDrawerLayout.closeDrawer(mLinearLayout);
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new MessageBoxFragment()
+                    , MessageBoxFragment.class.getSimpleName()).commit();
+
+        }
     }
 
     public void onEvent(Exception exception){

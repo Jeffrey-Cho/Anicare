@@ -16,8 +16,13 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
+import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
+import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.service.AniCareService;
+import sep.software.anicare.util.AniCareLogger;
 
 /**
  * Created by Jeffrey on 2015. 6. 5..
@@ -25,10 +30,14 @@ import sep.software.anicare.model.AniCareMessage;
 public class SystemMessageList extends CardWithList {
 
     List<AniCareMessage> msgList;
+    AniCareService mAniCareService;
+    AniCareApp mAppContext;
 
     public SystemMessageList(Context context, List<AniCareMessage> systemMsglist) {
         super(context);
         this.msgList = systemMsglist;
+        mAppContext = AniCareApp.getAppContext();
+        mAniCareService = mAppContext.getAniCareService();
     }
 
     @Override
@@ -65,7 +74,7 @@ public class SystemMessageList extends CardWithList {
             MayKnowObject tempObject = new MayKnowObject(this);
             tempObject.name = msg.getSender();
             tempObject.common = msg.getContent();
-            tempObject.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
+            tempObject.url = mAniCareService.getPetImageUrl("ic_launcher.png");
             mObjects.add(tempObject);
         }
 
@@ -95,6 +104,7 @@ public class SystemMessageList extends CardWithList {
         ImageView imagePeople = (ImageView) convertView.findViewById(R.id.carddemo_know_image);
         TextView addText = (TextView) convertView.findViewById(R.id.carddemo_know_add);
 
+        final AniCareMessage msg = msgList.get(childPosition);
 
         //Retrieve the values from the object
         MayKnowObject stockObject = (MayKnowObject) object;
@@ -108,7 +118,24 @@ public class SystemMessageList extends CardWithList {
         addText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
+                AniCareUser me = mAniCareService.getCurrentUser();
+                AniCareMessage responseMsg = new AniCareMessage();
+                responseMsg.setType(AniCareMessage.Type.SYSTEM);
+                responseMsg.setCommType(AniCareMessage.CommType.ACCEPT);
+                responseMsg.setReceiver(msg.getSender());
+                responseMsg.setReceiverId(msg.getSenderId());
+                responseMsg.setSender(me.getName());
+                responseMsg.setSenderId(me.getId());
+                responseMsg.setContent(me.getName() + " has accepted your request.");
+                mAppContext.showProgressDialog(getContext());
+                mAniCareService.sendMessage(responseMsg ,new EntityCallback<AniCareMessage>() {
+                    @Override
+                    public void onCompleted(AniCareMessage entity) {
+                        mAppContext.dismissProgressDialog();
+                        Toast.makeText(getContext(),"Message sent", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 

@@ -21,8 +21,10 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
+import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.service.AniCareService;
 
 /**
  * Created by Jeffrey on 2015. 6. 5..
@@ -30,10 +32,12 @@ import sep.software.anicare.model.AniCareMessage;
 public class SendedMessageList extends CardWithList {
 
     List<AniCareMessage> msgList;
+    AniCareService mAniCareService;
 
     public SendedMessageList(Context context, List<AniCareMessage> sendedMsgList) {
         super(context);
         this.msgList = sendedMsgList;
+        mAniCareService = AniCareApp.getAppContext().getAniCareService();
     }
 
     @Override
@@ -70,7 +74,7 @@ public class SendedMessageList extends CardWithList {
             MayKnowObject tempObject = new MayKnowObject(this);
             tempObject.name = msg.getSender();
             tempObject.common = msg.getContent();
-            tempObject.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
+            tempObject.url = mAniCareService.getUserImageUrl(msg.getReceiverId());
             mObjects.add(tempObject);
         }
 
