@@ -36,7 +36,6 @@ import sep.software.anicare.util.ImageUtil;
 public class PetSettingActivity extends AniCareActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     private static final String TAG = PetSettingActivity.class.getSimpleName();
-    private static final String SETTING_FLAG = "FROM_SETTING";
 
     private ImageView petImage;
     private Uri mProfileImageUri;
@@ -50,12 +49,9 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
     private Button submitBtn;
 
     private AniCarePet.Category Category;
-//    private ImageAsyncTask imageTask;
     private String profileImageUrl;
 
     private Bitmap petImageBitmap;
-    private String flag;
-    private CharSequence mTitle;
 
 
     @Override
@@ -63,20 +59,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_setting);
 
-        Intent intent = getIntent();
-        flag = intent.getType();
-
-        if (flag != null && flag.equals(SETTING_FLAG)) {
-            // enable ActionBar app icon to behave as action to toggle nav drawer
-            ActionBar actionBar = getActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setBackgroundDrawable(mThisActivity.getResources().getDrawable(R.drawable.custom_action_bar));
-            mTitle = getResources().getString(R.string.title_activity_pet_setting);
-            getActionBar().setTitle(mTitle);
-        } else {
-            getActionBar().hide();
-        }
+        getActionBar().hide();
 
         petImage = (ImageView) findViewById(R.id.petProfileImage);
         petName = (TextView) findViewById(R.id.pet_setting_name);
@@ -98,105 +81,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
 
         setImageButton();
 
-        if (flag != null && flag.equals(SETTING_FLAG)) enableEdit(); // for edit
-//        profileImageUrl = mAniCareService.getPetImageUrl(mThisUser.getId());
-
-//        imageTask = new ImageAsyncTask();
-//        imageTask.execute(profileImageUrl);
-
-//        textView = (TextView) findViewById(R.id.pet_setting_text_view);
-//        randSet = (Button) findViewById(R.id.pet_setting_rand_set);
-//        gotoMainBtn = (Button) findViewById(R.id.pet_setting_go_back_to_main);
-//
-//        randSet.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AniCarePet pet = AniCarePet.rand();
-//                mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
-//                    @Override
-//                    public void onCompleted(AniCarePet entity) {
-//                        textView.setText(entity.toString());
-//                    }
-//                });
-//            }
-//        });
-//
-//        gotoMainBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
     }
-
-    private void enableEdit() {
-
-        petName.setText(mThisPet.getName());
-
-        switch(mThisPet.getRawCategory()) {
-            case 0:
-                petCategory.setSelection(0);
-                break;
-            case 1:
-                petCategory.setSelection(1);
-                break;
-            case 2:
-                petCategory.setSelection(2);
-                break;
-            case 3:
-                petCategory.setSelection(3);
-                break;
-        }
-
-        switch(mThisPet.getRawSize()) {
-            case 0:
-                petSize.check(R.id.pet_size_large);
-                break;
-            case 1:
-                petSize.check(R.id.pet_size_medium);
-                break;
-            case 2:
-                petSize.check(R.id.pet_size_small);
-                break;
-        }
-
-        switch(mThisPet.getRawPersonality()) {
-            case 0:
-                petPersonality.check(R.id.pet_bright);
-                break;
-            case 1:
-                petPersonality.check(R.id.pet_normal);
-                break;
-            case 2:
-                petPersonality.check(R.id.pet_shy);
-                break;
-        }
-
-
-        if(mThisPet.isMale()) {
-            petSex.check(R.id.pet_male);
-        } else {
-            petSex.check(R.id.pet_female);
-        }
-
-        if(mThisPet.isNeutralized()) {
-            petNeutralized.check(R.id.pet_neutralized_yes);
-        } else {
-            petNeutralized.check(R.id.pet_neutralized_no);
-        }
-
-        if(mThisPet.isPetFood()) {
-            petFeed.check(R.id.pet_feed_yes);
-        } else {
-            petFeed.check(R.id.pet_feed_no);
-        }
-
-        Picasso.with(mThisActivity).invalidate(mAniCareService.getPetImageUrl(mThisPet.getId()));
-        mThisPet.setImageURL(mThisPet.getId());
-        mAniCareService.setPetImageInto(mThisPet, petImage);
-
-    }
-
 
     private boolean checkContent() {
         if (petName.getText().toString().isEmpty()) {
@@ -247,8 +132,6 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
         }
 
         return size;
-
-
     }
 
     @Override
@@ -300,42 +183,6 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setNeutralized(petNeutralized.getCheckedRadioButtonId() == R.id.pet_neutralized_yes);
                 pet.setPetFood(petFeed.getCheckedRadioButtonId() == R.id.pet_feed_yes);
 
-                if (flag != null && flag.equals(SETTING_FLAG)) {
-
-                    AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
-                        @Override
-                        public void doNext(final Object obj, Object... params) {
-                            mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
-                                @Override
-                                public void onCompleted(AniCarePet entity) {
-//                                    pet.setImageURL(pet.getId());
-                                    AsyncChainer.notifyNext(obj, entity.getId());
-                                }
-                            });
-
-                        }
-                    }, new AsyncChainer.Chainable() {
-                        @Override
-                        public void doNext(Object obj, Object... params) {
-                            String id = (String) params[0];
-//                            ((MainActivity)PetSettingActivity.this.getParent()).changeName();
-                            EventBus.getDefault().post(new Exception());
-                            if (petImageBitmap == null) {
-                                mAppContext.dismissProgressDialog();
-                                onBackPressed();
-                                return;
-                            }
-                            mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
-                                @Override
-                                public void onCompleted(String entity) {
-                                    mAppContext.dismissProgressDialog();
-                                    onBackPressed();
-                                }
-                            });
-                        }
-                    });
-
-                } else {
                     if (petImageBitmap == null) {
                         new AlertDialog.Builder(mThisActivity)
                                 .setMessage("You should upload your pet image")
@@ -365,6 +212,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                                     mAppContext.dismissProgressDialog();
                                     Intent intent = new Intent();
                                     intent.setClass(mThisActivity, MainActivity.class);
+                                    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -372,7 +220,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                         }
                     });
 
-                }
+
 
             } else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);

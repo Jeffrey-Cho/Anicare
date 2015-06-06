@@ -2,6 +2,7 @@ package sep.software.anicare.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -55,11 +56,11 @@ public class SettingFragment extends PreferenceFragment {
         Preference userPref = findPreference("user_setting_category_key");
         userPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent();
-                intent.setClass(mAppContext, UserSettingActivity.class);
-                intent.setType(SETTING_FLAG);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                Fragment usereditfragment = new UserEditFragment();
+                String tag = usereditfragment.getClass().getSimpleName();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, usereditfragment, tag).commit();
+
                 return true;
             }
         });
@@ -67,11 +68,10 @@ public class SettingFragment extends PreferenceFragment {
         Preference petPref = findPreference("pet_setting_category_key");
         petPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent();
-                intent.setClass(mAppContext, PetSettingActivity.class);
-                intent.setType(SETTING_FLAG);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent);
+                Fragment peteditfragment = new PetEditFragment();
+                String tag = peteditfragment.getClass().getSimpleName();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, peteditfragment, tag).commit();
                 return true;
             }
         });

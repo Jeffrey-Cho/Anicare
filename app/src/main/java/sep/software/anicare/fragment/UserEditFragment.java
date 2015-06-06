@@ -1,8 +1,9 @@
-package sep.software.anicare.activity;
+package sep.software.anicare.fragment;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,8 +11,10 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,28 +23,25 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import de.greenrobot.event.EventBus;
 import sep.software.anicare.R;
+import sep.software.anicare.activity.MapActivity;
 import sep.software.anicare.interfaces.EntityCallback;
-import sep.software.anicare.AniCareException;
-import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
-import sep.software.anicare.service.AniCareAsyncTask;
-import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
-import sep.software.anicare.view.DynamicHeightImageView;
 
-public class UserSettingActivity extends AniCareActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+/**
+ * Created by Jeffrey on 2015. 6. 6..
+ */
+public class UserEditFragment extends AniCareFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    private static final String TAG = UserSettingActivity.class.getSimpleName();
+    private static final String TAG = UserEditFragment.class.getSimpleName();
 
     private String profileImageUrl;
     private Uri mProfileImageUri;
@@ -53,6 +53,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private RadioGroup havePet;
     private TextView selfIntro;
     private Button submitBtn;
+    private Button cancleBtn;
 
     private double longitude;
     private double latitude;
@@ -62,30 +63,30 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private String address3;
 
     private AniCareUser.HouseType livingType;
-    private int defaultPoint = 100;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_setting);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActionBar().hide();
+        View rootView = inflater.inflate(R.layout.fragment_user_edit, container, false);
 
-        userImage = (ImageView) findViewById(R.id.profileImage);
+        userImage = (ImageView) rootView.findViewById(R.id.profileImage);
         userImage.setScaleType(ImageView.ScaleType.FIT_XY);
-        userName = (TextView) findViewById(R.id.user_setting_name);
-        userLocation = (TextView) findViewById(R.id.user_setting_location);
+        userName = (TextView) rootView.findViewById(R.id.user_setting_name);
+        userLocation = (TextView) rootView.findViewById(R.id.user_setting_location);
 
-        userLivingType = (Spinner) findViewById(R.id.user_setting_living_type);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.user_living_type,android.R.layout.simple_spinner_item);
+        userLivingType = (Spinner) rootView.findViewById(R.id.user_setting_living_type);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mThisActivity,R.array.user_living_type,android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userLivingType.setAdapter(adapter);
         userLivingType.setOnItemSelectedListener(this);
 
-        havePet = (RadioGroup) findViewById(R.id.is_pet);
-        selfIntro = (TextView) findViewById(R.id.user_setting_self_intro);
-        submitBtn = (Button) findViewById(R.id.user_setting_submit);
+        havePet = (RadioGroup) rootView.findViewById(R.id.is_pet);
+        selfIntro = (TextView) rootView.findViewById(R.id.user_setting_self_intro);
+        submitBtn = (Button) rootView.findViewById(R.id.user_setting_submit);
         submitBtn.setOnClickListener(this);
+
+        cancleBtn = (Button) rootView.findViewById(R.id.user_setting_cancle);
+        cancleBtn.setOnClickListener(this);
 
         userName.setText(mThisUser.getName());
         profileImageUrl = mAniCareService.getUserImageUrl(mThisUser.getId());
@@ -99,7 +100,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getActionMasked()) {
+                switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_UP:
                         Intent intent = new Intent();
                         intent.setClass(mThisActivity, MapActivity.class);
@@ -112,45 +113,23 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
             }
         });
 
+        enableEdit();
+
+        return rootView;
     }
 
-    private boolean checkContent() {
-        if (userName.getText().toString().isEmpty()) {
-            return false;
-        }
-        if (userLocation.getText().toString().isEmpty()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getSelectedItemPosition()) {
-            case 0:
-                livingType = AniCareUser.HouseType.HOUSE;
-            break;
-            case 1:
-                livingType = AniCareUser.HouseType.APART;
-            break;
-            case 2:
-                livingType = AniCareUser.HouseType.OFFICE_TEL;
-            break;
-            case 3:
-                livingType = AniCareUser.HouseType.Etc;
-            break;
-        }
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        livingType = AniCareUser.HouseType.HOUSE;
+    private void setImageButton(){
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileUtil.getMediaFromGallery(mThisActivity);
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
+
 
         if (v.equals(submitBtn)) {
 
@@ -176,7 +155,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 user.setAddress2(this.address2);
                 user.setAddress3(this.address3);
 
-                 if (havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_no) { // when the user has no pet
+                if (havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_no) { // when the user has no pet
 
                     mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                         @Override
@@ -184,20 +163,27 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                             // we need define no pet action
                         }
                     });
-                } else { // when user login with facebook or kakaotalk
-                    user.setPoint(defaultPoint); // initial point
+
+                } else {
+
                     mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                         @Override
                         public void onCompleted(AniCareUser entity) {
-                            Intent intent = new Intent();
-                            intent.setClass(mThisActivity, PetSettingActivity.class);
-                            startActivity(intent);
-                            finish();
+                            Fragment settingFragment = new SettingFragment();
+                            String tag = settingFragment.getClass().getSimpleName();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
                             mAppContext.dismissProgressDialog();
-
                         }
                     });
                 }
+
+            } else if (v.equals(cancleBtn)) {
+                Fragment settingFragment = new SettingFragment();
+                String tag = settingFragment.getClass().getSimpleName();
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+                mAppContext.dismissProgressDialog();
 
             } else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
@@ -215,32 +201,73 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 alert11.show();
             }
         }
+
     }
 
-    private void setImageButton(){
-//        userImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FileUtil.getMediaFromGallery(mThisActivity);
-//            }
-//        });
+    private boolean checkContent() {
+        if (userName.getText().toString().isEmpty()) {
+            return false;
+        }
+        if (userLocation.getText().toString().isEmpty()) {
+            return false;
+        }
 
-        userImage.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
+        return true;
+    }
 
-                longitude = 126.97690095752479;
-                latitude = 37.48355207373753;
-                location = "서울특별시 종로구 세종로 1-72";
-                address1 = "서울특별시";
-                address2 = "종로구";
-                address3 = "세종로";
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getSelectedItemPosition()) {
+            case 0:
+                livingType = AniCareUser.HouseType.HOUSE;
+                break;
+            case 1:
+                livingType = AniCareUser.HouseType.APART;
+                break;
+            case 2:
+                livingType = AniCareUser.HouseType.OFFICE_TEL;
+                break;
+            case 3:
+                livingType = AniCareUser.HouseType.Etc;
+                break;
+        }
 
-                userLocation.setText(location);
+    }
 
-                return true;
-            }
-        });
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        livingType = AniCareUser.HouseType.HOUSE;
+    }
+
+    private void enableEdit() {
+        userName.setText(mThisUser.getName());
+        userLocation.setText(mThisUser.getLocation());
+
+        switch(mThisUser.getRawHouseType()) {
+            case 1:
+                userLivingType.setSelection(0);
+                break;
+            case 2:
+                userLivingType.setSelection(1);
+                break;
+            case 3:
+                userLivingType.setSelection(2);
+                break;
+            case 4:
+                userLivingType.setSelection(3);
+                break;
+        }
+
+        selfIntro.setText(mThisUser.getSelfIntro());
+
+        Picasso.with(mThisActivity).invalidate(mAniCareService.getUserImageUrl(mThisUser.getId()));
+        mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
+
+        if(mThisUser.isHasPet()) {
+            havePet.check(R.id.user_setting_pet_yes);
+        } else {
+            havePet.check(R.id.user_setting_pet_no);
+        }
     }
 
     @Override
@@ -300,27 +327,4 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
 //        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
     }
-
-//    public class ImageAsyncTask extends AniCareAsyncTask <String, Integer, Bitmap> {
-//
-//        @Override
-//        protected Bitmap doInBackground(String... params) {
-//            // TODO Auto-generated method stub
-//            try {
-//                return Picasso.with(mThisActivity).load(profileImageUrl).get();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            Bitmap profileImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
-//            userImage.setImageBitmap(profileImageBitmap);
-//        }
-//    }
-
 }
