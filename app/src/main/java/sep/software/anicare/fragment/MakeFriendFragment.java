@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import sep.software.anicare.R;
+import sep.software.anicare.activity.MainActivity;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.util.AniCareLogger;
@@ -226,7 +227,12 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
                 FragmentManager fragmentManager = getFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
+                // update selected item and title, then close the drawer
+
+                ((MainActivity) mThisActivity).getDrawer().setItemChecked(0, true);
                 mThisActivity.getActionBar().setTitle(getResources().getStringArray(R.array.anicare_menu)[0]);
+
+
             }
         });
 
