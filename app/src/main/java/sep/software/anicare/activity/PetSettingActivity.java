@@ -178,6 +178,7 @@ public class PetSettingActivity extends AniCareActivity implements View.OnClickL
                 pet.setLongitude(mThisUser.getLongitude());
                 pet.setPersonality(checkPersonality());
                 pet.setSize(checkSize());
+                pet.setSelfIntro(mThisUser.getSelfIntro());
 
                 pet.setMale(petSex.getCheckedRadioButtonId() == R.id.pet_male);
                 pet.setNeutralized(petNeutralized.getCheckedRadioButtonId() == R.id.pet_neutralized_yes);

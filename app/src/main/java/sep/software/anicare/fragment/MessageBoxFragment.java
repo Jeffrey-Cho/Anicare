@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import it.gmariotti.cardslib.library.view.CardView;
 import sep.software.anicare.R;
 import sep.software.anicare.adapter.ReceivedMessageList;
@@ -21,17 +22,22 @@ import sep.software.anicare.util.AniCareLogger;
  */
 public class MessageBoxFragment extends AniCareFragment {
 
+    CardView systemCardview;
+    CardView receivedCardview;
+    CardView sendCardview;
     private final static String TAG = CardTestFragment.class.getCanonicalName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_message_box, container, false);
+
         return rootView;
     }
 
@@ -42,51 +48,36 @@ public class MessageBoxFragment extends AniCareFragment {
     }
 
     private void initCard() {
+        systemCardview = (CardView) getActivity().findViewById(R.id.system_message_cardview);
+        receivedCardview = (CardView) getActivity().findViewById(R.id.received_message_cardview);
+        sendCardview = (CardView) getActivity().findViewById(R.id.send_message_cardview);
+        refreshCard();
+    }
 
-        //List<AniCareMessage> totalMsg = mAniCareService.listMessage(); // does not work properly now. we use fake function.
+    private void refreshCard() {
 
-//        List<AniCareMessage> totalMsg = generateTempMessages(); // dummpy fake function
-        List<AniCareMessage> allList = mAniCareService.listMessage();
-        for(AniCareMessage msg : allList) {
-            AniCareLogger.log(msg);
-        }
         List<AniCareMessage> systemMsg = mAniCareService.listSystemMessage();
         List<AniCareMessage> receivedMsg = mAniCareService.listReceivedMessage();
         List<AniCareMessage> sendedMsg = mAniCareService.listSendedMessage();
 
-//        for (AniCareMessage msg: totalMsg) {
-//            if (msg.getRawType() == 0) {
-//                systemMsg.add(msg);
-//            } else {
-//                if (true) { // for temp
-//                    receivedMsg.add(msg);
-//                } else {
-//                    sendedMsg.add(msg);
-//                }
-//            }
-//        }
-
-
         // System Messages
-        SystemMessageList systemCard= new SystemMessageList(getActivity(), systemMsg);
+        SystemMessageList systemCard = new SystemMessageList(getActivity(), systemMsg);
         systemCard.init();
 
-        CardView systemCardview = (CardView) getActivity().findViewById(R.id.system_message_cardview);
         systemCardview.setCard(systemCard);
 
         // Received Messages
         ReceivedMessageList receivedCard = new ReceivedMessageList(getActivity(), receivedMsg);
         receivedCard.init();
 
-        CardView receivedCardview = (CardView) getActivity().findViewById(R.id.received_message_cardview);
         receivedCardview.setCard(receivedCard);
 
         // Sended Messages
         SendedMessageList sendCard= new SendedMessageList(getActivity(), sendedMsg);
         sendCard.init();
 
-        CardView sendCardview = (CardView) getActivity().findViewById(R.id.send_message_cardview);
         sendCardview.setCard(sendCard);
+
     }
 
     /*

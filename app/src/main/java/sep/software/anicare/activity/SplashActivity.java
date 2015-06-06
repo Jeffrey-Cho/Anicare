@@ -13,6 +13,9 @@ import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.AsyncChainer.Chainable;
 import sep.software.anicare.util.ImageUtil;
+
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -58,6 +61,9 @@ public class SplashActivity extends AniCareActivity {
         setContentView(R.layout.activity_splash);
 
         getActionBar().hide();
+
+        NotificationManager notificationManger = (NotificationManager) mThisActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManger.cancel(1);
 
         initializeFacebook(savedInstanceState);
 

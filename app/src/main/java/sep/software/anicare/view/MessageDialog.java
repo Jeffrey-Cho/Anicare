@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import sep.software.anicare.AniCareApp;
@@ -26,24 +27,28 @@ public class MessageDialog extends Dialog {
 
     Context context;
     TextView toWhom;
+    TextView selfIntroView;
     EditText content;
     ImageButton cancelBtn;
     ImageButton sendBtn;
+    CircleImageView receiverImage;
 
     AniCareApp mApp;
     AniCareService mAniCareService;
 
     String receiver;
     String receiverId;
+    String selfIntro;
 
 
-    public MessageDialog(Context context, String receiver, String receiverId) {
+    public MessageDialog(Context context, String receiver, String receiverId, String selfIntro) {
         super(context);
         this.context = context;
         this.mApp = AniCareApp.getAppContext();
         mAniCareService = mApp.getAniCareService();
         this.receiver = receiver;
         this.receiverId = receiverId;
+        this.selfIntro = selfIntro;
     }
 
     @Override
@@ -58,11 +63,15 @@ public class MessageDialog extends Dialog {
         setContentView(R.layout.custom_message_dialog);
 
         toWhom = (TextView) findViewById(R.id.custom_message_dialog_to_whom);
+        selfIntroView = (TextView) findViewById(R.id.custom_message_dialog_intro);
+
+        selfIntroView.setText("[자기소개]"+selfIntro);
         content = (EditText)findViewById(R.id.custom_message_dialog_content);
         cancelBtn = (ImageButton)findViewById(R.id.custom_message_dialog_cancel_btn);
         sendBtn =   (ImageButton)findViewById(R.id.custom_message_dialog_send_btn);
+        receiverImage = (CircleImageView)findViewById(R.id.receiver_image);
 
-        toWhom.setText("To : "+this.receiver);
+        toWhom.setText(this.receiver);
         setTitle("Send Message");
 
         cancelBtn.setOnClickListener(new View.OnClickListener() {
@@ -92,11 +101,14 @@ public class MessageDialog extends Dialog {
                 mAniCareService.sendMessage(msg, new EntityCallback<AniCareMessage>() {
                     @Override
                     public void onCompleted(AniCareMessage entity) {
+                        mAniCareService.addMessageDB(entity);
                         mApp.dismissProgressDialog();
                         dismiss();
                     }
                 });
             }
         });
+
+        mAniCareService.setUserImageInto(receiverId,receiverImage);
     }
 }

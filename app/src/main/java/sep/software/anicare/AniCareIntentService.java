@@ -1,5 +1,6 @@
 package sep.software.anicare;
 
+import de.greenrobot.event.EventBus;
 import sep.software.anicare.activity.MainActivity;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCareUser;
@@ -65,9 +66,9 @@ public class AniCareIntentService extends IntentService {
 
         AniCareApp appContext = AniCareApp.getAppContext();
         AniCareService aniCareService = appContext.getAniCareService();
-        AniCareLogger.log("in intent : "+msg);
         aniCareService.addMessageDB(msg);
-
+        aniCareService.saveFlag("didCheckedMessageBox", false);
+        EventBus.getDefault().post(msg);
         notifyMessage(msg);
 
 //        if(AudioManager.RINGER_MODE_SILENT != audioManager.getRingerMode()){

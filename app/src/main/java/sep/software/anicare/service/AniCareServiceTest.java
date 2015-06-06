@@ -363,7 +363,7 @@ public class AniCareServiceTest implements AniCareService {
         List<AniCareMessage> list = this.listMessage();
         List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
         for (AniCareMessage msg : list) {
-            if (msg.getRawType() == AniCareMessage.Type.SYSTEM.getValue()) retList.add(msg);
+            if (msg.getRawType() == AniCareMessage.Type.SYSTEM.getValue() && !msg.isResolved()) retList.add(msg);
         }
         return retList;
     }
@@ -475,6 +475,12 @@ public class AniCareServiceTest implements AniCareService {
         mObjectPreference.put(id, value);
     }
     public boolean getFlag(String id) {
-        return mObjectPreference.get(id, Boolean.class);
+        boolean bool = false;
+        try {
+            bool = mObjectPreference.get(id, Boolean.class);
+        } catch (Exception ex) {
+
+        }
+        return bool;
     }
 }

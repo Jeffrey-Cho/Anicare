@@ -1,17 +1,22 @@
 package sep.software.anicare.adapter;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardHeader;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
@@ -38,6 +43,7 @@ public class SystemMessageList extends CardWithList {
         this.msgList = systemMsglist;
         mAppContext = AniCareApp.getAppContext();
         mAniCareService = mAppContext.getAniCareService();
+//        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -71,32 +77,14 @@ public class SystemMessageList extends CardWithList {
         //MayKnowObject tempObject = new MayKnowObject(this);
 
         for(AniCareMessage msg: msgList) {
-            MayKnowObject tempObject = new MayKnowObject(this);
-            tempObject.name = msg.getSender();
-            tempObject.common = msg.getContent();
-            tempObject.url = mAniCareService.getPetImageUrl("ic_launcher.png");
-            mObjects.add(tempObject);
+            mObjects.add(new MayKnowObject(this, msg));
         }
-
-//        //Add an object to the list
-//        MayKnowObject s1 = new MayKnowObject(this);
-//        s1.name = "정지현";
-//        s1.common = "안녕하세요? 반갑습니다. 맡기고 싶은데요...";
-//        s1.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
-//        mObjects.add(s1);
-//
-//        //Add an object to the list
-//        MayKnowObject s2 = new MayKnowObject(this);
-//        s2.name = "유홍근";
-//        s2.common = "유홍근님이 당신에게 펫을 맡기고 싶어 합니다.";
-//        s2.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
-//        mObjects.add(s2);
 
         return mObjects;
     }
 
     @Override
-    public View setupChildView(int childPosition, ListObject object, View convertView, ViewGroup parent) {
+    public View setupChildView(final int childPosition, ListObject object, View convertView, ViewGroup parent) {
 
         //Setup the ui elements inside the item
         TextView textViewName = (TextView) convertView.findViewById(R.id.carddemo_know_name);
@@ -107,35 +95,44 @@ public class SystemMessageList extends CardWithList {
         final AniCareMessage msg = msgList.get(childPosition);
 
         //Retrieve the values from the object
-        MayKnowObject stockObject = (MayKnowObject) object;
+        final MayKnowObject stockObject = (MayKnowObject) object;
         textViewName.setText(stockObject.name);
         textViewPeople.setText(""+stockObject.common);
 
         Picasso.with(getContext()).setIndicatorsEnabled(false);
-        Picasso.with(getContext()).load(stockObject.url)
-                .into(imagePeople);
-
+        Picasso.with(getContext()).load(stockObject.url).into(imagePeople);
+        if (msg.getCommType().getValue() != AniCareMessage.CommType.REQUEST.getValue()) {
+            addText.setVisibility(View.GONE);
+        }
         addText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
-                AniCareUser me = mAniCareService.getCurrentUser();
-                AniCareMessage responseMsg = new AniCareMessage();
-                responseMsg.setType(AniCareMessage.Type.SYSTEM);
-                responseMsg.setCommType(AniCareMessage.CommType.ACCEPT);
-                responseMsg.setReceiver(msg.getSender());
-                responseMsg.setReceiverId(msg.getSenderId());
-                responseMsg.setSender(me.getName());
-                responseMsg.setSenderId(me.getId());
-                responseMsg.setContent(me.getName() + " has accepted your request.");
-                mAppContext.showProgressDialog(getContext());
-                mAniCareService.sendMessage(responseMsg ,new EntityCallback<AniCareMessage>() {
-                    @Override
-                    public void onCompleted(AniCareMessage entity) {
-                        mAppContext.dismissProgressDialog();
-                        Toast.makeText(getContext(),"Message sent", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            AniCareUser me = mAniCareService.getCurrentUser();
+            AniCareMessage responseMsg = new AniCareMessage();
+            responseMsg.setType(AniCareMessage.Type.SYSTEM);
+            responseMsg.setCommType(AniCareMessage.CommType.ACCEPT);
+            responseMsg.setReceiver(msg.getSender());
+            responseMsg.setReceiverId(msg.getSenderId());
+            responseMsg.setSender(me.getName());
+            responseMsg.setSenderId(me.getId());
+            responseMsg.setContent(me.getName() + " has accepted your request.");
+            mAppContext.showProgressDialog(getContext());
+            mAniCareService.sendMessage(responseMsg ,new EntityCallback<AniCareMessage>() {
+                @Override
+                public void onCompleted(AniCareMessage entity) {
+                    mAppContext.dismissProgressDialog();
+                    msg.resolved();
+
+                    mLinearListAdapter.remove(stockObject);
+                    mLinearListAdapter.notifyDataSetChanged();
+
+                    mAniCareService.updateMessageDB(msg.getId(), msg);
+
+
+                    Toast.makeText(getContext(),"Message sent", Toast.LENGTH_SHORT).show();
+                }
+            });
             }
         });
 
@@ -147,15 +144,27 @@ public class SystemMessageList extends CardWithList {
         return R.layout.system_message_withlist_inner_main;
     }
 
+//    public void onEvent(AniCareMessage msg) {
+//        AniCareLogger.log("onEvent! : " + msg);
+//        mLinearListAdapter.add(new MayKnowObject(this, msg));
+//    }
+
     public class MayKnowObject extends DefaultListObject {
 
         public String name;
         public String common;
         public String url;
+        public AniCareMessage msg;
+        private MayKnowObject _this;
 
-        public MayKnowObject(Card parentCard) {
+        public MayKnowObject(Card parentCard, AniCareMessage msg) {
             super(parentCard);
             init();
+            this.name = msg.getSender();
+            this.common = msg.getContent();
+            this.url = mAniCareService.getUserImageUrl(msg.getSenderId());
+            this.msg = msg;
+            _this = this;
         }
 
         private void init() {
@@ -163,7 +172,9 @@ public class SystemMessageList extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
+                    AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
+
+                    Toast.makeText(getContext(), "Click on " + msg.getSender(), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -171,14 +182,54 @@ public class SystemMessageList extends CardWithList {
             setOnItemSwipeListener(new OnItemSwipeListener() {
                 @Override
                 public void onItemSwipe(ListObject object, boolean dismissRight) {
-                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+                    final AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
+
+                    if (msg.getCommType().getValue() == AniCareMessage.CommType.REQUEST.getValue()) {
+                        new AlertDialog.Builder(getContext())
+                                .setMessage("Do you really want to reject the request?")
+                                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        AniCareMessage responseMsg = new AniCareMessage();
+                                        AniCareUser me = mAniCareService.getCurrentUser();
+                                        responseMsg.setType(AniCareMessage.Type.SYSTEM);
+                                        responseMsg.setCommType(AniCareMessage.CommType.REJECT);
+                                        responseMsg.setReceiver(msg.getSender());
+                                        responseMsg.setReceiverId(msg.getSenderId());
+                                        responseMsg.setSender(me.getName());
+                                        responseMsg.setSenderId(me.getId());
+                                        responseMsg.setContent(me.getName() + " has rejected your request.");
+
+                                        mAniCareService.sendMessage(responseMsg, new EntityCallback<AniCareMessage>() {
+                                            @Override
+                                            public void onCompleted(AniCareMessage entity) {
+                                                msg.resolved();
+                                                mAniCareService.updateMessageDB(msg.getId(), msg);
+                                            }
+                                        });
+                                    }
+                                })
+                                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mLinearListAdapter.add(_this);
+                                        mLinearListAdapter.notifyDataSetChanged();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        msg.resolved();
+                        mAniCareService.updateMessageDB(msg.getId(), msg);
+                    }
+
+//                    Toast.makeText(getContext(), "Swipe on " + msg.getSender(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         @Override
         public String getObjectId() {
-            return name;
+            return msg.toString();
         }
     }
 }

@@ -9,6 +9,7 @@ import sep.software.anicare.fragment.ListFriendFragment;
 import sep.software.anicare.fragment.MakeFriendFragment;
 import sep.software.anicare.fragment.MessageBoxFragment;
 import sep.software.anicare.fragment.SettingFragment;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.view.CircleImageView;
@@ -129,9 +130,10 @@ public class MainActivity extends AniCareActivity {
         } catch (Exception ex) {
             // Ignore
         }
-
-        if (mAniCareService.hasNotResolvedMessage()) {
+        boolean checkedMessageBox = mAniCareService.getFlag("didCheckedMessageBox");
+        if (mAniCareService.hasNotResolvedMessage() && !checkedMessageBox) {
 //        if (false) {
+            mAniCareService.saveFlag("didCheckedMessageBox", true);
             mDrawerList.setItemChecked(2, true);
             setTitle(mPlanetTitles[2]);
             mDrawerLayout.closeDrawer(mLinearLayout);
@@ -309,6 +311,15 @@ public class MainActivity extends AniCareActivity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public void onEvent(AniCareMessage msg) {
+        int position = mDrawerList.getCheckedItemPosition();
+        if (position == 2) {
+            String tag = MessageBoxFragment.class.getSimpleName();
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new MessageBoxFragment(), tag).commit();
+        }
     }
 
 }

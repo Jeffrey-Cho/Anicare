@@ -159,8 +159,8 @@ public class AniCareMessage extends AniCareModel {
 	}
 
     public boolean isMine() {
-        if (this.id == null) return false;
-        return this.id.equals(AniCareApp.getAppContext().getAniCareService().getCurrentUser().getId());
+        if (this.senderId == null) return false;
+        return this.senderId.equals(AniCareApp.getAppContext().getAniCareService().getCurrentUser().getId());
     }
 
 	public static Parcelable.Creator<AniCareMessage> getCreator() {

@@ -129,7 +129,9 @@ public class AniCareDBServiceSQLite implements AniCareDBService {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                messages.add(convertToClass(cursor, AniCareMessage.class));
+                AniCareMessage msg = convertToClass(cursor, AniCareMessage.class);
+                msg.setId(cursor.getString(0));
+                messages.add(msg);
             } while (cursor.moveToNext());
         }
 
@@ -185,7 +187,9 @@ public class AniCareDBServiceSQLite implements AniCareDBService {
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
-                histories.add(convertToClass(cursor, CareHistory.class));
+                CareHistory his = convertToClass(cursor, CareHistory.class);
+                his.setId(cursor.getString(0));
+                histories.add(his);
             } while (cursor.moveToNext());
         }
 

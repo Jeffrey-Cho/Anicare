@@ -26,7 +26,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
 import sep.software.anicare.R;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.util.AniCareLogger;
 
 /**

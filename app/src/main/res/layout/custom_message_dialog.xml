@@ -3,17 +3,49 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textSize="25sp"
-        android:textColor="@color/anicare_hint"
-        android:id="@+id/custom_message_dialog_to_whom" />
+        android:layout_marginBottom="30dp">
+
+        <sep.software.anicare.view.CircleImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:layout_margin="8dp"
+            android:id="@+id/receiver_image" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:textSize="25sp"
+                android:textColor="@color/anicare_hint"
+                android:id="@+id/custom_message_dialog_to_whom" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Text"
+                android:textSize="15sp"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/custom_message_dialog_intro" />
+        </LinearLayout>
+
+    </LinearLayout>
 
     <EditText
         android:layout_width="match_parent"
