@@ -70,7 +70,7 @@
     </string-array>
 
     <string name="title_activity_user_setting">사용자 정보 설정</string>
-    <string name="title_activity_pet_setting">마이펫 정보 설</string>
+    <string name="title_activity_pet_setting">마이펫 정보 설정</string>
     <string name="title_activity_pet_detail">친구 자세히 보기</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_map">MapActivity</string>
