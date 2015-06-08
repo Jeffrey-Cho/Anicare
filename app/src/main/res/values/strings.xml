@@ -93,5 +93,6 @@
     <string name="item_cat">고양이</string>
     <string name="item_bird">새</string>
     <string name="item_default">기타</string>
+    <string name="user_phone_number">전화번호</string>
 
 </resources>

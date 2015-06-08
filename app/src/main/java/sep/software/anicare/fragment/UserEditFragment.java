@@ -11,6 +11,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,6 +50,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     private ImageView userImage;
     private TextView userName;
     private TextView userLocation;
+    private TextView phoneNumber;
     private Spinner userLivingType;
     private RadioGroup havePet;
     private TextView selfIntro;
@@ -79,6 +81,9 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userLivingType.setAdapter(adapter);
         userLivingType.setOnItemSelectedListener(this);
+
+        phoneNumber = (TextView) rootView.findViewById(R.id.user_setting_phone_number);
+        phoneNumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         havePet = (RadioGroup) rootView.findViewById(R.id.is_pet);
         selfIntro = (TextView) rootView.findViewById(R.id.user_setting_self_intro);
@@ -148,6 +153,8 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
                 user.setHouseType(livingType);
                 user.setHasPet(havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_yes);
 
+                user.setPhoneNumber(phoneNumber.getText().toString());
+
                 user.setLongitude(this.longitude);
                 user.setLatitude((this.latitude));
                 user.setLocation(this.location);
@@ -181,7 +188,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
             }  else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
                 builder1.setTitle("Alert");
-                builder1.setMessage("User Name and User Location are mandatory!");
+                builder1.setMessage("User Name, User Location and Phone Number are mandatory!");
                 builder1.setCancelable(true);
                 builder1.setNeutralButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
@@ -209,6 +216,10 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
             return false;
         }
         if (userLocation.getText().toString().isEmpty()) {
+            return false;
+        }
+
+        if (phoneNumber.getText().toString().isEmpty()) {
             return false;
         }
 
@@ -242,6 +253,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     private void enableEdit() {
         userName.setText(mThisUser.getName());
         userLocation.setText(mThisUser.getLocation());
+        phoneNumber.setText(!mThisUser.getPhoneNumber().isEmpty()?mThisUser.getPhoneNumber():"No Phone");
 
         switch(mThisUser.getRawHouseType()) {
             case 1:
