@@ -82,6 +82,7 @@ public interface AniCareService {
     public void updateHistoryDB(String id, CareHistory history);
     public void deleteHistoryDB(String id);
     public void deleteAllHistoryDB();
+    public int getPoint();
     public void plsPoint(int point);
     public void minPoint(int point);
 

@@ -390,6 +390,12 @@ public class AniCareServiceTest implements AniCareService {
     public void deleteHistoryDB(String id) { mDbService.deleteHistory(id); }
     public void deleteAllHistoryDB() { mDbService.deleteHistoryAll(); }
 
+
+    public int getPoint() {
+        AniCareUser me = this.getCurrentUser();
+        return me.getPoint();
+    }
+
     public void plsPoint(int point) {
         AniCareUser me = this.getCurrentUser();
         int myPoint = me.getPoint();
