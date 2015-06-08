@@ -195,7 +195,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
             @Override
             public void onCompleted(AniCareMessage entity) {
                 mAppContext.dismissProgressDialog();
-//                mAniCareService.addMessageDB(entity);
+                mAniCareService.addMessageDB(entity);
                 Toast t = Toast.makeText(mThisActivity, "Complete Send Message.", Toast.LENGTH_LONG); // for debugging
                 t.setGravity(Gravity.CENTER, 0, 0);
                 t.show();

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,6 +25,7 @@ import it.gmariotti.cardslib.library.prototypes.LinearListView;
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.model.AniCareDateTime;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
@@ -109,7 +111,7 @@ public class SystemMessageList extends CardWithList {
             public void onClick(View v) {
 //                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
             AniCareUser me = mAniCareService.getCurrentUser();
-            AniCareMessage responseMsg = new AniCareMessage();
+            final AniCareMessage responseMsg = new AniCareMessage();
             responseMsg.setType(AniCareMessage.Type.SYSTEM);
             responseMsg.setCommType(AniCareMessage.CommType.ACCEPT);
             responseMsg.setReceiver(msg.getSender());
@@ -117,7 +119,9 @@ public class SystemMessageList extends CardWithList {
             responseMsg.setSender(me.getName());
             responseMsg.setSenderId(me.getId());
             responseMsg.setContent(me.getName() + " has accepted your request.");
+            responseMsg.setDateTime(AniCareDateTime.now());
             mAppContext.showProgressDialog(getContext());
+            //Log.d(TAG, responseMsg.toString());
             mAniCareService.sendMessage(responseMsg ,new EntityCallback<AniCareMessage>() {
                 @Override
                 public void onCompleted(AniCareMessage entity) {
@@ -126,8 +130,10 @@ public class SystemMessageList extends CardWithList {
 
                     mLinearListAdapter.remove(stockObject);
                     mLinearListAdapter.notifyDataSetChanged();
-
-                    mAniCareService.updateMessageDB(msg.getId(), msg);
+                    //Log.d(TAG, entity.toString());
+                    mAniCareService.plsPoint(100); // When I accept other user request
+                    //mAniCareService.updateMessageDB(msg.getId(), msg);
+                    mAniCareService.addMessageDB(responseMsg); // buf fixed
 
 
                     Toast.makeText(getContext(),"Message sent", Toast.LENGTH_SHORT).show();
