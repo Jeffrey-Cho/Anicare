@@ -237,7 +237,8 @@ public class AniCareServiceTest implements AniCareService {
                 // TODO Auto-generated method stub
                 if (arg1 == null) {
                     JsonElement json = arg0.getAsJsonArray();
-                    List<AniCarePet> list = new Gson().fromJson(json, new TypeToken<List<AniCarePet>>() {}.getType());
+                    List<AniCarePet> list = new Gson().fromJson(json, new TypeToken<List<AniCarePet>>() {
+                    }.getType());
                     callback.onCompleted(list, list.size());
                 } else {
                     EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
@@ -368,7 +369,7 @@ public class AniCareServiceTest implements AniCareService {
         List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
         for (AniCareMessage msg : list) {
             if (msg.getRawType() == AniCareMessage.Type.MESSAGE.getValue()
-                    && msg.isMine()) retList.add(msg);
+                    && msg.isMine() && !msg.isResolved()) retList.add(msg);
         }
         return retList;
     }
@@ -377,7 +378,16 @@ public class AniCareServiceTest implements AniCareService {
         List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
         for (AniCareMessage msg : list) {
             if (msg.getRawType() == AniCareMessage.Type.MESSAGE.getValue()
-                    && !msg.isMine()) retList.add(msg);
+                    && !msg.isMine() && !msg.isResolved()) retList.add(msg);
+        }
+        return retList;
+    }
+
+    public List<AniCareMessage> listReadedMessage() {
+        List<AniCareMessage> list = this.listMessage();
+        List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
+        for (AniCareMessage msg : list) {
+            if (msg.isResolved() && msg.isResolved()) retList.add(msg);
         }
         return retList;
     }

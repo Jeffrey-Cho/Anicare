@@ -134,6 +134,10 @@ public class AniCareMessage extends AniCareModel {
         this.resolved = true;
     }
 
+	public void unresolved() {
+		this.resolved = false;
+	}
+
     public void makeRelation() {
         if (senderId == null || receiverId == null) {
             this.relationId = "00000000";

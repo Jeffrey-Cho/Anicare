@@ -11,6 +11,7 @@ import java.util.List;
 import de.greenrobot.event.EventBus;
 import it.gmariotti.cardslib.library.view.CardView;
 import sep.software.anicare.R;
+import sep.software.anicare.adapter.ReadedMessageList;
 import sep.software.anicare.adapter.ReceivedMessageList;
 import sep.software.anicare.adapter.SendedMessageList;
 import sep.software.anicare.adapter.SystemMessageList;
@@ -25,6 +26,8 @@ public class MessageBoxFragment extends AniCareFragment {
     CardView systemCardview;
     CardView receivedCardview;
     CardView sendCardview;
+    CardView readedCardview;
+
     private final static String TAG = CardTestFragment.class.getCanonicalName();
 
     @Override
@@ -51,6 +54,7 @@ public class MessageBoxFragment extends AniCareFragment {
         systemCardview = (CardView) getActivity().findViewById(R.id.system_message_cardview);
         receivedCardview = (CardView) getActivity().findViewById(R.id.received_message_cardview);
         sendCardview = (CardView) getActivity().findViewById(R.id.send_message_cardview);
+        readedCardview = (CardView) getActivity().findViewById(R.id.read_message_cardview);
         refreshCard();
     }
 
@@ -59,6 +63,7 @@ public class MessageBoxFragment extends AniCareFragment {
         List<AniCareMessage> systemMsg = mAniCareService.listSystemMessage();
         List<AniCareMessage> receivedMsg = mAniCareService.listReceivedMessage();
         List<AniCareMessage> sendedMsg = mAniCareService.listSendedMessage();
+        List<AniCareMessage> readedMsg = mAniCareService.listReadedMessage();
 
         // System Messages
         SystemMessageList systemCard = new SystemMessageList(getActivity(), systemMsg);
@@ -77,6 +82,11 @@ public class MessageBoxFragment extends AniCareFragment {
         sendCard.init();
 
         sendCardview.setCard(sendCard);
+
+        ReadedMessageList readedCard = new ReadedMessageList(getActivity(), readedMsg);
+        readedCard.init();
+
+        readedCardview.setCard(readedCard);
 
     }
 
