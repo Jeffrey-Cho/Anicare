@@ -181,6 +181,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         String requestMsg = me.getName()+ " want to make friend with your pet." ;
 
         msg.setType(AniCareMessage.Type.SYSTEM);
+        msg.setCommType(AniCareMessage.CommType.REQUEST);
         msg.setSender(me.getName());
         msg.setSenderId(me.getId());
         msg.setReceiver(receiver);
