@@ -24,12 +24,15 @@ import it.gmariotti.cardslib.library.internal.base.BaseCard;
 import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
 import sep.software.anicare.R;
+import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.CareHistory;
 
 /**
  * Created by apple on 2015. 6. 6..
  */
 public class HistoryCardList extends CardWithList {
+
+    private final String TAG = HistoryCardList.class.getCanonicalName();
 
     public HistoryCardList(Context context) {
         super(context);
@@ -39,8 +42,17 @@ public class HistoryCardList extends CardWithList {
     protected CardHeader initCardHeader() {
 
         //Add Header
-        CardHeader header = new CardHeader(getContext());
-        //Add a popup menu. This method set OverFlow button to visible
+        CardHeader header = new CardHeader(getContext(), R.layout.carddemo_googleknow_withlist_inner_header) {
+
+            @Override
+            public void setupInnerViewElements(ViewGroup parent, View view) {
+                super.setupInnerViewElements(parent, view);
+                TextView subTitle = (TextView) view.findViewById(R.id.carddemo_googleknow_sub_title);
+                if (subTitle != null) {
+                    subTitle.setText("보낸 날짜 / 포인트 증감 / 포인트 차감 / 내용");  //Should use strings.xml
+                }
+            }
+        };
         header.setTitle("History"); //should use R.string.
         return header;
     }
@@ -83,12 +95,16 @@ public class HistoryCardList extends CardWithList {
         HistoryObject historyObject= (HistoryObject)object;
 
         dayDate.setText(historyObject.date);
-        if (historyObject.plusPoint > 0) {
+
+        if (historyObject.plusPoint != 0) {
             minTempText.setText(""+historyObject.plusPoint);
-        } else {
+        }
+
+        if (historyObject.minusPoint != 0) {
             maxTempText.setText(""+historyObject.minusPoint);
         }
-        dayDescr.setText("bla bla bla~~~");
+
+        dayDescr.setText((historyObject.content).equals(null)?"sample":historyObject.content);
 
         return convertView;
     }
@@ -99,15 +115,39 @@ public class HistoryCardList extends CardWithList {
     }
 
 
-    public void updateHistory(List<CareHistory> historyList) {
+    public void updateHistory(List<AniCareMessage> messageList) {
 
         ArrayList<HistoryObject> objs = new ArrayList<HistoryObject>();
 
-        for (CareHistory historyItem:historyList){
-            HistoryObject historyObject = new HistoryObject(this);
-            historyObject.date = historyItem.getRawDateTime();
-            historyObject.plusPoint = 200; // need to modify
-            objs.add(historyObject);
+        for (AniCareMessage messageItem:messageList){
+
+
+            if (messageItem.getType().equals(AniCareMessage.Type.SYSTEM)) {
+
+
+                if (messageItem.isMine() && messageItem.getCommType().equals(AniCareMessage.CommType.ACCEPT)) {
+                    // User decide that accept system request, plus point
+                    HistoryObject historyObject = new HistoryObject(this);
+                    Log.d(TAG, messageItem.toString());
+                    historyObject.date = messageItem.getDateTime().toPrettyDate();
+                    historyObject.plusPoint = +100;
+                    historyObject.content = messageItem.getReceiver()+ "님 펫돌봄";
+                    objs.add(historyObject);
+                } else if (!messageItem.isMine() && messageItem.getCommType().equals(AniCareMessage.CommType.ACCEPT)) {
+                    // User receive acceptance message from other user, minus point
+                    Log.d(TAG, messageItem.toString());
+                    HistoryObject historyObject = new HistoryObject(this);
+                    historyObject.date = messageItem.getDateTime().toPrettyDate();
+                    historyObject.minusPoint = -100;
+                    historyObject.content = messageItem.getSender()+ "님에게 맡김";
+                    objs.add(historyObject);
+                } else {
+//                    Log.d(TAG, messageItem.toString());
+//                    historyObject.date = "default";
+//                    historyObject.content = "default";
+                }
+
+            }
         }
         getLinearListAdapter().addAll(objs);
         //updateProgressBar(true,true);
@@ -124,6 +164,7 @@ public class HistoryCardList extends CardWithList {
         public String date;
         public int plusPoint = 0;
         public int minusPoint = 0;
+        public String content;
 
         public HistoryObject(Card parentCard) {
             super(parentCard);

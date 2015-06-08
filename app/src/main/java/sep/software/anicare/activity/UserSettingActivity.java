@@ -62,7 +62,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private String address3;
 
     private AniCareUser.HouseType livingType;
-    private int defaultPoint = 100;
+    private int defaultPoint = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

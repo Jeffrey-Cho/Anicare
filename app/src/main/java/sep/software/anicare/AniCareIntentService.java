@@ -2,6 +2,7 @@ package sep.software.anicare;
 
 import de.greenrobot.event.EventBus;
 import sep.software.anicare.activity.MainActivity;
+import sep.software.anicare.model.AniCareDateTime;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
@@ -66,10 +67,18 @@ public class AniCareIntentService extends IntentService {
 
         AniCareApp appContext = AniCareApp.getAppContext();
         AniCareService aniCareService = appContext.getAniCareService();
+        msg.setDateTime(AniCareDateTime.now()); // for date display
         aniCareService.addMessageDB(msg);
         aniCareService.saveFlag("didCheckedMessageBox", false);
         EventBus.getDefault().post(msg);
         notifyMessage(msg);
+
+
+        // When other user accept my request
+        if (!msg.isMine() && msg.getCommType().equals(AniCareMessage.CommType.ACCEPT)) {
+            ((AniCareApp) mAppContext).getAniCareService().minPoint(100);
+        }
+
 
 //        if(AudioManager.RINGER_MODE_SILENT != audioManager.getRingerMode()){
 //            ((Vibrator)getSystemService(Context.VIBRATOR_SERVICE)).vibrate(500);
