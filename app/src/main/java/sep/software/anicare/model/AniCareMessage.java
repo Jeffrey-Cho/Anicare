@@ -39,7 +39,7 @@ public class AniCareMessage extends AniCareModel {
 	private String senderId;
 	private String receiver;
 	private String receiverId;
-	private String rawDateTime;
+	private String rawDateTime = AniCareDateTime.now().toString();
 	private String relationId;
 	private String content;
     private boolean resolved = false;

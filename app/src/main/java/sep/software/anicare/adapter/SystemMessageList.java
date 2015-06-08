@@ -130,11 +130,11 @@ public class SystemMessageList extends CardWithList {
 
                     mLinearListAdapter.remove(stockObject);
                     mLinearListAdapter.notifyDataSetChanged();
+
                     //Log.d(TAG, entity.toString());
                     mAniCareService.plsPoint(100); // When I accept other user request
                     //mAniCareService.updateMessageDB(msg.getId(), msg);
                     mAniCareService.addMessageDB(responseMsg); // buf fixed
-
 
                     Toast.makeText(getContext(),"Message sent", Toast.LENGTH_SHORT).show();
                 }
