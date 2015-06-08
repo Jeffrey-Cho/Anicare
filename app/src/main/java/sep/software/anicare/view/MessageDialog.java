@@ -38,17 +38,29 @@ public class MessageDialog extends Dialog {
 
     String receiver;
     String receiverId;
-    String selfIntro;
+    OnClickListener positive;
+    OnClickListener negative;
+//    String selfIntro;
 
 
-    public MessageDialog(Context context, String receiver, String receiverId, String selfIntro) {
+    public MessageDialog(Context context, String receiver, String receiverId) {
+        this(context, receiver, receiverId, null, null);
+    }
+
+    public MessageDialog(Context context, String receiver, String receiverId, OnClickListener positive) {
+        this(context, receiver, receiverId, positive, null);
+    }
+
+    public MessageDialog(Context context, String receiver, String receiverId, OnClickListener positive, OnClickListener negative) {
         super(context);
         this.context = context;
         this.mApp = AniCareApp.getAppContext();
         mAniCareService = mApp.getAniCareService();
         this.receiver = receiver;
         this.receiverId = receiverId;
-        this.selfIntro = selfIntro;
+//        this.selfIntro = selfIntro;
+        this.positive = positive;
+        this.negative = negative;
     }
 
     @Override
@@ -63,9 +75,10 @@ public class MessageDialog extends Dialog {
         setContentView(R.layout.custom_message_dialog);
 
         toWhom = (TextView) findViewById(R.id.custom_message_dialog_to_whom);
-        selfIntroView = (TextView) findViewById(R.id.custom_message_dialog_intro);
+//        selfIntroView = (TextView) findViewById(R.id.custom_message_dialog_intro);
 
-        selfIntroView.setText("[자기소개]"+selfIntro);
+//        selfIntroView.setText("[자기소개]"+selfIntro);
+//        selfIntroView.setText("----------------------");
         content = (EditText)findViewById(R.id.custom_message_dialog_content);
         cancelBtn = (ImageButton)findViewById(R.id.custom_message_dialog_cancel_btn);
         sendBtn =   (ImageButton)findViewById(R.id.custom_message_dialog_send_btn);
@@ -77,6 +90,9 @@ public class MessageDialog extends Dialog {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (negative != null) {
+                    negative.onClick(MessageDialog.this, 0);
+                }
                 dismiss();
             }
         });
@@ -103,6 +119,9 @@ public class MessageDialog extends Dialog {
                     public void onCompleted(AniCareMessage entity) {
                         mAniCareService.addMessageDB(entity);
                         mApp.dismissProgressDialog();
+                        if (positive != null) {
+                            positive.onClick(MessageDialog.this, 0);
+                        }
                         dismiss();
                     }
                 });
@@ -110,5 +129,11 @@ public class MessageDialog extends Dialog {
         });
 
         mAniCareService.setUserImageInto(receiverId,receiverImage);
+
+    }
+
+    public interface OnMessageDialogCallback {
+        public void onPositive();
+        public void onNegative();
     }
 }

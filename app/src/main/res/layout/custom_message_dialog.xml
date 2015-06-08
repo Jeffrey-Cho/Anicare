@@ -10,7 +10,7 @@
         android:layout_marginBottom="30dp">
 
         <sep.software.anicare.view.CircleImageView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:layout_margin="8dp"
@@ -32,17 +32,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Text"
-                android:textSize="25sp"
+                android:textSize="28sp"
                 android:textColor="@color/anicare_hint"
                 android:id="@+id/custom_message_dialog_to_whom" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:textSize="15sp"
-                android:textColor="@android:color/darker_gray"
-                android:id="@+id/custom_message_dialog_intro" />
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="@dimen/line_width"
+                android:background="@color/anicare_hint" />
         </LinearLayout>
 
     </LinearLayout>

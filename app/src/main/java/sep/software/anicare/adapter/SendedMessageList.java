@@ -25,6 +25,7 @@ import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
 import sep.software.anicare.model.AniCareMessage;
 import sep.software.anicare.service.AniCareService;
+import sep.software.anicare.view.MessageDialog;
 
 /**
  * Created by Jeffrey on 2015. 6. 5..
@@ -72,8 +73,11 @@ public class SendedMessageList extends CardWithList {
 
         for(AniCareMessage msg: msgList) {
             MayKnowObject tempObject = new MayKnowObject(this);
-            tempObject.name = msg.getSender();
+            tempObject.name = msg.getReceiver();
             tempObject.common = msg.getContent();
+            String receiverId = msg.getReceiverId();
+            if (msg.getReceiverId().equals("9715C50C-FD9C-4FA8-B557-9A2E8654DB43") && !msg.getReceiver().equals("HongKun"))
+                msg.setReceiverId("dummy");
             tempObject.url = mAniCareService.getUserImageUrl(msg.getReceiverId());
             mObjects.add(tempObject);
         }
@@ -105,7 +109,7 @@ public class SendedMessageList extends CardWithList {
         ImageView imagePeople = (ImageView) convertView.findViewById(R.id.carddemo_know_image);
         TextView addText = (TextView) convertView.findViewById(R.id.carddemo_know_add);
 
-
+        final AniCareMessage msg = msgList.get(childPosition);
         //Retrieve the values from the object
         MayKnowObject stockObject = (MayKnowObject) object;
         textViewName.setText(stockObject.name);
@@ -118,7 +122,8 @@ public class SendedMessageList extends CardWithList {
         addText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
+                MessageDialog msgDial = new MessageDialog(getContext(), msg.getReceiver(), msg.getReceiverId());
+                msgDial.show();
             }
         });
 
@@ -146,7 +151,7 @@ public class SendedMessageList extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
                 }
             });
 

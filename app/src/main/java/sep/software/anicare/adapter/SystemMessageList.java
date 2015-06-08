@@ -172,9 +172,7 @@ public class SystemMessageList extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
-
-                    Toast.makeText(getContext(), "Click on " + msg.getSender(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Click on " + msg.getSender(), Toast.LENGTH_SHORT).show();
                 }
             });
 

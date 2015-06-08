@@ -19,8 +19,11 @@ import it.gmariotti.cardslib.library.prototypes.CardWithList;
 import it.gmariotti.cardslib.library.prototypes.LinearListView;
 import sep.software.anicare.AniCareApp;
 import sep.software.anicare.R;
+import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCareMessage;
+import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareService;
+import sep.software.anicare.view.MessageDialog;
 
 /**
  * Created by Jeffrey on 2015. 6. 5..
@@ -28,12 +31,14 @@ import sep.software.anicare.service.AniCareService;
 public class ReceivedMessageList extends CardWithList {
 
     private final List<AniCareMessage> msgList;
+    AniCareApp mAppContext;
     AniCareService mAniCareService;
 
     public ReceivedMessageList(Context context, List<AniCareMessage> receivedMsg) {
         super(context);
         this.msgList = receivedMsg;
-        mAniCareService = AniCareApp.getAppContext().getAniCareService();
+        mAppContext = AniCareApp.getAppContext();
+        mAniCareService = mAppContext.getAniCareService();
     }
 
     @Override
@@ -74,20 +79,6 @@ public class ReceivedMessageList extends CardWithList {
             mObjects.add(tempObject);
         }
 
-//        //Add an object to the list
-//        MayKnowObject s1 = new MayKnowObject(this);
-//        s1.name = "정지현";
-//        s1.common = "안녕하세요? 반갑습니다. 맡기고 싶은데요...";
-//        s1.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
-//        mObjects.add(s1);
-//
-//        //Add an object to the list
-//        MayKnowObject s2 = new MayKnowObject(this);
-//        s2.name = "유홍근";
-//        s2.common = "유홍근님이 당신에게 펫을 맡기고 싶어 합니다.";
-//        s2.url = "https://lh5.googleusercontent.com/-squZd7FxR8Q/UyN5UrsfkqI/AAAAAAAAbAo/VoDHSYAhC_E/s54/new%2520profile%2520%25282%2529.jpg";
-//        mObjects.add(s2);
-
         return mObjects;
     }
 
@@ -100,6 +91,7 @@ public class ReceivedMessageList extends CardWithList {
         ImageView imagePeople = (ImageView) convertView.findViewById(R.id.carddemo_know_image);
         TextView addText = (TextView) convertView.findViewById(R.id.carddemo_know_add);
 
+        final AniCareMessage msg = msgList.get(childPosition);
 
         //Retrieve the values from the object
         MayKnowObject stockObject = (MayKnowObject) object;
@@ -113,7 +105,8 @@ public class ReceivedMessageList extends CardWithList {
         addText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Add Clicked", Toast.LENGTH_SHORT).show();
+                MessageDialog msgDial = new MessageDialog(getContext(), msg.getSender(), msg.getSenderId());
+                msgDial.show();
             }
         });
 
@@ -141,7 +134,7 @@ public class ReceivedMessageList extends CardWithList {
             setOnItemClickListener(new OnItemClickListener() {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
-                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Click on " + getObjectId(), Toast.LENGTH_SHORT).show();
                 }
             });
 

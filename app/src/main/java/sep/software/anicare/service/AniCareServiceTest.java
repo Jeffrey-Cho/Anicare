@@ -436,7 +436,13 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public void setUserImageInto(String userId, ImageView view){
-        Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId)).into(view);
+        if (userId == null || view == null) return;
+        if (userId.equals("dummy")) {
+            Picasso.with(AniCareApp.getAppContext()).load(getRandomUserImageUrl(userId)).into(view);
+        } else {
+            Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId)).into(view);
+        }
+
     }
 
     @Override
@@ -458,6 +464,12 @@ public class AniCareServiceTest implements AniCareService {
     @Override
     public String getPetImageUrl(String id) {
         return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_IMAGE + "/" + id;
+    }
+
+    private String getRandomUserImageUrl(String id) {
+        int randNum = RandomUtil.getInt(21);
+
+        return BASE_IMAGE_URL + "/" + BlobStorageService.CONTAINER_USER_PROFILE + "/users/" + randNum;
     }
 
     private String getRandomPetImageUrl(AniCarePet pet) {

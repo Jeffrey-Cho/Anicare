@@ -164,7 +164,7 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
 //                sendRequest(me.getName(), me.getId()); // for testing
                 break;
             case R.id.pet_detail_send_message: // send messaage
-                MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId, selectedPet.getSelfIntro());
+                MessageDialog dialog = new MessageDialog(mThisActivity, receiver, receiverId);
 //                MessageDialog dialog = new MessageDialog(mThisActivity, me.getName(), me.getId()); // for testing
                 dialog.show();
                 break;
