@@ -22,6 +22,7 @@ public interface AniCareService {
      */
     public void login(AniCareUser user, final EntityCallback<AniCareUser> callback) ;
     public void logout() ;
+    public void dropout();
     public boolean isLoggedIn() ;
 
     /*

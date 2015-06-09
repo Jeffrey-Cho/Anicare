@@ -99,13 +99,13 @@ public class AniCareUser extends AniCareModel {
         this.point = point;
     }
 
-    public int getRawHouseType() {
-        return rawHouseType;
-    }
-
-    public void setRawHouseType(int rawHouseType) {
-        this.rawHouseType = rawHouseType;
-    }
+//    public int getRawHouseType() {
+//        return rawHouseType;
+//    }
+//
+//    public void setRawHouseType(int rawHouseType) {
+//        this.rawHouseType = rawHouseType;
+//    }
 
     public HouseType getHouseType() {
         return HouseType.values()[this.rawHouseType-1];
@@ -171,7 +171,7 @@ public class AniCareUser extends AniCareModel {
         user.setLocation("Seoul");
         user.setSelfIntro("Hello, my name is " + user.getName());
         user.setPoint(RandomUtil.getInt(20));
-        user.setRawHouseType(RandomUtil.getInt(3));
+//        user.setRawHouseType(RandomUtil.getInt(3));
         user.setHasPet(RandomUtil.getBoolean());
         return user;
     }

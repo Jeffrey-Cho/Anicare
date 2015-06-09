@@ -150,7 +150,7 @@ public class ReceivedMessageList extends CardWithList {
                     final AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
                     msg.resolved();
                     mAniCareService.updateMessageDB(msg.getId(), msg);
-                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
                 }
             });
         }

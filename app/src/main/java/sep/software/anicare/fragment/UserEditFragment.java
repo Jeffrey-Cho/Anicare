@@ -304,7 +304,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         userLocation.setText(mThisUser.getLocation());
         phoneNumber.setText(!mThisUser.getPhoneNumber().isEmpty() ? mThisUser.getPhoneNumber() : "No Phone");
 
-        switch(mThisUser.getRawHouseType()) {
+        switch(mThisUser.getHouseType().getValue()) {
             case 1:
                 userLivingType.setSelection(0);
                 break;

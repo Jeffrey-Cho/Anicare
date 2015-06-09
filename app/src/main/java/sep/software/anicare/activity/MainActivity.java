@@ -149,6 +149,7 @@ public class MainActivity extends AniCareActivity {
         AniCarePet myPet = mAniCareService.getCurrentPet();
         if (myPet == null) return;
         mPetName.setText(myPet.getName());
+        mAniCareService.setPetImageInto(myPet, mProfileImage);
     }
 
     @Override

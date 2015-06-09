@@ -174,7 +174,6 @@ public class SplashActivity extends AniCareActivity {
                     @Override
                     public void onCompleted(AniCareUser entity) {
                         // TODO Auto-generated method stub
-                        AniCareLogger.log(entity);
                         AsyncChainer.notifyNext(object);
                     }
                 });

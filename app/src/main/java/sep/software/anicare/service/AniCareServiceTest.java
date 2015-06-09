@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 import com.microsoft.windowsazure.mobileservices.ApiJsonOperationCallback;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
 import com.microsoft.windowsazure.mobileservices.ServiceFilterResponse;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -51,19 +53,8 @@ public class AniCareServiceTest implements AniCareService {
 
     private String BASE_IMAGE_URL = "https://portalvhdsj2ksq9qld7v06.blob.core.windows.net";
 
-    private List<AniCarePet> petList = new ArrayList<AniCarePet>();
-    private List<CareHistory> historyList = new ArrayList<CareHistory>();
-
     public AniCareServiceTest(Context context) {
         mDbService = new AniCareDBServiceSQLite(context);
-
-        for (int i = 0 ; i < 10 ; i++) {
-            petList.add(AniCarePet.rand(true));
-        }
-
-        for (int i = 0 ; i < 10 ; i++) {
-            historyList.add(CareHistory.rand(true));
-        }
 
         try {
             mMobileClient = new MobileServiceClient(
@@ -111,6 +102,7 @@ public class AniCareServiceTest implements AniCareService {
                 if (arg1 == null) {
                     AniCareUser savedUser = mGb.create().fromJson(arg0, AniCareUser.class);
                     mObjectPreference.put("user", savedUser);
+                    mObjectPreference.put("login", true);
                     callback.onCompleted(savedUser);
                 } else {
                     EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
@@ -135,30 +127,61 @@ public class AniCareServiceTest implements AniCareService {
             session.closeAndClearTokenInformation();
         }
 
+//        mObjectPreference.remove("user");
+//        mObjectPreference.remove("pet");
+        mObjectPreference.remove("login");
+
+    }
+
+    public void dropout() {
+        Session session = com.facebook.Session.getActiveSession();
+        if (session != null) {
+            if (!session.isClosed()) {
+                session.closeAndClearTokenInformation();
+            }
+        } else {
+
+            session = new Session(AniCareApp.getAppContext());
+            Session.setActiveSession(session);
+
+            session.closeAndClearTokenInformation();
+        }
+
         mObjectPreference.remove("user");
         mObjectPreference.remove("pet");
+        mObjectPreference.remove("login");
+        mObjectPreference.remove("isUserSet");
     }
 
     @Override
     public boolean isLoggedIn() {
-        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-        if (user == null) return false;
-        return user != null && user.getId() != null && !user.getId().equals("");
+//        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
+//        if (user == null) return false;
+//        return user != null && user.getId() != null && !user.getId().equals("");
+        boolean isLogged = false;
+        try {
+            isLogged = mObjectPreference.get("login", Boolean.class);
+        } catch(Exception ex) {
+
+        }
+        return isLogged;
     }
 
     @Override
     public void putUser(AniCareUser user, final EntityCallback<AniCareUser> callback) {
         this.login(user, callback);
+        mObjectPreference.put("isUserSet", true);
     }
 
     @Override
     public boolean isUserSet() {
-        AniCareUser user = mObjectPreference.get("user", AniCareUser.class);
-        if (user != null) {
-            if (user.getId() != null && !user.getId().equals("") &&
-                    user.getLocation() != null && !"".equals(user.getLocation())) return true;
+        boolean isUserSet = false;
+        try {
+            isUserSet = mObjectPreference.get("isUserSet", Boolean.class);
+        } catch(Exception ex) {
+
         }
-        return false;
+        return isUserSet;
     }
 
     @Override
@@ -187,7 +210,6 @@ public class AniCareServiceTest implements AniCareService {
             public void onCompleted(JsonElement arg0, Exception arg1,
                                     ServiceFilterResponse arg2) {
                 // TODO Auto-generated method stub
-                AniCareLogger.log("onCompleted");
                 if (arg1 == null) {
                     AniCarePet savedPet = mGb.create().fromJson(arg0, AniCarePet.class);
                     savedPet.setImageURL(savedPet.getId());
@@ -467,7 +489,10 @@ public class AniCareServiceTest implements AniCareService {
         if (pet.isTestData() == true) {
             Picasso.with(AniCareApp.getAppContext()).load(getRandomPetImageUrl(pet)).into(view);
         } else {
-            Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(pet.getImageURL())).into(view);
+
+            Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(pet.getImageURL()))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE).into(view);
         }
     }
 

@@ -32,7 +32,9 @@ import sep.software.anicare.R;
 import sep.software.anicare.activity.MainActivity;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
+import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
@@ -111,7 +113,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
             if (checkContent()) {
                 mAppContext.showProgressDialog(mThisActivity);
                 final AniCarePet pet = new AniCarePet();
-
+                AniCareLogger.log(mThisUser, pet);
                 pet.setName(petName.getText().toString());
                 pet.setCategory(Category);
                 pet.setUserId(mThisUser.getId());
@@ -130,7 +132,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                 Log.d(TAG, "pet id: " + mThisPet.getId());
                 Log.d(TAG, "pet image url: "+mThisPet.getImageURL());
                 Log.d(TAG, "pet image url from service: " + mAniCareService.getPetImageUrl(mThisPet.getId()));
-
+                Picasso.with(mAppContext).invalidate(mAniCareService.getPetImageUrl(pet.getId()));
                 AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
                     @Override
                     public void doNext(final Object obj, Object... params) {
@@ -159,6 +161,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                                 String tag = settingFragment.getClass().getSimpleName();
                                 FragmentManager fragmentManager = getFragmentManager();
                                 fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+                                EventBus.getDefault().post(new Exception());
                                 mAppContext.dismissProgressDialog();
                             }
                         });

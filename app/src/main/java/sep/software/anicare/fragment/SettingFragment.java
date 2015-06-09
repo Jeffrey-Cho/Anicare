@@ -92,6 +92,11 @@ public class SettingFragment extends PreferenceFragment {
         exitPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 //open browser or intent here
+                mAniCareService.dropout();
+                Intent intent = new Intent();
+                intent.setClass(mThisActivity, SplashActivity.class);
+                startActivity(intent);
+                mThisActivity.finish();
                 return true;
             }
         });
