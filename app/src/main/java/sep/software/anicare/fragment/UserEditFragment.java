@@ -32,11 +32,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import de.greenrobot.event.EventBus;
+import sep.software.anicare.AniCareException;
 import sep.software.anicare.R;
 import sep.software.anicare.activity.MapActivity;
 import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
@@ -49,6 +52,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     private static final String TAG = UserEditFragment.class.getSimpleName();
     public static final int GALLERY = 10;
     public static final int CAMERA = 11;
+    private ImageAsyncTask imageTask;
 
 
     private String profileImageUrl;
@@ -298,7 +302,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     private void enableEdit() {
         userName.setText(mThisUser.getName());
         userLocation.setText(mThisUser.getLocation());
-        phoneNumber.setText(!mThisUser.getPhoneNumber().isEmpty()?mThisUser.getPhoneNumber():"No Phone");
+        phoneNumber.setText(!mThisUser.getPhoneNumber().isEmpty() ? mThisUser.getPhoneNumber() : "No Phone");
 
         switch(mThisUser.getRawHouseType()) {
             case 1:
@@ -318,7 +322,13 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         selfIntro.setText(mThisUser.getSelfIntro());
 
         Picasso.with(mThisActivity).invalidate(mAniCareService.getUserImageUrl(mThisUser.getId()));
-        mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
+//        mThisUser.setImageUrl(mAniCareService.getUserImageUrl(mThisUser.getId()));
+//        Log.d(TAG, "UserImageURL: " + mAniCareService.getUserImageUrl(mThisUser.getId()));
+//        mAniCareService.setUserImageInto(mThisUser.getId(), userImage);
+
+        imageTask = new ImageAsyncTask();
+        imageTask.execute(profileImageUrl);
+
 
         if(mThisUser.isHasPet()) {
             havePet.check(R.id.user_setting_pet_yes);
@@ -385,5 +395,27 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         userImage.setImageBitmap(profileImageBitmap);
 
 //        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
+    }
+
+    public class ImageAsyncTask extends AniCareAsyncTask<String, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            try {
+                return Picasso.with(mThisActivity).load(profileImageUrl).get();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            profileImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
+            userImage.setImageBitmap(profileImageBitmap);
+        }
     }
 }
