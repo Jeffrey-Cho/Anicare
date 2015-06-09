@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -52,6 +53,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
     private Spinner userLivingType;
     private RadioGroup havePet;
     private TextView selfIntro;
+    private TextView phonenumber;
     private Button submitBtn;
 
     private double longitude;
@@ -81,6 +83,9 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         userLivingType.setAdapter(adapter);
         userLivingType.setOnItemSelectedListener(this);
+
+        phonenumber = (TextView) findViewById(R.id.user_setting_phone_number);
+        phonenumber.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
         havePet = (RadioGroup) findViewById(R.id.is_pet);
         selfIntro = (TextView) findViewById(R.id.user_setting_self_intro);
@@ -121,6 +126,11 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         if (userLocation.getText().toString().isEmpty()) {
             return false;
         }
+
+        if (phonenumber.getText().toString().isEmpty()) {
+            return false;
+        }
+
 
         return true;
     }
@@ -168,6 +178,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
                 user.setHouseType(livingType);
                 user.setHasPet(havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_yes);
+                user.setPhoneNumber(phonenumber.getText().toString());
 
                 user.setLongitude(this.longitude);
                 user.setLatitude((this.latitude));
@@ -202,7 +213,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
             } else {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mThisActivity);
                 builder1.setTitle("Alert");
-                builder1.setMessage("User Name and User Location are mandatory!");
+                builder1.setMessage("User Name, User Location and Phone Number are mandatory!");
                 builder1.setCancelable(true);
                 builder1.setNeutralButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {

@@ -66,7 +66,19 @@ public class PetDetailActivity extends AniCareActivity implements View.OnClickLi
         petName.setText(selectedPet.getName());
         petName.setSelected(false);
         petLocation = (TextView) findViewById(R.id.pet_detail_location);
-        petLocation.setText(selectedPet.getLocation());
+
+        String[] address;
+        String locationStr = selectedPet.getLocation();
+        address = locationStr.split(" ");
+
+        StringBuilder locationMessage = new StringBuilder();
+        locationMessage.append(address[0]);
+        locationMessage.append(" ");
+        locationMessage.append(address[1]);
+        locationMessage.append(" ");
+        locationMessage.append(address[2]);
+
+        petLocation.setText(locationMessage);
         petLocation.setSelected(false);
 
 

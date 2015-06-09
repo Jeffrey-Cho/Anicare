@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class SendedMessageList extends CardWithList {
         //MayKnowObject tempObject = new MayKnowObject(this);
 
         for(AniCareMessage msg: msgList) {
-            MayKnowObject tempObject = new MayKnowObject(this);
+            MayKnowObject tempObject = new MayKnowObject(this, msg);
             tempObject.name = msg.getReceiver();
             tempObject.common = msg.getContent();
             String receiverId = msg.getReceiverId();
@@ -140,10 +141,14 @@ public class SendedMessageList extends CardWithList {
         public String name;
         public String common;
         public String url;
+        public AniCareMessage msg;
+        private MayKnowObject _this;
 
-        public MayKnowObject(Card parentCard) {
+        public MayKnowObject(Card parentCard, AniCareMessage msg) {
             super(parentCard);
             init();
+            this.msg = msg;
+            _this = this;
         }
 
         private void init() {
@@ -157,8 +162,12 @@ public class SendedMessageList extends CardWithList {
 
             //OnItemSwipeListener
             setOnItemSwipeListener(new OnItemSwipeListener() {
+
                 @Override
                 public void onItemSwipe(ListObject object, boolean dismissRight) {
+                    final AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
+                    msg.resolved();
+                    mAniCareService.updateMessageDB(msg.getId(), msg);
                     Toast.makeText(getContext(), "Swipe on " + object.getObjectId(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -166,7 +175,7 @@ public class SendedMessageList extends CardWithList {
 
         @Override
         public String getObjectId() {
-            return name;
+            return msg.toString();
         }
     }
 }

@@ -73,6 +73,7 @@ public interface AniCareService {
     public List<AniCareMessage> listSystemMessage();
     public List<AniCareMessage> listSendedMessage();
     public List<AniCareMessage> listReceivedMessage();
+    public List<AniCareMessage> listReadedMessage();
 
     /*
         CareHistory API

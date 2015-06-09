@@ -129,6 +129,35 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
         confirm = (AniCareButton)rootView.findViewById(R.id.confirm);
         cancel =  (AniCareButton)rootView.findViewById(R.id.cancel);
 
+        switch(mThisPet.getRawCategory()) {
+            case 0: // dog
+                petCategory.setSelection(0);
+                break;
+            case 1: // cat
+                petCategory.setSelection(1);
+                break;
+            case 2: // birds
+                petCategory.setSelection(2);
+                break;
+            case 3: // etc
+                petCategory.setSelection(3);
+                break;
+        }
+
+        switch(mThisPet.getRawSize()) {
+            case 3: // big
+                petSize.check(R.id.pet_size_large);
+                break;
+            case 2:
+                petSize.check(R.id.pet_size_medium);
+                break;
+            case 1: // small
+                petSize.check(R.id.pet_size_small);
+                break;
+        }
+
+
+
 
         // select date event
         fromDate.setOnTouchListener(new View.OnTouchListener() {

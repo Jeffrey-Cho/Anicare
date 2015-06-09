@@ -3,6 +3,7 @@ package sep.software.anicare.model;
 import sep.software.anicare.util.RandomUtil;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -17,11 +18,21 @@ public class AniCareUser extends AniCareModel {
     private String address2;
     private String address3;
     private String selfIntro;
+    private String phoneNumber;
     private double longitude;
     private double latitude;
     private int point;
     private int rawHouseType;
     private boolean hasPet;
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
     public enum HouseType {
         HOUSE(1), APART(2),OFFICE_TEL(3), Etc(4);
 

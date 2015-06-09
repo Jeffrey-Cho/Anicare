@@ -223,13 +223,13 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
         }
 
         switch(mThisPet.getRawSize()) {
-            case 1:
+            case 3:
                 petSize.check(R.id.pet_size_large);
                 break;
             case 2:
                 petSize.check(R.id.pet_size_medium);
                 break;
-            case 3:
+            case 1:
                 petSize.check(R.id.pet_size_small);
                 break;
         }
