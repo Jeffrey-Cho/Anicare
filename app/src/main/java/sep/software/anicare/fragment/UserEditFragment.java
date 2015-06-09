@@ -11,7 +11,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,7 +35,9 @@ import java.util.Locale;
 import sep.software.anicare.R;
 import sep.software.anicare.activity.MapActivity;
 import sep.software.anicare.interfaces.EntityCallback;
+import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
+import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
 
@@ -43,9 +47,13 @@ import sep.software.anicare.util.ImageUtil;
 public class UserEditFragment extends AniCareFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String TAG = UserEditFragment.class.getSimpleName();
+    public static final int GALLERY = 10;
+    public static final int CAMERA = 11;
+
 
     private String profileImageUrl;
     private Uri mProfileImageUri;
+    private Bitmap profileImageBitmap;
 
     private ImageView userImage;
     private TextView userName;
@@ -127,7 +135,10 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileUtil.getMediaFromGallery(mThisActivity);
+//                FileUtil.getMediaFromGallery(mThisActivity);
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), GALLERY);
             }
         });
     }
@@ -140,7 +151,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
 
             if (checkContent()) {
                 mAppContext.showProgressDialog(mThisActivity);
-                AniCareUser user = mAniCareService.getCurrentUser();
+                final AniCareUser user = mAniCareService.getCurrentUser();
 
                 user.setName(userName.getText().toString());
                 user.setLocation(userLocation.getText().toString());
@@ -173,16 +184,50 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
 
                 } else {
 
-                    mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
+                    AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
                         @Override
-                        public void onCompleted(AniCareUser entity) {
-                            Fragment settingFragment = new SettingFragment();
-                            String tag = settingFragment.getClass().getSimpleName();
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
-                            mAppContext.dismissProgressDialog();
+                        public void doNext(final Object obj, Object... params) {
+                            mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
+                                @Override
+                                public void onCompleted(AniCareUser entity) {
+                                    AsyncChainer.notifyNext(obj, entity.getId());
+                                }
+                            });
+
+                        }
+                    }, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(Object obj, Object... params) {
+                            String id = (String) params[0];
+                            Log.d(TAG, "uploadUserImage id: " + id);
+
+                            // Please check this routine for modified user image bitmap to Hongkun
+                            mAniCareService.uploadUserImage(id, profileImageBitmap, new EntityCallback<String>() {
+                                @Override
+                                public void onCompleted(String entity) {
+                                    Log.d(TAG, "uploadUserImage completed: " + entity.toString());
+                                    Log.d(TAG, "uploadUserImage url: " + mAniCareService.getUserImageUrl(entity));
+
+                                    Fragment settingFragment = new SettingFragment();
+                                    String tag = settingFragment.getClass().getSimpleName();
+                                    FragmentManager fragmentManager = getFragmentManager();
+                                    fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+                                    mAppContext.dismissProgressDialog();
+                                }
+                            });
                         }
                     });
+
+//                    mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
+//                        @Override
+//                        public void onCompleted(AniCareUser entity) {
+//                            Fragment settingFragment = new SettingFragment();
+//                            String tag = settingFragment.getClass().getSimpleName();
+//                            FragmentManager fragmentManager = getFragmentManager();
+//                            fragmentManager.beginTransaction().replace(R.id.content_frame, settingFragment, tag).commit();
+//                            mAppContext.dismissProgressDialog();
+//                        }
+//                    });
                 }
 
             }  else {
@@ -334,9 +379,11 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     }
 
     private void updateProfileImage(String imagePath){
-        mAppContext.showProgressDialog(mThisActivity);
-        Bitmap profileImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_IMAGE_SIZE);
+        //mAppContext.showProgressDialog(mThisActivity);
+        profileImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_IMAGE_SIZE);
         Bitmap profileThumbnailImageBitmap = ImageUtil.refineSquareImage(imagePath, ImageUtil.PROFILE_THUMBNAIL_IMAGE_SIZE);
+        userImage.setImageBitmap(profileImageBitmap);
+
 //        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
     }
 }
