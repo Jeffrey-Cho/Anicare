@@ -64,7 +64,7 @@ public class AniCareIntentService extends IntentService {
 
         AniCareMessage msg = mGb.create().fromJson(msgObj, AniCareMessage.class);
         AniCareUser user = mGb.create().fromJson(userObj, AniCareUser.class);
-
+        AniCareLogger.log("IntentService : " + msg);
         AniCareApp appContext = AniCareApp.getAppContext();
         AniCareService aniCareService = appContext.getAniCareService();
         msg.setDateTime(AniCareDateTime.now()); // for date display

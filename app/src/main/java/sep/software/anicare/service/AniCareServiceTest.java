@@ -381,7 +381,7 @@ public class AniCareServiceTest implements AniCareService {
         List<AniCareMessage> list = this.listMessage();
         List<AniCareMessage> retList = new ArrayList<AniCareMessage>();
         for (AniCareMessage msg : list) {
-            if (msg.getRawType() == AniCareMessage.Type.SYSTEM.getValue() && !msg.isResolved()) retList.add(msg);
+            if (msg.getRawType() == AniCareMessage.Type.SYSTEM.getValue() && !msg.isResolved() && !msg.isMine()) retList.add(msg);
         }
         return retList;
     }
