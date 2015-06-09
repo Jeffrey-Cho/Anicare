@@ -36,6 +36,7 @@ import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
 import sep.software.anicare.util.AniCareLogger;
+import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
 import sep.software.anicare.view.DynamicHeightImageView;
@@ -46,6 +47,10 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
     private String profileImageUrl;
     private Uri mProfileImageUri;
+    private Bitmap defaultPetImageBitmap;
+
+
+    private ImageAsyncTask imageTask;
 
     private ImageView userImage;
     private TextView userName;
@@ -65,6 +70,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
     private AniCareUser.HouseType livingType;
     private int defaultPoint = 1000;
+    private String defaultPetImageUrl = "http://portalvhdsj2ksq9qld7v06.blob.core.windows.net/anicare-profile/question.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +172,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 
             if (checkContent()) {
                 mAppContext.showProgressDialog(mThisActivity);
-                AniCareUser user = mAniCareService.getCurrentUser();
+                final AniCareUser user = mAniCareService.getCurrentUser();
 
                 user.setName(userName.getText().toString());
                 user.setLocation(userLocation.getText().toString());
@@ -188,11 +194,16 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                 user.setAddress3(this.address3);
 
                  if (havePet.getCheckedRadioButtonId() == R.id.user_setting_pet_no) { // when the user has no pet
+                     // for default pet
+                     imageTask = new ImageAsyncTask();
+                     imageTask.execute(defaultPetImageUrl);
+                     user.setPoint(defaultPoint);
 
-                    mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
+                     mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                         @Override
                         public void onCompleted(AniCareUser entity) {
                             // we need define no pet action
+                            setDefaultPet(user);
                         }
                     });
                 } else { // when user login with facebook or kakaotalk
@@ -292,6 +303,59 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
         }
     }
 
+    private void setDefaultPet(AniCareUser thisUser) {
+
+        final AniCarePet defaultPet = new AniCarePet();
+
+        defaultPet.setUserId(thisUser.getId());
+        defaultPet.setName("");
+        defaultPet.setCategory(AniCarePet.Category.ETC);
+        defaultPet.setUserName(thisUser.getName());
+        defaultPet.setLocation(thisUser.getLocation());
+        defaultPet.setHouseType(thisUser.getHouseType());
+        defaultPet.setLatitude(thisUser.getLatitude());
+        defaultPet.setLongitude(thisUser.getLongitude());
+        defaultPet.setPersonality(AniCarePet.Personality.BRIGHT);
+        defaultPet.setSize(AniCarePet.Size.MIDDLE);
+        defaultPet.setSelfIntro(thisUser.getSelfIntro());
+
+        defaultPet.setMale(true);
+        defaultPet.setNeutralized(true);
+        defaultPet.setPetFood(true);
+
+        AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
+            @Override
+            public void doNext(final Object obj, Object... params) {
+                mAniCareService.putPet(defaultPet, new EntityCallback<AniCarePet>() {
+                    @Override
+                    public void onCompleted(AniCarePet entity) {
+                        AsyncChainer.notifyNext(obj, entity.getId());
+                    }
+                });
+
+            }
+        }, new AsyncChainer.Chainable() {
+            @Override
+            public void doNext(Object obj, Object... params) {
+                String id = (String) params[0];
+
+                mAniCareService.uploadPetImage(id, defaultPetImageBitmap, new EntityCallback<String>() {
+                    @Override
+                    public void onCompleted(String entity) {
+                        mAppContext.dismissProgressDialog();
+                        Intent intent = new Intent();
+                        intent.setClass(mThisActivity, MainActivity.class);
+                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        });
+
+
+    }
+
     private Address getLocationName(double latitude, double longitude) {
         Geocoder gc = new Geocoder(mThisActivity, Locale.KOREA);
         try {
@@ -312,26 +376,26 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
 //        updateProfileImage(profileImageBitmap, profileThumbnailImageBitmap);
     }
 
-//    public class ImageAsyncTask extends AniCareAsyncTask <String, Integer, Bitmap> {
-//
-//        @Override
-//        protected Bitmap doInBackground(String... params) {
-//            // TODO Auto-generated method stub
-//            try {
-//                return Picasso.with(mThisActivity).load(profileImageUrl).get();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
-//                return null;
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Bitmap bitmap) {
-//            Bitmap profileImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
-//            userImage.setImageBitmap(profileImageBitmap);
-//        }
-//    }
+    public class ImageAsyncTask extends AniCareAsyncTask<String, Integer, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            // TODO Auto-generated method stub
+            try {
+                return Picasso.with(mThisActivity).load(defaultPetImageUrl).get();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            defaultPetImageBitmap = ImageUtil.refineSquareImage(bitmap, ImageUtil.PROFILE_IMAGE_SIZE);
+            //userImage.setImageBitmap(defaultPetImageBitmap);
+        }
+    }
 
 }
