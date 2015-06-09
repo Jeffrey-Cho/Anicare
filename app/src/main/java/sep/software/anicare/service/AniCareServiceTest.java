@@ -228,7 +228,6 @@ public class AniCareServiceTest implements AniCareService {
         jo.addProperty("userId", userId);
         jo.addProperty("page", page);
         jo.addProperty("mode", mode);
-
         mMobileClient.invokeApi("list_pet", jo, new ApiJsonOperationCallback() {
 
             @Override

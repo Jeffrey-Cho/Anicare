@@ -155,6 +155,7 @@ public class AniCareUser extends AniCareModel {
         this.address3 = address3;
     }
 
+
     public static AniCareUser rand() {
         return rand(false);
     }
