@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,8 @@ import sep.software.anicare.util.ImageUtil;
 public class PetEditFragment extends AniCareFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final String TAG = PetEditFragment.class.getSimpleName();
+    public static final int GALLERY = 10;
+    public static final int CAMERA = 11;
 
     private ImageView petImage;
     private Uri mProfileImageUri;
@@ -123,6 +127,10 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                 pet.setNeutralized(petNeutralized.getCheckedRadioButtonId() == R.id.pet_neutralized_yes);
                 pet.setPetFood(petFeed.getCheckedRadioButtonId() == R.id.pet_feed_yes);
 
+                Log.d(TAG, "pet id: " + mThisPet.getId());
+                Log.d(TAG, "pet image url: "+mThisPet.getImageURL());
+                Log.d(TAG, "pet image url from service: " + mAniCareService.getPetImageUrl(mThisPet.getId()));
+
                 AsyncChainer.asyncChain(mThisActivity, new AsyncChainer.Chainable() {
                     @Override
                     public void doNext(final Object obj, Object... params) {
@@ -138,10 +146,15 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
                     @Override
                     public void doNext(Object obj, Object... params) {
                         String id = (String) params[0];
+                        Log.d(TAG, "uploadPetImage id: " + id);
 
+                        // Please check this routine for modified pet image bitmap to Hongkun
                         mAniCareService.uploadPetImage(id, petImageBitmap, new EntityCallback<String>() {
                             @Override
                             public void onCompleted(String entity) {
+                                Log.d(TAG, "uploadPetImage completed: " + entity.toString());
+                                Log.d(TAG, "uploadPetImage url: " + mAniCareService.getPetImageUrl(entity));
+
                                 Fragment settingFragment = new SettingFragment();
                                 String tag = settingFragment.getClass().getSimpleName();
                                 FragmentManager fragmentManager = getFragmentManager();
@@ -268,7 +281,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
         profileImageUrl = mAniCareService.getPetImageUrl(mThisPet.getId());
 
         Picasso.with(mThisActivity).invalidate(profileImageUrl);
-        mThisPet.setImageURL(mThisPet.getId());
+        mThisPet.setImageURL(profileImageUrl);
         mAniCareService.setPetImageInto(mThisPet, petImage);
 
         imageTask = new ImageAsyncTask();
@@ -331,7 +344,10 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
         petImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileUtil.getMediaFromGallery(mThisActivity);
+                //FileUtil.getMediaFromGallery(mThisActivity);
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setType("image/*");
+                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_picture)), GALLERY);
             }
         });
     }

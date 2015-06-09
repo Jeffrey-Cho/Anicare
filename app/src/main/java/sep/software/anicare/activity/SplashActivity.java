@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.AppEventsLogger;
@@ -117,6 +118,7 @@ public class SplashActivity extends AniCareActivity {
     private void initializeKakao() {
 
         com.kakao.Session.initialize(mAppContext);
+
         mKakaoButton = (com.kakao.widget.LoginButton) findViewById(R.id.com_kakao_login);
 
         if (mAniCareService.isLoggedIn()) {
@@ -125,6 +127,7 @@ public class SplashActivity extends AniCareActivity {
 
 
         session = com.kakao.Session.getCurrentSession();
+        Log.d(TAG, "getCurrentSession");
         session.addCallback(mySessionCallback);
 
 
@@ -307,7 +310,7 @@ public class SplashActivity extends AniCareActivity {
     private class MySessionStatusCallback implements com.kakao.SessionCallback {
         @Override
         public void onSessionOpened() {
-
+            Log.d(TAG, "Kakao onSessionOpend");
             AniCareLogger.log("SessionOpend");
 
             UserManagement.requestMe(new MeResponseCallback() {
@@ -343,12 +346,14 @@ public class SplashActivity extends AniCareActivity {
 
         @Override
         public void onSessionClosed(final KakaoException exception) {
+            Log.d(TAG, "Kakao onSessionClosed");
 
 //            mKakaoButton.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onSessionOpening() {
+            Log.d(TAG, "Kakao onSessionOpening");
 
         }
     }
