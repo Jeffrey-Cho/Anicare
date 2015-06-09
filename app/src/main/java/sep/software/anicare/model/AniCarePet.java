@@ -76,6 +76,8 @@ public class AniCarePet extends AniCareModel {
     private String address2;
     private String address3;
 
+
+
     public String getId(){ return id; }
     public void setId(String id) { this.id = id; }
     public String getUserId() { return  userId; }

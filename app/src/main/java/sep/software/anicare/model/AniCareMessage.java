@@ -42,6 +42,7 @@ public class AniCareMessage extends AniCareModel {
 	private String rawDateTime = AniCareDateTime.now().toString();
 	private String relationId;
 	private String content;
+    private String userPhone;
     private boolean resolved = false;
 	
 	public String getId() {
@@ -161,6 +162,10 @@ public class AniCareMessage extends AniCareModel {
 	public void setContent(String content) {
 		this.content = content;
 	}
+
+    public String getUserPhone() { return this.userPhone; }
+
+    public void setUserPhone(String userPhone) { this.userPhone = userPhone; }
 
     public boolean isMine() {
         if (this.senderId == null) return false;

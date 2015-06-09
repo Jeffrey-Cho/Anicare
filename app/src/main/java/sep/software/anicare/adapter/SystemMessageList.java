@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,6 +181,13 @@ public class SystemMessageList extends CardWithList {
                 @Override
                 public void onItemClick(LinearListView parent, View view, int position, ListObject object) {
 //                    Toast.makeText(getContext(), "Click on " + msg.getSender(), Toast.LENGTH_SHORT).show();
+                    AniCareMessage msg = new Gson().fromJson(object.getObjectId(), AniCareMessage.class);
+
+                    if (msg.getType().getValue() == AniCareMessage.Type.SYSTEM.getValue()
+                            && msg.getCommType().getValue() == AniCareMessage.CommType.ACCEPT.getValue()) {
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", msg.getUserPhone(), null));
+                        getContext().startActivity(intent);
+                    }
                 }
             });
 
