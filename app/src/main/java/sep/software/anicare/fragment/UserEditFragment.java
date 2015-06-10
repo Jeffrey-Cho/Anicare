@@ -194,11 +194,31 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
                             mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                                 @Override
                                 public void onCompleted(AniCareUser entity) {
-                                    AsyncChainer.notifyNext(obj, entity.getId());
+                                    AsyncChainer.notifyNext(obj, entity);
                                 }
                             });
 
                         }
+                    }, new AsyncChainer.Chainable() {
+                        @Override
+                        public void doNext(final Object obj, Object... params) {
+                            final AniCareUser user = (AniCareUser) params[0];
+                            AniCarePet pet = new AniCarePet();
+                            pet.setUserId(user.getId());
+                            pet.setUserName(user.getName());
+                            pet.setLocation(user.getLocation());
+                            pet.setHouseType(user.getHouseType());
+                            pet.setLatitude(user.getLatitude());
+                            pet.setLongitude(user.getLongitude());
+                            pet.setSelfIntro(user.getSelfIntro());
+                            mAniCareService.putPet(pet, new EntityCallback<AniCarePet>() {
+                                @Override
+                                public void onCompleted(AniCarePet entity) {
+                                    AsyncChainer.notifyNext(obj, user.getId());
+                                }
+                            });
+                        }
+
                     }, new AsyncChainer.Chainable() {
                         @Override
                         public void doNext(Object obj, Object... params) {

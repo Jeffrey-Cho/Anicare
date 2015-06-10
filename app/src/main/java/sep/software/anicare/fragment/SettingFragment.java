@@ -1,8 +1,10 @@
 package sep.software.anicare.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -92,11 +94,21 @@ public class SettingFragment extends PreferenceFragment {
         exitPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             public boolean onPreferenceClick(Preference preference) {
                 //open browser or intent here
-                mAniCareService.dropout();
-                Intent intent = new Intent();
-                intent.setClass(mThisActivity, SplashActivity.class);
-                startActivity(intent);
-                mThisActivity.finish();
+                new AlertDialog.Builder(mThisActivity)
+                        .setMessage("All your data will be erased")
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mAniCareService.dropout();
+                                Intent intent = new Intent();
+                                intent.setClass(mThisActivity, SplashActivity.class);
+                                startActivity(intent);
+                                mThisActivity.finish();
+                            }
+                        })
+                        .setNegativeButton("cancel", null)
+                        .show();
+
                 return true;
             }
         });

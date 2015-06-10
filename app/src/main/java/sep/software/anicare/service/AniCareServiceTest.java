@@ -151,6 +151,7 @@ public class AniCareServiceTest implements AniCareService {
         mObjectPreference.remove("pet");
         mObjectPreference.remove("login");
         mObjectPreference.remove("isUserSet");
+        mDbService.dropTable();
     }
 
     @Override
@@ -475,9 +476,13 @@ public class AniCareServiceTest implements AniCareService {
     public void setUserImageInto(String userId, ImageView view){
         if (userId == null || view == null) return;
         if (userId.equals("dummy")) {
-            Picasso.with(AniCareApp.getAppContext()).load(getRandomUserImageUrl(userId)).into(view);
+            Picasso.with(AniCareApp.getAppContext()).load(getRandomUserImageUrl(userId))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE).into(view);
         } else {
-            Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId)).into(view);
+            Picasso.with(AniCareApp.getAppContext()).load(getUserImageUrl(userId))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE).into(view);
         }
 
     }
@@ -487,7 +492,9 @@ public class AniCareServiceTest implements AniCareService {
         if (pet == null) return;
 
         if (pet.isTestData() == true) {
-            Picasso.with(AniCareApp.getAppContext()).load(getRandomPetImageUrl(pet)).into(view);
+            Picasso.with(AniCareApp.getAppContext()).load(getRandomPetImageUrl(pet))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE )
+                    .networkPolicy(NetworkPolicy.NO_CACHE).into(view);
         } else {
 
             Picasso.with(AniCareApp.getAppContext()).load(getPetImageUrl(pet.getImageURL()))
