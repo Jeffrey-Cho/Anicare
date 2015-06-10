@@ -101,6 +101,7 @@ public class AniCareServiceTest implements AniCareService {
                 // TODO Auto-generated method stub
                 if (arg1 == null) {
                     AniCareUser savedUser = mGb.create().fromJson(arg0, AniCareUser.class);
+                    AniCareLogger.log("login : "+savedUser);
                     mObjectPreference.put("user", savedUser);
                     mObjectPreference.put("login", true);
                     callback.onCompleted(savedUser);
@@ -170,8 +171,34 @@ public class AniCareServiceTest implements AniCareService {
 
     @Override
     public void putUser(AniCareUser user, final EntityCallback<AniCareUser> callback) {
-        this.login(user, callback);
-        mObjectPreference.put("isUserSet", true);
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject userJson = mGb.create().fromJson(mGb.create().toJson(user), JsonObject.class);
+        JsonObject jo = new JsonObject();
+        jo.add("user", userJson);
+
+        mMobileClient.invokeApi("put_user", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    AniCareUser savedUser = mGb.create().fromJson(arg0, AniCareUser.class);
+                    AniCareLogger.log("put_user : "+savedUser);
+                    mObjectPreference.put("user", savedUser);
+                    mObjectPreference.put("isUserSet", true);
+                    callback.onCompleted(savedUser);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+
+            }
+        });
+
     }
 
     @Override
@@ -295,6 +322,32 @@ public class AniCareServiceTest implements AniCareService {
             }
         });
 
+    }
+
+    @Override
+    public void removeFriend(AniCarePet pet, final EntityCallback<Boolean> callback) {
+        if (!internetAvailable()) {
+            EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.NETWORK_UNAVAILABLE));
+            return;
+        }
+
+        JsonObject jo = new JsonObject();
+        jo.add("pet", mGb.create().fromJson(mGb.create().toJson(pet), JsonElement.class));
+
+        mMobileClient.invokeApi("remove_friend", jo, new ApiJsonOperationCallback() {
+
+            @Override
+            public void onCompleted(JsonElement arg0, Exception arg1,
+                                    ServiceFilterResponse arg2) {
+                // TODO Auto-generated method stub
+                if (arg1 == null) {
+                    Boolean _pet = mGb.create().fromJson(arg0, Boolean.class);
+                    callback.onCompleted(_pet);
+                } else {
+                    EventBus.getDefault().post(new AniCareException(AniCareException.TYPE.SERVER_ERROR));
+                }
+            }
+        });
     }
 
     @Override

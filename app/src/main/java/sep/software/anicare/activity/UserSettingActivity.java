@@ -211,6 +211,7 @@ public class UserSettingActivity extends AniCareActivity implements AdapterView.
                     mAniCareService.putUser(user, new EntityCallback<AniCareUser>() {
                         @Override
                         public void onCompleted(AniCareUser entity) {
+                            mThisUser = entity;
                             Intent intent = new Intent();
                             intent.setClass(mThisActivity, PetSettingActivity.class);
                             startActivity(intent);

@@ -143,6 +143,7 @@ public class MainActivity extends AniCareActivity {
                     , MessageBoxFragment.class.getSimpleName()).commit();
 
         }
+        AniCareLogger.log(mThisUser);
     }
 
     public void onEvent(Exception exception){

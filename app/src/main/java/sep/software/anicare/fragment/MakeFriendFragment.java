@@ -260,14 +260,29 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { // return to list Friends
-                Fragment fragment = new ListFriendFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-                // update selected item and title, then close the drawer
+                mAniCareService.removeFriend(mThisPet, new EntityCallback<Boolean>() {
+                    @Override
+                    public void onCompleted(Boolean entity) {
+                        if (entity) {
+                            Fragment fragment = new ListFriendFragment();
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
-                ((MainActivity) mThisActivity).getDrawer().setItemChecked(0, true);
-                mThisActivity.getActionBar().setTitle(getResources().getStringArray(R.array.anicare_menu)[0]);
+                            // update selected item and title, then close the drawer
+
+                            ((MainActivity) mThisActivity).getDrawer().setItemChecked(0, true);
+                            mThisActivity.getActionBar().setTitle(getResources().getStringArray(R.array.anicare_menu)[0]);
+                        } else {
+                            new AlertDialog.Builder(mThisActivity)
+                                    .setMessage("Removing friend failed. Try again.")
+                                    .setPositiveButton("ok", null)
+                                    .show();
+                        }
+
+                    }
+                });
+
 
 
             }

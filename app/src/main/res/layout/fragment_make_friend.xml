@@ -125,7 +125,7 @@
         <sep.software.anicare.view.AniCareButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/item_cancle"
+            android:text="@string/item_remove"
             android:id="@+id/cancel"
             android:layout_margin="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium"/>

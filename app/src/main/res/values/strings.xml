@@ -78,6 +78,7 @@
     <string name="item_no">No</string>
     <string name="item_confirm">확인</string>
     <string name="item_cancle">취소</string>
+    <string name="item_remove">삭제</string>
     <string name="item_large">대</string>
     <string name="item_medium">중</string>
     <string name="item_small">소</string>

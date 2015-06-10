@@ -40,6 +40,7 @@ import sep.software.anicare.interfaces.EntityCallback;
 import sep.software.anicare.model.AniCarePet;
 import sep.software.anicare.model.AniCareUser;
 import sep.software.anicare.service.AniCareAsyncTask;
+import sep.software.anicare.util.AniCareLogger;
 import sep.software.anicare.util.AsyncChainer;
 import sep.software.anicare.util.FileUtil;
 import sep.software.anicare.util.ImageUtil;
@@ -82,7 +83,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_user_edit, container, false);
-
+        AniCareLogger.log("in edit user frag : " + mThisUser);
         userImage = (ImageView) rootView.findViewById(R.id.profileImage);
         userImage.setScaleType(ImageView.ScaleType.FIT_XY);
         userName = (TextView) rootView.findViewById(R.id.user_setting_name);
@@ -203,7 +204,7 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
                         @Override
                         public void doNext(final Object obj, Object... params) {
                             final AniCareUser user = (AniCareUser) params[0];
-                            AniCarePet pet = new AniCarePet();
+                            AniCarePet pet = mThisPet;
                             pet.setUserId(user.getId());
                             pet.setUserName(user.getName());
                             pet.setLocation(user.getLocation());
@@ -323,6 +324,15 @@ public class UserEditFragment extends AniCareFragment implements AdapterView.OnI
         userName.setText(mThisUser.getName());
         userLocation.setText(mThisUser.getLocation());
         phoneNumber.setText(!mThisUser.getPhoneNumber().isEmpty() ? mThisUser.getPhoneNumber() : "No Phone");
+
+        this.latitude = mThisUser.getLatitude();
+        this.longitude = mThisUser.getLongitude();
+        this.location = mThisUser.getLocation();
+        this.address1 = mThisUser.getAddress1();
+        this.address2 = mThisUser.getAddress2();
+        this.address3 = mThisUser.getAddress3();
+
+
 
         switch(mThisUser.getHouseType().getValue()) {
             case 1:

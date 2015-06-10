@@ -49,6 +49,7 @@ public interface AniCareService {
         MakeFriend API
      */
     public void makeFriend(AniCarePet pet, final EntityCallback<AniCarePet> callback);
+    public void removeFriend(AniCarePet pet, final EntityCallback<Boolean> callback);
 
     /*
         Match API

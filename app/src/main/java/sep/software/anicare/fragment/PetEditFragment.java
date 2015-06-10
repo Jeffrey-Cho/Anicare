@@ -70,7 +70,7 @@ public class PetEditFragment extends AniCareFragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_pet_edit, container, false);
-
+        AniCareLogger.log(mThisPet);
         petImage = (ImageView) rootView.findViewById(R.id.petProfileImage);
         petName = (TextView) rootView.findViewById(R.id.pet_setting_name);
 
