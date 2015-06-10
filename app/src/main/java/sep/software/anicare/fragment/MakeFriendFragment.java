@@ -97,7 +97,12 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
                 e.printStackTrace();
             }
 
-            return date2.after(date1);
+            //return date2.after(date1);
+            if (date1.equals(date2)) {
+                return true;
+            } else if (date2.after(date1)) {
+                return true;
+            }
         }
 
         return false;
@@ -228,7 +233,8 @@ public class MakeFriendFragment extends AniCareFragment implements AdapterView.O
                         @Override
                         public void onCompleted(AniCarePet entity) {
                             mAppContext.dismissProgressDialog();
-                            Toast t = Toast.makeText(mThisActivity, "Complete make friend with S: "+ size.getValue() +"C: " +category.getValue(), Toast.LENGTH_LONG); // for debugging
+                            //Toast t = Toast.makeText(mThisActivity, "Complete make friend with S: "+ size.getValue() +"C: " +category.getValue(), Toast.LENGTH_LONG); // for debugging
+                            Toast t = Toast.makeText(mThisActivity, "Complete", Toast.LENGTH_LONG); // for debugging
                             t.setGravity(Gravity.CENTER, 0, 0);
                             t.show();
                         }
